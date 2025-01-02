@@ -1,4 +1,4 @@
-package com.iiddd.weather.navigation.voyager
+package com.iiddd.weather.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -12,7 +12,7 @@ import com.iiddd.weather.ui.search.view.SearchView
 import com.iiddd.weather.ui.settings.view.SettingsView
 import com.iiddd.weather.ui.weather.view.WeatherView
 
-object HomeTab : Tab {
+class HomeTab : Tab {
     override val options: TabOptions
         @Composable
         get() = TabOptions(
@@ -27,11 +27,11 @@ object HomeTab : Tab {
     }
 }
 
-object SearchTab : Tab {
+class SearchTab : Tab {
     override val options: TabOptions
         @Composable
         get() = TabOptions(
-            index = 0u,
+            index = 1u,
             title = "Search",
             icon = rememberVectorPainter(Icons.Default.Search)
         )
@@ -42,11 +42,11 @@ object SearchTab : Tab {
     }
 }
 
-object SettingsTab : Tab {
+class SettingsTab : Tab {
     override val options: TabOptions
         @Composable
         get() = TabOptions(
-            index = 0u,
+            index = 2u,
             title = "Settings",
             icon = rememberVectorPainter(Icons.Default.Settings)
         )

@@ -1,4 +1,4 @@
-package com.iiddd.weather.navigation.voyager
+package com.iiddd.weather.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Icon

@@ -3,7 +3,6 @@ package com.iiddd.weather.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.iiddd.weather.navigation.Navigation
 import com.iiddd.weather.ui.theme.WeatherTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,7 +12,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherTheme {
-                Navigation()
+                MainView()
             }
         }
     }

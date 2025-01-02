@@ -1,4 +1,4 @@
-package com.iiddd.weather.navigation.voyager
+package com.iiddd.weather.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -8,14 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.iiddd.weather.components.TabNavigationItem
+import com.iiddd.weather.navigation.HomeTab
+import com.iiddd.weather.navigation.SearchTab
+import com.iiddd.weather.navigation.SettingsTab
+
+private val homeTab = HomeTab()
+private val searchTab = SearchTab()
+private val settingsTab = SettingsTab()
 
 @Composable
-private fun MainContent() {
-    TabNavigator(HomeTab) {
+fun MainView() {
+    TabNavigator(homeTab) {
         Scaffold(
             bottomBar = {
                 NavigationBar {
-                    listOf(HomeTab, SettingsTab).forEach { tab ->
+                    listOf(homeTab, searchTab, settingsTab).forEach { tab ->
                         TabNavigationItem(tab = tab)
                     }
                 }

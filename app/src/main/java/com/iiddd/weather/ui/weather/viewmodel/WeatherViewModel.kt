@@ -1,4 +1,4 @@
-package com.iiddd.weather.ui.weather.viewModel
+package com.iiddd.weather.ui.weather.viewmodel
 
 class WeatherViewModel {
 }
