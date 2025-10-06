@@ -20,5 +20,13 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Weather"
+
 include(":app")
- 
+
+include(":core")
+
+include(
+    ":feature:search",
+    ":feature:settings",
+    ":feature:home"
+)

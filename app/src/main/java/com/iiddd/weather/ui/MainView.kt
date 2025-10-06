@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import com.iiddd.weather.components.TabNavigationItem
-import com.iiddd.weather.navigation.HomeTab
-import com.iiddd.weather.navigation.SearchTab
-import com.iiddd.weather.navigation.SettingsTab
+import com.iiddd.weather.ui.components.TabNavigationItem
+import com.iiddd.weather.ui.navigation.HomeTab
+import com.iiddd.weather.ui.navigation.SearchTab
+import com.iiddd.weather.ui.navigation.SettingsTab
 
 private val homeTab = HomeTab()
 private val searchTab = SearchTab()
