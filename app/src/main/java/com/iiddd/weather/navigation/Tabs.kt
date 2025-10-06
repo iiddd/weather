@@ -10,7 +10,8 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.iiddd.weather.ui.search.view.SearchView
 import com.iiddd.weather.ui.settings.view.SettingsView
-import com.iiddd.weather.ui.weather.view.WeatherView
+import com.iiddd.weather.ui.weather.view.WeatherScreen
+import com.iiddd.weather.ui.weather.view.localcomponents.WeatherView
 
 class HomeTab : Tab {
     override val options: TabOptions
@@ -23,7 +24,7 @@ class HomeTab : Tab {
 
     @Composable
     override fun Content() {
-        WeatherView()
+        WeatherScreen()
     }
 }
 

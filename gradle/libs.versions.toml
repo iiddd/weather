@@ -1,20 +1,26 @@
 [versions]
-agp = "8.7.3"
-kotlin = "2.1.0"
+activityCompose = "1.9.3"
+agp = "8.13.0"
+composeBom = "2024.12.01"
 coreKtx = "1.15.0"
+espressoCore = "3.6.1"
+hilt = "2.52"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
-composeBom = "2024.12.01"
-hilt = "2.52"
+kotlin = "2.1.0"
+kotlinxSerialization = "1.6.3"
 ksp = "2.1.0-1.0.29"
+lifecycleRuntimeKtx = "2.8.7"
+okhttp = "4.11.0"
 voyager = "1.0.1"
+retrofit = "2.9.0"
+retrofitKotlinxSerialization = "1.0.0"
+hilt-navigation-compose = "1.2.0"
 
 [libraries]
 #Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -42,9 +48,17 @@ google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-androi
 #Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
+#Network
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
