@@ -23,13 +23,10 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
 
     // Compose
     implementation(libs.compose.ui)
     implementation(platform(libs.compose.bom))
-
-    implementation(libs.material)
 
     testImplementation(libs.junit)
 }
