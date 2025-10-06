@@ -19,8 +19,6 @@ android {
         buildConfig = true
     }
 
-    composeOptions { kotlinCompilerExtensionVersion = libs.versions.kotlin.get() }
-
     defaultConfig { minSdk = 31 }
 }
 
