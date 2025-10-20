@@ -1,4 +1,4 @@
-package com.iiddd.core.ui.theme
+package com.iiddd.weather.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.iiddd.core
+package com.iiddd.ui
 
 import org.junit.Test
 

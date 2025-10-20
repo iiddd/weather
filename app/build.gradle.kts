@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
+    implementation(project(":core:ui"))
     implementation(project(":feature:weather"))
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))

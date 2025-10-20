@@ -30,3 +30,5 @@ include(
     ":feature:settings",
     ":feature:weather"
 )
+include(":core:ui")
+include(":core:location")

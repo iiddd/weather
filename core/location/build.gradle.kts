@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.iiddd.weather.core"
+    namespace = "com.iiddd.weather.core.ui"
     compileSdk = 36
 
     compileOptions {
@@ -13,18 +12,14 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig { minSdk = 31 }
 }
 
 dependencies {
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.androidx.core.ktx)
-
-    // Compose
-    implementation(libs.compose.material3)
-    implementation(libs.compose.ui)
-    implementation(platform(libs.compose.bom))
-
     testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
 }

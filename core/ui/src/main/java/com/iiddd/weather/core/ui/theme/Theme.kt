@@ -1,4 +1,4 @@
-package com.iiddd.core.ui.theme
+package com.iiddd.weather.core.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
