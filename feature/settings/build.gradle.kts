@@ -21,6 +21,10 @@ android {
     defaultConfig { minSdk = 31 }
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
 

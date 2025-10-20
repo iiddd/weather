@@ -1,27 +1,29 @@
 [versions]
 activityCompose = "1.11.0"
 agp = "8.13.0"
+appcompat = "1.7.1"
 composeBom = "2025.09.01"
 coreKtx = "1.17.0"
 espressoCore = "3.7.0"
-koin = "4.1.1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
+koin = "4.1.1"
 kotlin = "2.2.20"
 kotlinxSerialization = "1.9.0"
 lifecycleRuntimeKtx = "2.9.4"
+material = "1.13.0"
 okhttp = "5.2.1"
-voyager = "1.0.1"
+play-services-location = "21.0.1"
 retrofit = "3.0.0"
 retrofitKotlinxSerialization = "1.0.0"
-material = "1.13.0"
-appcompat = "1.7.1"
+voyager = "1.0.1"
 
 [libraries]
 #Core
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
@@ -51,11 +53,15 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 #Network
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
+
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
+
+#Play Services
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

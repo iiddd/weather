@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.iiddd.weather.core.ui"
+    namespace = "com.iiddd.weather.core.location"
     compileSdk = 36
 
     compileOptions {
@@ -14,12 +14,19 @@ android {
 
     buildFeatures {
         buildConfig = true
+        compose = false
     }
 
     defaultConfig { minSdk = 31 }
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.play.services.location)
+
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
 }
