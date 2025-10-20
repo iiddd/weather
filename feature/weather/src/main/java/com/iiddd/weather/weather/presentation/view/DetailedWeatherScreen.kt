@@ -12,11 +12,11 @@ fun DetailedWeatherScreen(viewModel: DetailedScreenViewModel = koinViewModel()) 
     val weatherState = viewModel.weather.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadWeather("Amsterdam")
+        viewModel.loadWeather(52.35, 4.91) // Coordinates for Amsterdam
     }
 
     WeatherView(
         weatherState = weatherState,
-        onRefresh = { viewModel.loadWeather("Amsterdam") }
+        onRefresh = { viewModel.loadWeather(52.35, 4.91) }
     )
 }

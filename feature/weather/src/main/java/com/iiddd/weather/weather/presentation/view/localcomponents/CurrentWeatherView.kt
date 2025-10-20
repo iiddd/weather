@@ -9,18 +9,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.iiddd.weather.weather.domain.model.WeatherByCity
+import com.iiddd.weather.weather.domain.model.Weather
 
 @Composable
-fun CurrentWeatherView(weather: WeatherByCity?) {
+fun CurrentWeatherView(weather: Weather?) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = weather?.condition ?: "Unknown",
+            text = weather?.description ?: "Unknown",
             style = MaterialTheme.typography.headlineSmall
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = weather?.degree?.let { "$it°C" } ?: "N/A",
+            text = weather?.currentTemp?.let { "$it°C" } ?: "N/A",
             style = MaterialTheme.typography.titleLarge
         )
     }

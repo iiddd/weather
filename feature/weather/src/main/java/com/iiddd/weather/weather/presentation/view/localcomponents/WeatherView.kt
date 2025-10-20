@@ -3,15 +3,19 @@ package com.iiddd.weather.weather.presentation.view.localcomponents
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.iiddd.weather.weather.domain.model.WeatherByCity
+import com.iiddd.weather.weather.domain.model.DailyForecast
+import com.iiddd.weather.weather.domain.model.HourlyForecast
+import com.iiddd.weather.weather.domain.model.Weather
 
 @Composable
 fun WeatherView(
-    weatherState: State<WeatherByCity?>,
+    weatherState: State<Weather?>,
     onRefresh: () -> Unit = {}
 ) {
     Box(
@@ -35,10 +39,20 @@ fun WeatherView(
 @Preview
 @Composable
 fun WeatherViewPreview() {
-    val mockWeather = object : State<WeatherByCity?> {
-        override val value: WeatherByCity? = WeatherByCity(
-            degree = "13",
-            condition = "Clear"
+    val mockWeather: State<Weather?> = remember {
+        mutableStateOf(
+            Weather(
+                currentTemp = 13.0,
+                description = "Clear",
+                hourly = listOf(
+                    HourlyForecast(time = "09:00", temp = 13.0, icon = "01d"),
+                    HourlyForecast(time = "12:00", temp = 15.0, icon = "02d")
+                ),
+                daily = listOf(
+                    DailyForecast(day = "Mon", tempDay = 16.0, tempNight = 8.0, icon = "01d"),
+                    DailyForecast(day = "Tue", tempDay = 17.0, tempNight = 9.0, icon = "02d")
+                )
+            )
         )
     }
 

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -19,7 +21,15 @@ android {
         buildConfig = true
     }
 
-    defaultConfig { minSdk = 31 }
+    defaultConfig {
+        minSdk = 31
+        val props = Properties().apply {
+            val f = rootProject.file("apikeys.properties")
+            if (f.exists()) f.inputStream().use(::load)
+        }
+        val openWeather = props.getProperty("OPEN_WEATHER_API_KEY") ?: ""
+        buildConfigField("String", "OPEN_WEATHER_API_KEY", "\"$openWeather\"")
+    }
 }
 
 dependencies {

@@ -1,7 +1,7 @@
 package com.iiddd.weather.weather.di
 
 import com.iiddd.weather.weather.BuildConfig
-import com.iiddd.weather.weather.data.api.OpenWeatherApiService
+import com.iiddd.weather.weather.data.api.OpenWeatherApi
 import com.iiddd.weather.weather.data.repository.WeatherRepositoryImpl
 import com.iiddd.weather.weather.domain.repository.WeatherRepository
 import com.iiddd.weather.weather.presentation.viewmodel.DetailedScreenViewModel
@@ -58,9 +58,9 @@ val weatherModule = module {
 
     single<WeatherRepository> {
         WeatherRepositoryImpl(
-            api = get<OpenWeatherApiService>()
+            api = get<OpenWeatherApi>()
         )
     }
 
-    single<OpenWeatherApiService> { get<Retrofit>().create(OpenWeatherApiService::class.java) }
+    single<OpenWeatherApi> { get<Retrofit>().create(OpenWeatherApi::class.java) }
 }
