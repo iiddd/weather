@@ -28,5 +28,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.play.services.location)
 
+    // Koin
+    implementation(libs.koin.android)
+
     testImplementation(libs.junit)
 }

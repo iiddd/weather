@@ -37,6 +37,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:location"))
+
     implementation(libs.androidx.core.ktx)
 
     // Retrofit
