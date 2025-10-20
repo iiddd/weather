@@ -1,6 +1,8 @@
 package com.iiddd.weather.weather.presentation.view.localcomponents
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -16,7 +18,8 @@ import com.iiddd.weather.weather.domain.model.Weather
 @Composable
 fun WeatherView(
     weatherState: State<Weather?>,
-    onRefresh: () -> Unit = {}
+    onRefresh: () -> Unit = {},
+    onRequestPermission: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -30,6 +33,11 @@ fun WeatherView(
             verticalArrangement = Arrangement.Center
         ) {
             HeaderView(onRefresh)
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = onRequestPermission) {
+                Text(text = "Request permission")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             CurrentWeatherView(weatherState.value)
             ForecastView(weatherState.value)
         }

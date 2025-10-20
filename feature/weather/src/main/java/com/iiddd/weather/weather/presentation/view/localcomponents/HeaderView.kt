@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 fun HeaderView(onRefresh: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.Center
     ) {
         Button(onClick = onRefresh) {
             Text("Refresh")
