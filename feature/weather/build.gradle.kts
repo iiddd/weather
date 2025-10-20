@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(platform(libs.compose.bom))
 
+    // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
 
