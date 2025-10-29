@@ -8,12 +8,14 @@ espressoCore = "3.7.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 koin = "4.1.1"
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 kotlinxSerialization = "1.9.0"
 lifecycleRuntimeKtx = "2.9.4"
+maps-compose = "6.12.1"
 material = "1.13.0"
 okhttp = "5.2.1"
-play-services-location = "21.0.1"
+play-services-location = "21.3.0"
+play-services-maps = "19.2.0"
 retrofit = "3.0.0"
 retrofitKotlinxSerialization = "1.0.0"
 voyager = "1.0.1"
@@ -51,6 +53,9 @@ koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", versi
 #Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
+#Maps
+maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose" }
+
 #Network
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
@@ -62,6 +67,7 @@ retrofit-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-
 
 #Play Services
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-services-maps" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

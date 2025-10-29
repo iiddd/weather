@@ -4,18 +4,21 @@ import com.iiddd.weather.forecast.BuildConfig
 import com.iiddd.weather.forecast.data.api.OpenWeatherApi
 import com.iiddd.weather.forecast.data.repository.WeatherRepositoryImpl
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
-import com.iiddd.weather.forecast.presentation.viewmodel.DetailedScreenViewModel
+import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-val weatherModule = module {
+val forecastModule = module {
+
+    val OPENWEATHER_RETROFIT = named("openweather_retrofit")
 
     single {
         Json {
@@ -33,9 +36,9 @@ val weatherModule = module {
         }
     }
 
-    viewModel { DetailedScreenViewModel(weatherRepository = get()) }
+    viewModel { ForecastViewModel(weatherRepository = get()) }
 
-    single {
+    single(OPENWEATHER_RETROFIT) {
         val json = get<Json>()
         val contentType = "application/json".toMediaType()
 
@@ -62,5 +65,7 @@ val weatherModule = module {
         )
     }
 
-    single<OpenWeatherApi> { get<Retrofit>().create(OpenWeatherApi::class.java) }
+    single<OpenWeatherApi> {
+        get<Retrofit>(OPENWEATHER_RETROFIT).create(OpenWeatherApi::class.java)
+    }
 }

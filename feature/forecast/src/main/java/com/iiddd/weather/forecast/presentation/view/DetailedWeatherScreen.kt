@@ -23,15 +23,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import com.iiddd.weather.location.data.FusedLocationTracker
-import com.iiddd.weather.forecast.presentation.view.localcomponents.WeatherView
-import com.iiddd.weather.forecast.presentation.viewmodel.DetailedScreenViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import com.iiddd.weather.forecast.R as ForecastR
 
 @Composable
-fun DetailedWeatherScreen(viewModel: DetailedScreenViewModel = koinViewModel()) {
+fun DetailedWeatherScreen(viewModel: ForecastViewModel = koinViewModel()) {
     val weatherState = viewModel.weather.collectAsState()
     val context = LocalContext.current
     val activity = context as? Activity
@@ -66,10 +65,22 @@ fun DetailedWeatherScreen(viewModel: DetailedScreenViewModel = koinViewModel()) 
 
     fun isPermissionPermanentlyDenied(): Boolean {
         if (activity == null) return false
-        val fine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        val coarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        val shouldShowFine = ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-        val shouldShowCoarse = ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val fine = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+        val shouldShowFine = ActivityCompat.shouldShowRequestPermissionRationale(
+            activity,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        val shouldShowCoarse = ActivityCompat.shouldShowRequestPermissionRationale(
+            activity,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
         return (fine && !shouldShowFine) || (coarse && !shouldShowCoarse)
     }
 
@@ -78,14 +89,25 @@ fun DetailedWeatherScreen(viewModel: DetailedScreenViewModel = koinViewModel()) 
             showOpenSettings = true
         } else {
             val shouldShow = activity?.let {
-                ActivityCompat.shouldShowRequestPermissionRationale(it, Manifest.permission.ACCESS_FINE_LOCATION) ||
-                        ActivityCompat.shouldShowRequestPermissionRationale(it, Manifest.permission.ACCESS_COARSE_LOCATION)
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) ||
+                        ActivityCompat.shouldShowRequestPermissionRationale(
+                            it,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
             } ?: false
 
             if (shouldShow) {
                 showRationale = true
             } else {
-                permissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+                permissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
             }
         }
     }
@@ -110,7 +132,7 @@ fun DetailedWeatherScreen(viewModel: DetailedScreenViewModel = koinViewModel()) 
         }
     }
 
-    WeatherView(
+    DetailedWeatherContent(
         weatherState = weatherState,
         onRefresh = {
             scope.launch {
@@ -118,7 +140,10 @@ fun DetailedWeatherScreen(viewModel: DetailedScreenViewModel = koinViewModel()) 
                     requestLocationPermission()
                 } else {
                     val coord = tracker.getLastKnownLocation()
-                    viewModel.loadWeather(coord?.latitude ?: defaultLat, coord?.longitude ?: defaultLon)
+                    viewModel.loadWeather(
+                        coord?.latitude ?: defaultLat,
+                        coord?.longitude ?: defaultLon
+                    )
                 }
             }
         }
@@ -132,11 +157,18 @@ fun DetailedWeatherScreen(viewModel: DetailedScreenViewModel = koinViewModel()) 
             confirmButton = {
                 TextButton(onClick = {
                     showRationale = false
-                    permissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+                    permissionLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
+                    )
                 }) { Text(stringResource(ForecastR.string.allow)) }
             },
             dismissButton = {
-                TextButton(onClick = { showRationale = false }) { Text(stringResource(ForecastR.string.cancel)) }
+                TextButton(onClick = {
+                    showRationale = false
+                }) { Text(stringResource(ForecastR.string.cancel)) }
             }
         )
     }
@@ -156,7 +188,9 @@ fun DetailedWeatherScreen(viewModel: DetailedScreenViewModel = koinViewModel()) 
                 }) { Text(stringResource(ForecastR.string.open_settings)) }
             },
             dismissButton = {
-                TextButton(onClick = { showOpenSettings = false }) { Text(stringResource(ForecastR.string.cancel)) }
+                TextButton(onClick = {
+                    showOpenSettings = false
+                }) { Text(stringResource(ForecastR.string.cancel)) }
             }
         )
     }

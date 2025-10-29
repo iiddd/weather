@@ -1,6 +1,5 @@
 package com.iiddd.weather.forecast.data.repository
 
-
 import com.iiddd.weather.forecast.BuildConfig
 import com.iiddd.weather.forecast.data.api.OpenWeatherApi
 import com.iiddd.weather.forecast.data.mapper.toDomain

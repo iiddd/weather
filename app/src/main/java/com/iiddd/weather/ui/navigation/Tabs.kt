@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.iiddd.weather.search.presentation.view.SearchView
+import com.iiddd.weather.search.presentation.view.SearchScreen
 import com.iiddd.weather.settings.presentation.view.SettingsView
 import com.iiddd.weather.forecast.presentation.view.DetailedWeatherScreen
 
@@ -38,7 +38,7 @@ class SearchTab : Tab {
 
     @Composable
     override fun Content() {
-        SearchView()
+        SearchScreen()
     }
 }
 

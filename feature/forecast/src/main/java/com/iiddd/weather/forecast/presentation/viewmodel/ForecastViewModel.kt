@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class DetailedScreenViewModel(
+class ForecastViewModel(
     private val weatherRepository: WeatherRepository
 ) : ViewModel() {
 

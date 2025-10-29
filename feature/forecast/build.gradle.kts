@@ -38,6 +38,7 @@ kotlin {
 
 dependencies {
     implementation(project(":core:location"))
+    implementation(project(":core:ui"))
 
     implementation(libs.androidx.core.ktx)
 
@@ -56,12 +57,13 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
     implementation(platform(libs.compose.bom))
 
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+
+    debugImplementation(libs.compose.ui.tooling)
 
     testImplementation(libs.junit)
 }
