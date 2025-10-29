@@ -5,8 +5,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Looper
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.OnCompleteListener
@@ -26,14 +31,33 @@ class FusedLocationTracker(
     private val priority: Int = Priority.PRIORITY_BALANCED_POWER_ACCURACY
 ) : LocationTracker {
 
+    private val tag = "FusedLocationTracker"
+
     override suspend fun getLastKnownLocation(): Coordinate? {
         if (!hasLocationPermission()) return null
 
-        lastLocationOrNull()?.let { return it.toCoordinate() }
-
-        return withTimeoutOrNull(timeoutMs) {
-            currentFixOrNull()?.toCoordinate()
+        // Try current location first
+        val current = withTimeoutOrNull(timeoutMs) { currentFixOrNull() }
+        if (current != null) {
+            Log.d(tag, "currentFix -> lat=${current.latitude}, lon=${current.longitude}, provider=${current.provider}")
+            return current.toCoordinate()
         }
+
+        // Single update request fallback
+        val active = withTimeoutOrNull(timeoutMs) { requestSingleUpdateOrNull() }
+        if (active != null) {
+            Log.d(tag, "activeFix -> lat=${active.latitude}, lon=${active.longitude}, provider=${active.provider}")
+            return active.toCoordinate()
+        }
+
+        // Cached location fallback
+        val last = lastLocationOrNull()
+        if (last != null) {
+            Log.d(tag, "lastLocation (fallback) -> lat=${last.latitude}, lon=${last.longitude}, provider=${last.provider}")
+            return last.toCoordinate()
+        }
+
+        return null
     }
 
     private fun hasLocationPermission(): Boolean {
@@ -53,6 +77,29 @@ class FusedLocationTracker(
     @SuppressLint("MissingPermission")
     private suspend fun currentFixOrNull(): Location? =
         fused.getCurrentLocation(priority, null).awaitOrNull()
+
+    @SuppressLint("MissingPermission")
+    private suspend fun requestSingleUpdateOrNull(): Location? =
+        suspendCancellableCoroutine { cont: CancellableContinuation<Location?> ->
+            val request = LocationRequest.Builder(priority, 1000L)
+                .setMinUpdateIntervalMillis(0)
+                .build()
+
+            val callback = object : LocationCallback() {
+                override fun onLocationResult(result: LocationResult) {
+                    val loc = result.lastLocation
+                    if (!cont.isActive) return
+                    cont.resume(loc)
+                }
+            }
+
+            fused.requestLocationUpdates(request, callback, Looper.getMainLooper())
+            cont.invokeOnCancellation {
+                try {
+                    fused.removeLocationUpdates(callback)
+                } catch (_: Exception) { /* ignore */ }
+            }
+        }
 }
 
 /* ===== Helpers ===== */

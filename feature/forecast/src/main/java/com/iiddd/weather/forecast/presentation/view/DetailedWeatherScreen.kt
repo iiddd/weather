@@ -65,6 +65,7 @@ fun DetailedWeatherScreen(viewModel: ForecastViewModel = koinViewModel()) {
 
     fun isPermissionPermanentlyDenied(): Boolean {
         if (activity == null) return false
+        if (!initialPermissionRequested) return false // не считать заблокированным до первой попытки
         val fine = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -102,6 +103,7 @@ fun DetailedWeatherScreen(viewModel: ForecastViewModel = koinViewModel()) {
             if (shouldShow) {
                 showRationale = true
             } else {
+                initialPermissionRequested = true
                 permissionLauncher.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -114,7 +116,6 @@ fun DetailedWeatherScreen(viewModel: ForecastViewModel = koinViewModel()) {
 
     LaunchedEffect(Unit) {
         if (!hasPermission && !initialPermissionRequested) {
-            initialPermissionRequested = true
             requestLocationPermission()
         }
     }
@@ -157,6 +158,7 @@ fun DetailedWeatherScreen(viewModel: ForecastViewModel = koinViewModel()) {
             confirmButton = {
                 TextButton(onClick = {
                     showRationale = false
+                    initialPermissionRequested = true
                     permissionLauncher.launch(
                         arrayOf(
                             Manifest.permission.ACCESS_FINE_LOCATION,
