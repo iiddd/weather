@@ -60,7 +60,7 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
-    implementation(project(":feature:weather"))
+    implementation(project(":feature:forecast"))
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))
 

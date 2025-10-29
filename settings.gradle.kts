@@ -28,7 +28,7 @@ include(":core")
 include(
     ":feature:search",
     ":feature:settings",
-    ":feature:weather"
+    ":feature:forecast"
 )
 include(":core:ui")
 include(":core:location")

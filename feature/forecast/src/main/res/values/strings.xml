@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_required">Location access required</string>
+    <string name="permission_rationale">To show weather for your location the app needs access to location. Allow?</string>
+    <string name="allow">Allow</string>
+    <string name="cancel">Cancel</string>
+    <string name="open_settings">Open settings</string>
+    <string name="permission_blocked">Permission blocked</string>
+    <string name="permission_blocked_text">Location permission has been blocked. Open app settings to enable it.</string>
+    <string name="refresh">Refresh</string>
+    <string name="no_weather_data">No weather data</string>
+</resources>

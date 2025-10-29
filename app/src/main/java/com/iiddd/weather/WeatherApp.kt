@@ -1,7 +1,7 @@
 package com.iiddd.weather
 
 import android.app.Application
-import com.iiddd.weather.weather.di.weatherModule
+import com.iiddd.weather.forecast.di.weatherModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
