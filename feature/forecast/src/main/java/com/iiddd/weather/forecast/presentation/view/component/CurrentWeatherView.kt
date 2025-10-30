@@ -1,4 +1,4 @@
-package com.iiddd.weather.forecast.presentation.view.localcomponents
+package com.iiddd.weather.forecast.presentation.view.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

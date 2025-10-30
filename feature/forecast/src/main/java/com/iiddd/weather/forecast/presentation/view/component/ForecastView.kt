@@ -1,4 +1,4 @@
-package com.iiddd.weather.forecast.presentation.view.localcomponents
+package com.iiddd.weather.forecast.presentation.view.component
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

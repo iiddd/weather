@@ -33,6 +33,7 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
         cameraPositionState = cameraPositionState,
         onQueryChange = viewModel::onQueryChange,
         onSearch = viewModel::search,
-        onClearMarker = viewModel::clearMarker
+        onClearMarker = viewModel::clearMarker,
+        onAddFavorite = { name, lat, lon -> viewModel.addFavorite(name, lat, lon) }
     )
 }

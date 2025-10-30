@@ -9,7 +9,7 @@ import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.forecast.domain.model.DailyForecast
 import com.iiddd.weather.forecast.domain.model.HourlyForecast
 import com.iiddd.weather.forecast.domain.model.Weather
-import com.iiddd.weather.forecast.presentation.view.localcomponents.WeatherView
+import com.iiddd.weather.forecast.presentation.view.component.WeatherView
 
 @Composable
 fun DetailedWeatherContent(
