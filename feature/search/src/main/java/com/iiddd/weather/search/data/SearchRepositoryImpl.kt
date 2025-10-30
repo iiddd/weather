@@ -1,5 +1,6 @@
 package com.iiddd.weather.search.data
 
+import android.util.Log
 import com.iiddd.weather.search.data.api.GeocodingApi
 import com.iiddd.weather.search.domain.Location
 import com.iiddd.weather.search.domain.SearchRepository
@@ -9,9 +10,9 @@ class SearchRepositoryImpl(
     private val apiKey: String
 ) : SearchRepository {
     override suspend fun searchLocation(query: String, maxResults: Int): List<Location> {
-        return try {
+        try {
             val resp = geocodingApi.geocode(query, apiKey, "en")
-            resp.results
+            return resp.results
                 .take(maxResults)
                 .mapNotNull { r ->
                     val loc = r.geometry?.location ?: return@mapNotNull null
@@ -22,7 +23,8 @@ class SearchRepositoryImpl(
                     )
                 }
         } catch (e: Exception) {
-            emptyList()
+            Log.e("SearchRepository", "geocode error for query='$query'", e)
+            throw e
         }
     }
 }
