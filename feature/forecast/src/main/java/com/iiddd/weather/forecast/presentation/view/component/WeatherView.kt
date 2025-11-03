@@ -23,7 +23,6 @@ import com.iiddd.weather.forecast.domain.model.Weather
 fun WeatherView(
     weatherState: State<Weather?>,
     onRefresh: () -> Unit = {},
-    onOpenDetails: (Weather) -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -36,12 +35,9 @@ fun WeatherView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            RefreshButton(onRefresh)
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Spacer(modifier = Modifier.height(16.dp))
             CurrentWeatherView(weatherState.value)
-            ForecastView(weatherState.value, onOpenDetails = onOpenDetails)
+            ForecastView(weatherState.value)
+            RefreshButton(onRefresh)
         }
     }
 }

@@ -19,7 +19,6 @@ fun DetailedWeatherContent(
     WeatherView(
         weatherState = weatherState,
         onRefresh = onRefresh,
-        onOpenDetails = {}
     )
 }
 
