@@ -21,7 +21,7 @@ fun RowScope.TabNavigationItem(tab: Tab) {
             tabNavigator.current = tab
         },
         label = {
-            Text(text = tab.options.title ?: "")
+            Text(text = tab.options.title)
         },
         icon = {
             tab.options.icon?.let {

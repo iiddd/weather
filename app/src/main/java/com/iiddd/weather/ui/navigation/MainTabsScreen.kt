@@ -37,7 +37,7 @@ class MainTabsScreen : Screen {
             val tabNavigator = LocalTabNavigator.current
 
             val searchTab = remember {
-                SearchTab(onOpenDetailsExternal = { _name, lat, lon ->
+                SearchTab(onOpenDetailsExternal = { name, lat, lon ->
                     try { tabNavigator.current = homeTab } catch (_: Exception) {}
                     navEvents.tryEmit(lat to lon)
                 })
