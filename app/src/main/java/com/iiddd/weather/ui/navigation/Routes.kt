@@ -9,14 +9,15 @@ import com.iiddd.weather.settings.presentation.view.SettingsView
 
 class DetailedWeatherScreenRoute(
     private val lat: Double,
-    private val lon: Double
+    private val lon: Double,
+    private val city: String? = null
 ) : Screen {
     override val key: String
-        get() = "DetailedWeatherRoute($lat,$lon)"
+        get() = "DetailedWeatherRoute($lat,$lon,${city ?: "null"})"
 
     @Composable
     override fun Content() {
-        DetailedWeatherScreen(initialLat = lat, initialLon = lon)
+        DetailedWeatherScreen(initialLat = lat, initialLon = lon, initialCity = city)
     }
 }
 

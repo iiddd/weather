@@ -33,17 +33,18 @@ import com.iiddd.weather.forecast.R as ForecastR
 fun DetailedWeatherScreen(
     viewModel: ForecastViewModel = koinViewModel(),
     initialLat: Double? = null,
-    initialLon: Double? = null
+    initialLon: Double? = null,
+    initialCity: String? = null
 ) {
     if (initialLat != null && initialLon != null) {
         val weatherState = viewModel.weather.collectAsState()
-        LaunchedEffect(initialLat, initialLon) {
-            viewModel.loadWeather(initialLat, initialLon)
+        LaunchedEffect(initialLat, initialLon, initialCity) {
+            viewModel.loadWeather(initialLat, initialLon, initialCity)
         }
         DetailedWeatherContent(
             weatherState = weatherState,
             onRefresh = {
-                viewModel.loadWeather(initialLat, initialLon)
+                viewModel.loadWeather(initialLat, initialLon, initialCity)
             }
         )
         return

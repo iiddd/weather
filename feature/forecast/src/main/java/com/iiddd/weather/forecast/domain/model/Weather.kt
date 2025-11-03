@@ -3,8 +3,9 @@ package com.iiddd.weather.forecast.domain.model
 data class Weather(
     val currentTemp: Double,
     val description: String,
-    val hourly: List<HourlyForecast>,
-    val daily: List<DailyForecast>
+    val hourly: List<HourlyForecast> = emptyList(),
+    val daily: List<DailyForecast> = emptyList(),
+    val city: String? = null
 )
 
 data class HourlyForecast(

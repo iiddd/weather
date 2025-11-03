@@ -1,12 +1,15 @@
 package com.iiddd.weather.forecast.presentation.view.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -22,22 +25,36 @@ import com.iiddd.weather.forecast.domain.model.Weather
 @Composable
 fun WeatherView(
     weatherState: State<Weather?>,
-    onRefresh: () -> Unit = {},
+    onRefresh: () -> Unit
 ) {
-    Box(
+    val weather = weatherState.value
+
+    Card(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .padding(12.dp)
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 180.dp)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            CurrentWeatherView(weatherState.value)
-            ForecastView(weatherState.value)
-            RefreshButton(onRefresh)
+            Text(text = weather?.city ?: "Unknown location")
+            Spacer(modifier = Modifier.height(8.dp))
+            if (weather == null) {
+                Text(text = "Forecast coming soon...")
+            } else {
+                Text(text = "Summary: ${weather.description}")
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = "Temp: ${weather.currentTemp}°")
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(onClick = onRefresh) {
+                Text(text = "Refresh")
+            }
         }
     }
 }
@@ -62,5 +79,8 @@ fun WeatherViewPreview() {
         )
     }
 
-    WeatherView(weatherState = mockWeather)
+    WeatherView(
+        weatherState = mockWeather,
+        onRefresh = {}
+    )
 }

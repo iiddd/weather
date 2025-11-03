@@ -15,11 +15,11 @@ class ForecastViewModel(
     private val _weather = MutableStateFlow<Weather?>(null)
     val weather: StateFlow<Weather?> = _weather
 
-    fun loadWeather(lat: Double, lon: Double) {
+    fun loadWeather(lat: Double, lon: Double, city: String? = null) {
         viewModelScope.launch {
             try {
                 val result = weatherRepository.getWeather(lat = lat, lon = lon)
-                _weather.value = result
+                _weather.value = if (city != null) result.copy(city = city) else result
             } catch (_: Exception) {
                 _weather.value = null
             }
