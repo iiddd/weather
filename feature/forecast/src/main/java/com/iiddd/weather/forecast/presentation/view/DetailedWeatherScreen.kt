@@ -30,7 +30,25 @@ import org.koin.androidx.compose.koinViewModel
 import com.iiddd.weather.forecast.R as ForecastR
 
 @Composable
-fun DetailedWeatherScreen(viewModel: ForecastViewModel = koinViewModel()) {
+fun DetailedWeatherScreen(
+    viewModel: ForecastViewModel = koinViewModel(),
+    initialLat: Double? = null,
+    initialLon: Double? = null
+) {
+    if (initialLat != null && initialLon != null) {
+        val weatherState = viewModel.weather.collectAsState()
+        LaunchedEffect(initialLat, initialLon) {
+            viewModel.loadWeather(initialLat, initialLon)
+        }
+        DetailedWeatherContent(
+            weatherState = weatherState,
+            onRefresh = {
+                viewModel.loadWeather(initialLat, initialLon)
+            }
+        )
+        return
+    }
+
     val weatherState = viewModel.weather.collectAsState()
     val context = LocalContext.current
     val activity = context as? Activity
@@ -65,7 +83,7 @@ fun DetailedWeatherScreen(viewModel: ForecastViewModel = koinViewModel()) {
 
     fun isPermissionPermanentlyDenied(): Boolean {
         if (activity == null) return false
-        if (!initialPermissionRequested) return false // не считать заблокированным до первой попытки
+        if (!initialPermissionRequested) return false
         val fine = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION

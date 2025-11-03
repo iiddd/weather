@@ -13,11 +13,15 @@ import cafe.adriel.voyager.navigator.tab.Tab
 fun RowScope.TabNavigationItem(tab: Tab) {
     val tabNavigator = LocalTabNavigator.current
 
+    val isSelected = tabNavigator.current == tab
+
     NavigationBarItem(
-        selected = tabNavigator.current == tab,
-        onClick = { tabNavigator.current = tab },
+        selected = isSelected,
+        onClick = {
+            tabNavigator.current = tab
+        },
         label = {
-            Text(text = tab.options.title)
+            Text(text = tab.options.title ?: "")
         },
         icon = {
             tab.options.icon?.let {

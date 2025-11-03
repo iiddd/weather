@@ -5,14 +5,17 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.navigator.CurrentScreen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.iiddd.weather.search.presentation.view.SearchScreen
-import com.iiddd.weather.settings.presentation.view.SettingsView
-import com.iiddd.weather.forecast.presentation.view.DetailedWeatherScreen
 
-class HomeTab : Tab {
+class HomeTab(
+    private val onNavigatorReady: ((Navigator?) -> Unit)? = null
+) : Tab {
     override val options: TabOptions
         @Composable
         get() = TabOptions(
@@ -23,11 +26,19 @@ class HomeTab : Tab {
 
     @Composable
     override fun Content() {
-        DetailedWeatherScreen()
+        Navigator(HomeRootScreen()) {
+            val innerNav = LocalNavigator.current
+            LaunchedEffect(innerNav) {
+                onNavigatorReady?.invoke(innerNav)
+            }
+            CurrentScreen()
+        }
     }
 }
 
-class SearchTab : Tab {
+class SearchTab(
+    private val onOpenDetailsExternal: ((String?, Double, Double) -> Unit)? = null
+) : Tab {
     override val options: TabOptions
         @Composable
         get() = TabOptions(
@@ -38,7 +49,9 @@ class SearchTab : Tab {
 
     @Composable
     override fun Content() {
-        SearchScreen()
+        Navigator(SearchRootScreen(onOpenDetailsExternal)) {
+            CurrentScreen()
+        }
     }
 }
 
@@ -53,6 +66,8 @@ class SettingsTab : Tab {
 
     @Composable
     override fun Content() {
-        SettingsView()
+        Navigator(SettingsRootScreen()) {
+            CurrentScreen()
+        }
     }
 }

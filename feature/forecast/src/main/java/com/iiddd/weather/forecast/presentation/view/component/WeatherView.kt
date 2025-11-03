@@ -22,7 +22,8 @@ import com.iiddd.weather.forecast.domain.model.Weather
 @Composable
 fun WeatherView(
     weatherState: State<Weather?>,
-    onRefresh: () -> Unit = {}
+    onRefresh: () -> Unit = {},
+    onOpenDetails: (Weather) -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -35,12 +36,12 @@ fun WeatherView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            HeaderView(onRefresh)
+            RefreshButton(onRefresh)
             Spacer(modifier = Modifier.height(8.dp))
 
             Spacer(modifier = Modifier.height(16.dp))
             CurrentWeatherView(weatherState.value)
-            ForecastView(weatherState.value)
+            ForecastView(weatherState.value, onOpenDetails = onOpenDetails)
         }
     }
 }

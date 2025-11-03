@@ -12,7 +12,10 @@ import com.iiddd.weather.search.presentation.viewmodel.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
+fun SearchScreen(
+    viewModel: SearchViewModel = koinViewModel(),
+    onOpenDetails: (name: String?, lat: Double, lon: Double) -> Unit = { _, _, _ -> }
+) {
     val defaultLat = 52.35
     val defaultLon = 4.91
 
@@ -34,6 +37,8 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
         onQueryChange = viewModel::onQueryChange,
         onSearch = viewModel::search,
         onClearMarker = viewModel::clearMarker,
-        onAddFavorite = { name, lat, lon -> viewModel.addFavorite(name, lat, lon) }
+        onOpenDetails = { name, lat, lon ->
+            onOpenDetails(name, lat, lon)
+        }
     )
 }
