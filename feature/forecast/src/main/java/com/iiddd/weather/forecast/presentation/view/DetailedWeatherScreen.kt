@@ -72,24 +72,23 @@ fun DetailedWeatherScreen(
 
     var showRationale by remember { mutableStateOf(false) }
     var showOpenSettings by remember { mutableStateOf(false) }
-
     var initialPermissionRequested by remember { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { perms ->
-        hasPermission = perms[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                perms[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+    ) { permissions ->
+        hasPermission = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
     }
 
     fun isPermissionPermanentlyDenied(): Boolean {
         if (activity == null) return false
         if (!initialPermissionRequested) return false
-        val fine = ContextCompat.checkSelfPermission(
+        val fineDenied = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
-        val coarse = ContextCompat.checkSelfPermission(
+        val coarseDenied = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
@@ -101,7 +100,7 @@ fun DetailedWeatherScreen(
             activity,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
-        return (fine && !shouldShowFine) || (coarse && !shouldShowCoarse)
+        return (fineDenied && !shouldShowFine) || (coarseDenied && !shouldShowCoarse)
     }
 
     fun requestLocationPermission() {
@@ -142,11 +141,9 @@ fun DetailedWeatherScreen(
     LaunchedEffect(hasPermission) {
         if (hasPermission) {
             val coord = tracker.getLastKnownLocation()
-            if (coord != null) {
-                viewModel.loadWeather(coord.latitude, coord.longitude)
-            } else {
-                viewModel.loadWeather(defaultLat, defaultLon)
-            }
+            val lat = coord?.latitude ?: defaultLat
+            val lon = coord?.longitude ?: defaultLon
+            viewModel.loadWeatherWithGeocoding(context, lat, lon)
         } else {
             viewModel.loadWeather(defaultLat, defaultLon)
         }
@@ -159,11 +156,10 @@ fun DetailedWeatherScreen(
                 if (!hasPermission) {
                     requestLocationPermission()
                 } else {
-                    val coord = tracker.getLastKnownLocation()
-                    viewModel.loadWeather(
-                        coord?.latitude ?: defaultLat,
-                        coord?.longitude ?: defaultLon
-                    )
+                    val coordinate = tracker.getLastKnownLocation()
+                    val latitude = coordinate?.latitude ?: defaultLat
+                    val longitude = coordinate?.longitude ?: defaultLon
+                    viewModel.loadWeatherWithGeocoding(context, latitude, longitude)
                 }
             }
         }

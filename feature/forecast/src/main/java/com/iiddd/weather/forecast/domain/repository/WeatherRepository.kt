@@ -4,5 +4,5 @@ import com.iiddd.weather.forecast.domain.model.Weather
 
 interface WeatherRepository {
 
-    suspend fun getWeather(lat: Double, lon: Double): Weather
+    suspend fun getWeather(latitude: Double, longitude: Double): Weather
 }

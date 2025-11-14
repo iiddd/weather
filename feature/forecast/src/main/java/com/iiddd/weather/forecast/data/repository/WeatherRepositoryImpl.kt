@@ -12,10 +12,10 @@ class WeatherRepositoryImpl(
 
     private val apiKey = BuildConfig.OPEN_WEATHER_API_KEY
 
-    override suspend fun getWeather(lat: Double, lon: Double): Weather {
+    override suspend fun getWeather(latitude: Double, longitude: Double): Weather {
         val response = api.getWeather(
-            lat = lat,
-            lon = lon,
+            lat = latitude,
+            lon = longitude,
             apiKey = apiKey,
         )
         return response.toDomain()
