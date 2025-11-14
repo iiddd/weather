@@ -31,24 +31,33 @@ class MainTabsScreen : Screen {
         val homeTab = remember { HomeTab(onNavigatorReady = { homeInnerNav = it }) }
         val settingsTab = remember { SettingsTab() }
 
-        // Triple<city?, lat, lon>
-        val navEvents = remember { MutableSharedFlow<Triple<String?, Double, Double>>(extraBufferCapacity = 1) }
+        val navEvents = remember {
+            MutableSharedFlow<Pair<Double, Double>>(extraBufferCapacity = 1)
+        }
 
         TabNavigator(homeTab) {
             val tabNavigator = LocalTabNavigator.current
 
             val searchTab = remember {
-                SearchTab(onOpenDetailsExternal = { name, lat, lon ->
-                    try { tabNavigator.current = homeTab } catch (_: Exception) {}
-                    navEvents.tryEmit(Triple(name, lat, lon))
+                SearchTab(onOpenDetailsExternal = { lat, lon ->
+                    try {
+                        tabNavigator.current = homeTab
+                    } catch (_: Exception) {
+                    }
+                    navEvents.tryEmit(Pair(lat, lon))
                 })
             }
 
             LaunchedEffect(navEvents) {
-                navEvents.collect { (city, lat, lon) ->
+                navEvents.collect { (latitude, longitude) ->
                     delay(150)
                     scope.launch {
-                        homeInnerNav?.push(DetailedWeatherScreenRoute(lat, lon, city))
+                        homeInnerNav?.push(
+                            DetailedWeatherScreenRoute(
+                                latitude = latitude,
+                                longitude = longitude
+                            )
+                        )
                     }
                 }
             }

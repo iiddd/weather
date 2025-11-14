@@ -32,26 +32,35 @@ import com.iiddd.weather.forecast.R as ForecastR
 @Composable
 fun DetailedWeatherScreen(
     viewModel: ForecastViewModel = koinViewModel(),
-    initialLat: Double? = null,
-    initialLon: Double? = null,
+    initialLatitude: Double? = null,
+    initialLongitude: Double? = null,
     initialCity: String? = null
 ) {
-    if (initialLat != null && initialLon != null) {
+    val context = LocalContext.current
+
+    if (initialLatitude != null && initialLongitude != null) {
         val weatherState = viewModel.weather.collectAsState()
-        LaunchedEffect(initialLat, initialLon, initialCity) {
-            viewModel.loadWeather(initialLat, initialLon, initialCity)
+        LaunchedEffect(initialLatitude, initialLongitude, initialCity) {
+            if (initialCity != null) {
+                viewModel.loadWeather(initialLatitude, initialLongitude, initialCity)
+            } else {
+                viewModel.loadWeatherWithGeocoding(context, initialLatitude, initialLongitude)
+            }
         }
         DetailedWeatherContent(
             weatherState = weatherState,
             onRefresh = {
-                viewModel.loadWeather(initialLat, initialLon, initialCity)
+                if (initialCity != null) {
+                    viewModel.loadWeather(initialLatitude, initialLongitude, initialCity)
+                } else {
+                    viewModel.loadWeatherWithGeocoding(context, initialLatitude, initialLongitude)
+                }
             }
         )
         return
     }
 
     val weatherState = viewModel.weather.collectAsState()
-    val context = LocalContext.current
     val activity = context as? Activity
     val tracker = remember { FusedLocationTracker(context) }
     val scope = rememberCoroutineScope()

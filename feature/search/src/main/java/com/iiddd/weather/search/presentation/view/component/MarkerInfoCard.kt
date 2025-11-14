@@ -34,7 +34,7 @@ import com.iiddd.weather.core.ui.theme.WeatherTheme
 fun MarkerInfoCard(
     title: String,
     markerLatLng: LatLng,
-    onOpenDetails: (name: String?, lat: Double?, lon: Double?) -> Unit,
+    onOpenDetails: (lat: Double?, lon: Double?) -> Unit,
     onClearMarker: () -> Unit,
     modifier: Modifier = Modifier,
     tailHeight: Dp = 16.dp,
@@ -67,7 +67,7 @@ fun MarkerInfoCard(
 
                     IconButton(
                         onClick = {
-                            onOpenDetails(title, markerLatLng.latitude, markerLatLng.longitude)
+                            onOpenDetails(markerLatLng.latitude, markerLatLng.longitude)
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
@@ -113,7 +113,7 @@ fun MarkerInfoCardPreview() {
         MarkerInfoCard(
             title = "Amsterdam, Netherlands",
             markerLatLng = sample,
-            onOpenDetails = { _, _, _ -> },
+            onOpenDetails = { _, _ -> },
             onClearMarker = {},
         )
     }

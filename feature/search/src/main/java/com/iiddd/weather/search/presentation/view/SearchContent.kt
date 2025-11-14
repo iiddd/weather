@@ -37,7 +37,7 @@ fun SearchContent(
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     onClearMarker: () -> Unit,
-    onOpenDetails: (name: String?, lat: Double, lon: Double) -> Unit
+    onOpenDetails: (lat: Double, lon: Double) -> Unit
 ) {
     val isPreview = LocalInspectionMode.current
     val density = LocalDensity.current
@@ -91,9 +91,8 @@ fun SearchContent(
             MarkerInfoCard(
                 title = uiState.markerTitle ?: uiState.query.ifBlank { "Result" },
                 markerLatLng = markerLatLng,
-                onOpenDetails = { name, lat, lon ->
+                onOpenDetails = { lat, lon ->
                     onOpenDetails(
-                        name,
                         lat ?: markerLatLng.latitude,
                         lon ?: markerLatLng.longitude
                     )
@@ -107,7 +106,8 @@ fun SearchContent(
                     .let { base ->
                         if (mapSize.width > 0f && mapSize.height > 0f && cardSize.width > 0f) {
                             val x = (screenPos.x - cardSize.width / 2.0).roundToInt()
-                            val y = (screenPos.y - cardSize.height - tailHeightPx - markerOffsetPx).roundToInt()
+                            val y =
+                                (screenPos.y - cardSize.height - tailHeightPx - markerOffsetPx).roundToInt()
                             base.offset { IntOffset(x, y) }
                         } else base
                     }
@@ -138,7 +138,7 @@ fun SearchContentPreview() {
             onQueryChange = {},
             onSearch = {},
             onClearMarker = {},
-            onOpenDetails = { _, _, _ -> }
+            onOpenDetails = { _, _ -> }
         )
     }
 }

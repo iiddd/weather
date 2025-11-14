@@ -37,7 +37,7 @@ class HomeTab(
 }
 
 class SearchTab(
-    private val onOpenDetailsExternal: ((String?, Double, Double) -> Unit)? = null
+    private val onOpenDetailsExternal: ((Double, Double) -> Unit)? = null
 ) : Tab {
     override val options: TabOptions
         @Composable

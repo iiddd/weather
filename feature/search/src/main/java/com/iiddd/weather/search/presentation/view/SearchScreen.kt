@@ -14,7 +14,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel(),
-    onOpenDetails: (name: String?, lat: Double, lon: Double) -> Unit = { _, _, _ -> }
+    onOpenDetails: (lat: Double, lon: Double) -> Unit = { _, _ -> }
 ) {
     val defaultLat = 52.35
     val defaultLon = 4.91
@@ -37,8 +37,8 @@ fun SearchScreen(
         onQueryChange = viewModel::onQueryChange,
         onSearch = viewModel::search,
         onClearMarker = viewModel::clearMarker,
-        onOpenDetails = { name, lat, lon ->
-            onOpenDetails(name, lat, lon)
+        onOpenDetails = { lat, lon ->
+            onOpenDetails(lat, lon)
         }
     )
 }
