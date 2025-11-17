@@ -90,7 +90,6 @@ dependencies {
     implementation(libs.koin.compose)
 
     // Test
-    testImplementation(libs.junit)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 

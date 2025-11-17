@@ -32,3 +32,5 @@ include(
 )
 include(":core:ui")
 include(":core:location")
+include(":core:utils")
+include(":core:test-utils")

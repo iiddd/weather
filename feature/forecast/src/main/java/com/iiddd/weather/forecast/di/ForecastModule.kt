@@ -16,56 +16,58 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-val forecastModule = module {
+object ForecastModule {
 
     val OPENWEATHER_RETROFIT = named("openweather_retrofit")
 
-    single {
-        Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
+    val module = module {
+        single {
+            Json {
+                ignoreUnknownKeys = true
+                explicitNulls = false
+            }
         }
-    }
 
-    single {
-        HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG)
-                HttpLoggingInterceptor.Level.BODY
-            else
-                HttpLoggingInterceptor.Level.NONE
+        single {
+            HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG)
+                    HttpLoggingInterceptor.Level.BODY
+                else
+                    HttpLoggingInterceptor.Level.NONE
+            }
         }
-    }
 
-    viewModel { ForecastViewModel(weatherRepository = get()) }
+        viewModel { ForecastViewModel(weatherRepository = get()) }
 
-    single(OPENWEATHER_RETROFIT) {
-        val json = get<Json>()
-        val contentType = "application/json".toMediaType()
+        single(OPENWEATHER_RETROFIT) {
+            val json = get<Json>()
+            val contentType = "application/json".toMediaType()
 
-        Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/")
-            .client(get())
-            .addConverterFactory(json.asConverterFactory(contentType))
-            .build()
-    }
+            Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org/")
+                .client(get())
+                .addConverterFactory(json.asConverterFactory(contentType))
+                .build()
+        }
 
-    single {
-        OkHttpClient.Builder()
-            .addInterceptor(get<HttpLoggingInterceptor>())
-            .callTimeout(15, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
-    }
+        single {
+            OkHttpClient.Builder()
+                .addInterceptor(get<HttpLoggingInterceptor>())
+                .callTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build()
+        }
 
-    single<WeatherRepository> {
-        WeatherRepositoryImpl(
-            api = get<OpenWeatherApi>()
-        )
-    }
+        single<WeatherRepository> {
+            WeatherRepositoryImpl(
+                api = get<OpenWeatherApi>()
+            )
+        }
 
-    single<OpenWeatherApi> {
-        get<Retrofit>(OPENWEATHER_RETROFIT).create(OpenWeatherApi::class.java)
+        single<OpenWeatherApi> {
+            get<Retrofit>(OPENWEATHER_RETROFIT).create(OpenWeatherApi::class.java)
+        }
     }
 }

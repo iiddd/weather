@@ -1,21 +1,15 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.iiddd.weather.settings"
+    namespace = "com.iiddd.weather.core.testutils"
     compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-    }
-
-    buildFeatures {
-        compose = true
-        buildConfig = true
     }
 
     defaultConfig { minSdk = 31 }
@@ -26,9 +20,10 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
+    implementation(project(":core:utils"))
 
-    // Compose
-    implementation(libs.compose.ui)
-    implementation(platform(libs.compose.bom))
+    api(libs.kotlinx.coroutines.test)
+    api(libs.junit.jupiter.api)
+
+    implementation(libs.androidx.core.ktx)
 }

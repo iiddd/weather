@@ -18,59 +18,65 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-val searchModule = module {
+object SearchModule {
 
     val GOOGLE_MAPS_RETROFIT = named("google_maps_retrofit")
 
-    single {
-        Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
+    val module = module {
+        single {
+            Json {
+                ignoreUnknownKeys = true
+                explicitNulls = false
+            }
+        }
+
+        single {
+            HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG)
+                    HttpLoggingInterceptor.Level.BODY
+                else
+                    HttpLoggingInterceptor.Level.NONE
+            }
+        }
+
+        single {
+            OkHttpClient.Builder()
+                .addInterceptor(get<HttpLoggingInterceptor>())
+                .callTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .build()
+        }
+
+        single(GOOGLE_MAPS_RETROFIT) {
+            val json = get<Json>()
+            val contentType = "application/json".toMediaType()
+
+            Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/maps/api/")
+                .client(get())
+                .addConverterFactory(json.asConverterFactory(contentType))
+                .build()
+        }
+
+        single<GeocodingApi> {
+            get<Retrofit>(GOOGLE_MAPS_RETROFIT).create(GeocodingApi::class.java)
+        }
+
+        single { androidContext().getString(R.string.google_maps_key) }
+
+        single<SearchRepository> {
+            SearchRepositoryImpl(
+                geocodingApi = get(),
+                apiKey = get()
+            )
+        }
+
+        viewModel {
+            SearchViewModel(
+                repository = get(),
+            )
         }
     }
-
-    single {
-        HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG)
-                HttpLoggingInterceptor.Level.BODY
-            else
-                HttpLoggingInterceptor.Level.NONE
-        }
-    }
-
-    single {
-        OkHttpClient.Builder()
-            .addInterceptor(get<HttpLoggingInterceptor>())
-            .callTimeout(15, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
-    }
-
-    single(GOOGLE_MAPS_RETROFIT) {
-        val json = get<Json>()
-        val contentType = "application/json".toMediaType()
-
-        Retrofit.Builder()
-            .baseUrl("https://maps.googleapis.com/maps/api/")
-            .client(get())
-            .addConverterFactory(json.asConverterFactory(contentType))
-            .build()
-    }
-
-    single<GeocodingApi> {
-        get<Retrofit>(GOOGLE_MAPS_RETROFIT).create(GeocodingApi::class.java)
-    }
-
-    single { androidContext().getString(R.string.google_maps_key) }
-
-    single<SearchRepository> {
-        SearchRepositoryImpl(
-            geocodingApi = get(),
-            apiKey = get()
-        )
-    }
-
-    viewModel { SearchViewModel(repository = get()) }
 }

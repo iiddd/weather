@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     implementation(project(":core:ui"))
+    implementation(project(":core:utils"))
 
     // Compose
     implementation(libs.compose.ui)
@@ -71,5 +72,10 @@ dependencies {
 
     debugImplementation(libs.compose.ui.tooling)
 
-    testImplementation(libs.junit)
+    // Testing
+    testImplementation(project(":core:test-utils"))
+
+    testImplementation(libs.mockito.kotlin)
+
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }

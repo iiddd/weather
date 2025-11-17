@@ -65,5 +65,7 @@ dependencies {
 
     debugImplementation(libs.compose.ui.tooling)
 
-    testImplementation(libs.junit)
+    // Testing
+    testImplementation(project(":core:test-utils"))
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
