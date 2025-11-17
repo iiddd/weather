@@ -39,6 +39,7 @@ kotlin {
 dependencies {
     implementation(project(":core:location"))
     implementation(project(":core:ui"))
+    implementation(project(":core:utils"))
 
     implementation(libs.androidx.core.ktx)
 
@@ -67,5 +68,8 @@ dependencies {
 
     // Testing
     testImplementation(project(":core:test-utils"))
+
+    testImplementation(libs.mockito.kotlin)
+
     testRuntimeOnly(libs.junit.jupiter.engine)
 }
