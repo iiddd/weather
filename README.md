@@ -7,11 +7,11 @@ The app uses **OpenWeatherMap One Call API 3.0** as its primary data source and 
 
 ## 🚀 Project Goals
 
-- Practice **Jetpack Compose** UI without XML or Fragments  
+- Practice **Jetpack Compose** UI
 - Learn and apply **Koin** for dependency injection
 - Implement **Clean Architecture + MVVM**  
 - Integrate **OpenWeather** and **Google Maps** APIs  
-- Prepare for future expansion to **Compose Multiplatform (KMP)**
+- Prepare for future expansion to **Compose Multiplatform (KMP)??**
 
 ---
 
@@ -24,11 +24,11 @@ Weather/
 ├── app/                     # Entry point: WeatherApp, MainActivity, DI initialization, navigation
 ├── core/
 │   ├── ui/                  # Compose theme, Material 3, shared UI components
-│   ├── network/             # Retrofit, OkHttp, serialization setup
+│   ├── utils/               # General utilities, extensions
 │   ├── location/            # FusedLocationProvider logic
-│   └── common/              # Utilities, extensions, shared logic
+│   └── test-utils/          # Testing utilities
 ├── feature/
-│   ├── weather/             # Main screen: current weather + forecast
+│   ├── forecast/            # Main screen: current weather + forecast
 │   ├── search/              # City and map search screen
 │   └── settings/            # Settings, theme control, favorites
 └── build.gradle(.kts)
@@ -137,6 +137,11 @@ https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_K
 
 ---
 
+## Icon set
+
+Icon set credit: Pascal Vleugels [OpenWeatherMap iconset on Dribbble](https://dribbble.com/shots/4276406-OpenWeatherMap-iconset)
+---
+
 ## 🧩 Koin Modules
 
 | Module | Description |
@@ -164,5 +169,4 @@ https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_K
 ## 🧑‍💻 Author
 
 **Andrey Merkulov**  
-Android Developer • Kotlin • Compose Multiplatform  
-📍 Almere, Netherlands
+Android Developer • Kotlin
