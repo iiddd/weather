@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,7 +30,7 @@ fun HourlyWeatherCard(
 ) {
     Card(
         modifier = modifier
-            .width(72.dp)
+            .width(64.dp)
             .padding(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -38,11 +39,19 @@ fun HourlyWeatherCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Icon
+            Text(
+                text = forecast.time,
+                style = MaterialTheme.typography.labelSmall
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             val iconRes = resolveWeatherIcon(forecast.icon)
             Image(
                 painter = painterResource(id = iconRes),
@@ -50,20 +59,11 @@ fun HourlyWeatherCard(
                 modifier = Modifier.size(32.dp)
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Temp
             Text(
                 text = "${forecast.temp.toInt()}°",
                 style = MaterialTheme.typography.bodyLarge
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Time
-            Text(
-                text = forecast.time,
-                style = MaterialTheme.typography.labelSmall
             )
         }
     }
