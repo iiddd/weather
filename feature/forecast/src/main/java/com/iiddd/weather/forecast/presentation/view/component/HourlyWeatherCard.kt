@@ -3,9 +3,8 @@ package com.iiddd.weather.forecast.presentation.view.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +30,7 @@ fun HourlyWeatherCard(
     Card(
         modifier = modifier
             .width(64.dp)
+            .heightIn(min = 96.dp) // ensure enough vertical space so temperature isn't clipped
             .padding(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -41,16 +41,14 @@ fun HourlyWeatherCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp),
+                .padding(vertical = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
                 text = forecast.time,
                 style = MaterialTheme.typography.labelSmall
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             val iconRes = resolveWeatherIcon(forecast.icon)
             Image(
@@ -58,8 +56,6 @@ fun HourlyWeatherCard(
                 contentDescription = null,
                 modifier = Modifier.size(32.dp)
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = "${forecast.temp.toInt()}°",
