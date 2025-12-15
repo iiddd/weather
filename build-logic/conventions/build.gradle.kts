@@ -17,10 +17,15 @@ gradlePlugin {
             id = "weather.junit"
             implementationClass = "com.iiddd.weather.buildlogic.WeatherJunitPlugin"
         }
+        create("weatherAndroidFeature") {
+            id = "weather.android.feature"
+            implementationClass = "com.iiddd.weather.buildlogic.WeatherAndroidFeaturePlugin"
+        }
     }
 }
 
 dependencies {
     implementation(gradleApi())
     implementation(libs.android.gradlePlugin)
+    implementation(libs.kotlin.gradlePlugin)
 }

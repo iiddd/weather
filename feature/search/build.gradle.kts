@@ -1,30 +1,17 @@
 import java.util.Properties
 
-plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.serialization)
 
+plugins {
+    id("weather.android.feature")
     id("weather.junit")
+
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.iiddd.weather.search"
-    compileSdk = 36
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
 
     defaultConfig {
-        minSdk = 31
         val props = Properties().apply {
             val f = rootProject.file("apikeys.properties")
             if (f.exists()) f.inputStream().use(::load)
@@ -34,10 +21,6 @@ android {
     }
 }
 
-kotlin {
-    jvmToolchain(21)
-}
-
 dependencies {
     implementation(libs.androidx.core.ktx)
 
@@ -45,10 +28,11 @@ dependencies {
     implementation(project(":core:utils"))
 
     // Compose
+    implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.extended)
-    implementation(platform(libs.compose.bom))
+    debugImplementation(libs.compose.ui.tooling)
 
     // Google Maps
     implementation(libs.play.services.maps)
@@ -58,21 +42,12 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
 
-    // Retrofit
+    // Retrofit / OkHttp / Serialization
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization)
-
-    // Kotlin Serialization
-    implementation(libs.kotlinx.serialization.json)
-
-    // OkHttp
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
-
-    // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)
-
-    debugImplementation(libs.compose.ui.tooling)
 
     // Testing
     testImplementation(project(":core:test-utils"))
