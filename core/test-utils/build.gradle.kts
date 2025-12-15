@@ -23,7 +23,6 @@ dependencies {
     implementation(project(":core:utils"))
 
     api(libs.kotlinx.coroutines.test)
-    api(libs.junit.jupiter.api)
 
     implementation(libs.androidx.core.ktx)
 }

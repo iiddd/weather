@@ -29,6 +29,4 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.ui)
     implementation(platform(libs.compose.bom))
-
-    testImplementation(libs.junit)
 }

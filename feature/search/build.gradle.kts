@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+
+    id("weather.junit")
 }
 
 android {
@@ -74,8 +76,5 @@ dependencies {
 
     // Testing
     testImplementation(project(":core:test-utils"))
-
     testImplementation(libs.mockito.kotlin)
-
-    testRuntimeOnly(libs.junit.jupiter.engine)
 }

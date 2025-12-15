@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+
+    id("weather.junit")
 }
 
 android {
@@ -30,6 +32,4 @@ dependencies {
 
     // Koin
     implementation(libs.koin.android)
-
-    testImplementation(libs.junit)
 }
