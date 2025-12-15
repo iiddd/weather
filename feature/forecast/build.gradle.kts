@@ -29,23 +29,16 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
 
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.serialization)
-
-    // OkHttp
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
-
-    // Kotlin Serialization
-    implementation(libs.kotlinx.serialization.json)
-
-    // Compose
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
+    // UI extras
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.graphics)
-    debugImplementation(libs.compose.ui.tooling)
+
+    // Network / etc
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
 
     // Koin
     implementation(libs.koin.android)

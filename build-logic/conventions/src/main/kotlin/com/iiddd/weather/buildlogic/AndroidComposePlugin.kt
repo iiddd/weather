@@ -13,9 +13,9 @@ class AndroidComposePlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
 
-        extensions.configure<LibraryExtension> {
-            buildFeatures {
-                compose = true
+        plugins.withId("com.android.library") {
+            extensions.configure<LibraryExtension> {
+                buildFeatures { compose = true }
             }
         }
 
@@ -24,9 +24,8 @@ class AndroidComposePlugin : Plugin<Project> {
         dependencies {
             add("implementation", platform(libs.findLibrary("compose-bom").get()))
             add("implementation", libs.findLibrary("compose-ui").get())
-
-            add("debugImplementation", libs.findLibrary("compose-ui-tooling").get())
             add("implementation", libs.findLibrary("compose-ui-tooling-preview").get())
+            add("debugImplementation", libs.findLibrary("compose-ui-tooling").get())
         }
     }
 }

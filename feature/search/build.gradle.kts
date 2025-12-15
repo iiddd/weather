@@ -23,31 +23,27 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
 
-    // Compose
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
+    // UI extras
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.extended)
-    debugImplementation(libs.compose.ui.tooling)
 
-    // Google Maps
+    // Maps
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
 
-    // Koin
-    implementation(libs.koin.android)
-    implementation(libs.koin.compose)
-
-    // Retrofit / OkHttp / Serialization
+    // Network / etc
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
 
     // Testing
     testImplementation(project(":core:test-utils"))
