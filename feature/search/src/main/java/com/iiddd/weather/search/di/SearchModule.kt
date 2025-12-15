@@ -23,14 +23,14 @@ object SearchModule {
     val GOOGLE_MAPS_RETROFIT = named("google_maps_retrofit")
 
     val module = module {
-        single {
+        factory {
             Json {
                 ignoreUnknownKeys = true
                 explicitNulls = false
             }
         }
 
-        single {
+        factory {
             HttpLoggingInterceptor().apply {
                 level = if (BuildConfig.DEBUG)
                     HttpLoggingInterceptor.Level.BODY
@@ -60,7 +60,7 @@ object SearchModule {
                 .build()
         }
 
-        single<GeocodingApi> {
+        factory<GeocodingApi> {
             get<Retrofit>(GOOGLE_MAPS_RETROFIT).create(GeocodingApi::class.java)
         }
 

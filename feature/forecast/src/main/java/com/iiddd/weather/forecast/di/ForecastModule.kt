@@ -21,14 +21,14 @@ object ForecastModule {
     val OPENWEATHER_RETROFIT = named("openweather_retrofit")
 
     val module = module {
-        single {
+        factory {
             Json {
                 ignoreUnknownKeys = true
                 explicitNulls = false
             }
         }
 
-        single {
+        factory {
             HttpLoggingInterceptor().apply {
                 level = if (BuildConfig.DEBUG)
                     HttpLoggingInterceptor.Level.BODY
@@ -66,7 +66,7 @@ object ForecastModule {
             )
         }
 
-        single<OpenWeatherApi> {
+        factory<OpenWeatherApi> {
             get<Retrofit>(OPENWEATHER_RETROFIT).create(OpenWeatherApi::class.java)
         }
     }
