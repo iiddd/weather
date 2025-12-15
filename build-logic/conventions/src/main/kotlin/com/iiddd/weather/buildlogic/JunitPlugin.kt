@@ -7,7 +7,7 @@ import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 
-class WeatherJunitPlugin : Plugin<Project> {
+class JunitPlugin : Plugin<Project> {
 
     override fun apply(project: Project) = with(project) {
         plugins.withId("com.android.library") { enableJUnitPlatform() }

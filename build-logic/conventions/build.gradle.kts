@@ -13,13 +13,17 @@ repositories {
 
 gradlePlugin {
     plugins {
-        create("weatherJUnit") {
-            id = "weather.junit"
-            implementationClass = "com.iiddd.weather.buildlogic.WeatherJunitPlugin"
+        create("jUnit") {
+            id = "junit"
+            implementationClass = "com.iiddd.weather.buildlogic.JunitPlugin"
         }
-        create("weatherAndroidFeature") {
-            id = "weather.android.feature"
-            implementationClass = "com.iiddd.weather.buildlogic.WeatherAndroidFeaturePlugin"
+        create("library") {
+            id = "library"
+            implementationClass = "com.iiddd.weather.buildlogic.AndroidLibraryPlugin"
+        }
+        create("compose") {
+            id = "compose"
+            implementationClass = "com.iiddd.weather.buildlogic.AndroidComposePlugin"
         }
     }
 }

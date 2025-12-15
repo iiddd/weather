@@ -1,5 +1,5 @@
 plugins {
-    id("weather.android.feature")
+    id("library")
 }
 
 android {
