@@ -1,29 +1,28 @@
 package com.iiddd.weather.core.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-
-import androidx.compose.ui.text.googlefonts.GoogleFont
-import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import com.iiddd.weather.core.ui.R as ThemeResourcesR
 
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = ThemeResourcesR.array.com_google_android_gms_fonts_certs
-)
-
-val bodyFontFamily = FontFamily(
+private val bodyFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Funnel Sans"),
-        fontProvider = provider,
+        resId = ThemeResourcesR.font.funnel_sans,
+        weight = FontWeight.Normal
+    ),
+    Font(
+        resId = ThemeResourcesR.font.funnel_sans_italic,
+        weight = FontWeight.Normal,
+        style = FontStyle.Italic
     )
 )
 
-val displayFontFamily = FontFamily(
+private val displayFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Funnel Display"),
-        fontProvider = provider,
+        resId = ThemeResourcesR.font.funnel_display,
+        weight = FontWeight.Normal
     )
 )
 
