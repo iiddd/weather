@@ -82,6 +82,7 @@ fun DetailedWeatherScreen(
     var showRationale by remember { mutableStateOf(false) }
     var showOpenSettings by remember { mutableStateOf(false) }
     var initialPermissionRequested by remember { mutableStateOf(false) }
+    var hasLoadedDefault by remember { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -149,11 +150,16 @@ fun DetailedWeatherScreen(
 
     LaunchedEffect(hasPermission) {
         if (hasPermission) {
+            hasLoadedDefault = false
             val coord = tracker.getLastKnownLocation()
             val lat = coord?.latitude ?: defaultLat
             val lon = coord?.longitude ?: defaultLon
-            viewModel.loadWeatherWithGeocoding(context, lat, lon)
-        } else {
+            viewModel.loadWeatherWithGeocoding(
+                context = context,
+                latitude = lat,
+                longitude = lon)
+        } else if (!hasLoadedDefault) {
+            hasLoadedDefault = true
             viewModel.loadWeather(defaultLat, defaultLon)
         }
     }
