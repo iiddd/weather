@@ -141,9 +141,10 @@ https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_K
 
 ---
 
-## Icon set
+## 🖼 Icon set
 
-Icon set credit: Pascal Vleugels [OpenWeatherMap iconset on Dribbble](https://dribbble.com/shots/4276406-OpenWeatherMap-iconset)
+### Icon set credit: Pascal Vleugels [OpenWeatherMap iconset on Dribbble](https://dribbble.com/shots/4276406-OpenWeatherMap-iconset)
+
 ---
 
 ## 🧩 Koin Modules
