@@ -10,8 +10,12 @@ The app uses **OpenWeatherMap One Call API 3.0** as its primary data source and 
 - Practice **Jetpack Compose** UI
 - Learn and apply **Koin** for dependency injection
 - Implement **Clean Architecture + MVVM**  
-- Integrate **OpenWeather** and **Google Maps** APIs  
-- Prepare for future expansion to **Compose Multiplatform (KMP)??**
+- Implement **modularization** in Android projects
+- Use **Kotlin Coroutines** and **Flow** for asynchronous programming
+- Use **Retrofit** with **Kotlinx Serialization** for networking
+- Implement **location services** with FusedLocationProvider
+- Implement Navigation with **Navigation3**
+- Integrate **OpenWeather** and **Google Maps** APIs
 
 ---
 
@@ -22,6 +26,7 @@ The project follows **Clean Architecture** and **modularization** best practices
 ```
 Weather/
 ├── app/                     # Entry point: WeatherApp, MainActivity, DI initialization, navigation
+├── build-logic/             # Gradle build logic (convention plugins)
 ├── core/
 │   ├── ui/                  # Compose theme, Material 3, shared UI components
 │   ├── utils/               # General utilities, extensions
@@ -52,21 +57,20 @@ app → feature:* → core:* → external libraries
 
 ## 🧠 Core Technologies
 
-| Category | Stack |
-|-----------|--------|
-| UI | Jetpack Compose (Material 3, Voyager Navigation) |
-| Architecture | Clean Architecture + MVVM |
-| DI | [Koin 4.x](https://insert-koin.io/) |
-| Network | Retrofit + Kotlinx Serialization |
-| Async | Kotlin Coroutines + Flow |
-| Location | FusedLocationProviderClient (Google Play Services) |
-| Maps | Google Maps SDK |
-| Weather Data | OpenWeather One Call API 3.0 |
-| Language | Kotlin 2.1 (JVM target 21) |
-| Build | Gradle Kotlin DSL + TOML version catalog |
-| Min SDK | 31 (Android 12) |
-| Testing | JUnit 4 |
-| IDE | Android Studio Ladybug / Koala |
+| Category     | Stack                                              |
+|--------------|----------------------------------------------------|
+| UI           | Jetpack Compose (Material 3, Navigation3)          |
+| Architecture | Clean Architecture + MVVM                          |
+| DI           | [Koin 4.x](https://insert-koin.io/)                |
+| Network      | Retrofit + Kotlinx Serialization                   |
+| Async        | Kotlin Coroutines + Flow                           |
+| Location     | FusedLocationProviderClient (Google Play Services) |
+| Maps         | Google Maps SDK                                    |
+| Weather Data | OpenWeather One Call API 3.0                       |
+| Language     | Kotlin 2.2 (JVM target 21)                         |
+| Build        | Gradle Kotlin DSL + TOML version catalog           |
+| Min SDK      | 31 (Android 12)                                    |
+| Testing      | JUnit Jupiter                                      |
 
 ---
 
@@ -161,8 +165,7 @@ Icon set credit: Pascal Vleugels [OpenWeatherMap iconset on Dribbble](https://dr
 - [ ] Add notifications for weather alerts  
 - [ ] Add detailed 8-day forecast screen  
 - [ ] Add Gradle scripts for automatic module creation  
-- [ ] Add TOML and Gradle auto-formatting tasks  
-- [ ] Explore Compose Multiplatform (iOS / Desktop)
+- [ ] Add TOML and Gradle auto-formatting tasks
 
 ---
 

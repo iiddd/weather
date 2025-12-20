@@ -1,8 +1,8 @@
 [versions]
-activityCompose = "1.12.1"
+activityCompose = "1.12.2"
 agp = "8.13.2"
 appcompat = "1.7.1"
-composeBom = "2025.12.00"
+composeBom = "2025.12.01"
 coreKtx = "1.17.0"
 coroutines-test = "1.10.2"
 junitJupiter = "6.0.1"
