@@ -75,10 +75,9 @@ dependencies {
     implementation(libs.compose.activity)
     implementation(libs.compose.material.icons.extended)
 
-    // Voyager
-    implementation(libs.voyager.core)
-    implementation(libs.voyager.navigator)
-    implementation(libs.voyager.tab.navigator)
+    // Navigation3
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
 
     // KotlinX Serialization
     implementation(libs.kotlinx.serialization.json)

@@ -13,12 +13,12 @@ lifecycleRuntimeKtx = "2.10.0"
 maps-compose = "6.12.2"
 material = "1.13.0"
 mockito = "6.1.0"
+navigation3 = "1.0.0"
 okhttp = "5.3.2"
 play-services-location = "21.3.0"
 play-services-maps = "19.2.0"
 retrofit = "3.0.0"
 retrofitKotlinxSerialization = "1.0.0"
-voyager = "1.0.1"
 
 [libraries]
 #Core
@@ -39,10 +39,9 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
-#Voyager
-voyager-core = { module = "cafe.adriel.voyager:voyager-core", version.ref = "voyager" }
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
-voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+#Navigation 3
+androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
+androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
 
 #Koin
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
