@@ -6,6 +6,7 @@ import android.location.Geocoder
 import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iiddd.weather.core.network.ApiResult
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import com.iiddd.weather.forecast.domain.model.Weather
@@ -22,7 +23,7 @@ import kotlin.coroutines.resume
 
 class ForecastViewModel(
     private val weatherRepository: WeatherRepository,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider(),
 ) : ViewModel() {
 
     private val _weather = MutableStateFlow<Weather?>(null)
@@ -30,13 +31,12 @@ class ForecastViewModel(
 
     fun loadWeather(lat: Double, lon: Double, city: String? = null) {
         viewModelScope.launch(dispatcherProvider.main) {
-            try {
-                val result = withContext(dispatcherProvider.io) {
-                    weatherRepository.getWeather(latitude = lat, longitude = lon)
+            when (val result = weatherRepository.getWeather(latitude = lat, longitude = lon)) {
+                is ApiResult.Success -> {
+                    val value = result.value
+                    _weather.value = if (city != null) value.copy(city = city) else value
                 }
-                _weather.value = if (city != null) result.copy(city = city) else result
-            } catch (_: Exception) {
-                _weather.value = null
+                is ApiResult.Failure -> _weather.value = null
             }
         }
     }
@@ -47,16 +47,14 @@ class ForecastViewModel(
         longitude: Double
     ) {
         viewModelScope.launch(dispatcherProvider.main) {
-            try {
-                val weather = withContext(dispatcherProvider.io) {
-                    weatherRepository.getWeather(latitude = latitude, longitude = longitude)
+            when (val result =
+                weatherRepository.getWeather(latitude = latitude, longitude = longitude)) {
+                is ApiResult.Success -> {
+                    val city = resolveCityName(context, latitude, longitude)
+                    val value = result.value
+                    _weather.value = if (city != null) value.copy(city = city) else value
                 }
-                val city = withContext(dispatcherProvider.io) {
-                    resolveCityName(context, latitude, longitude)
-                }
-                _weather.value = if (city != null) weather.copy(city = city) else weather
-            } catch (_: Exception) {
-                _weather.value = null
+                is ApiResult.Failure -> _weather.value = null
             }
         }
     }
@@ -68,13 +66,9 @@ class ForecastViewModel(
     ): String? {
         return try {
             val geocoder = Geocoder(context, Locale.getDefault())
-
             val addresses = geocoder.getFromLocationCompat(latitude, longitude)
             val address = addresses?.firstOrNull() ?: return null
-
-            address.locality
-                ?: address.subAdminArea
-                ?: address.adminArea
+            address.locality ?: address.subAdminArea ?: address.adminArea
         } catch (_: Exception) {
             null
         }
@@ -89,16 +83,12 @@ suspend fun Geocoder.getFromLocationCompat(
     maxResults: Int = 1
 ): List<Address>? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        // New async API
         suspendCancellableCoroutine { continuation ->
             getFromLocation(latitude, longitude, maxResults) { result ->
-                if (continuation.isActive) {
-                    continuation.resume(result)
-                }
+                if (continuation.isActive) continuation.resume(result)
             }
         }
     } else {
-        // Old blocking API
         withContext(Dispatchers.IO) {
             try {
                 getFromLocation(latitude, longitude, maxResults)

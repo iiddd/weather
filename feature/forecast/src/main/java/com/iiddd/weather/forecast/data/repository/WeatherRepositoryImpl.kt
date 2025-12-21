@@ -1,5 +1,7 @@
 package com.iiddd.weather.forecast.data.repository
 
+import com.iiddd.weather.core.network.ApiResult
+import com.iiddd.weather.core.network.apiCall
 import com.iiddd.weather.forecast.BuildConfig
 import com.iiddd.weather.forecast.data.api.OpenWeatherApi
 import com.iiddd.weather.forecast.data.mapper.toDomain
@@ -12,12 +14,13 @@ class WeatherRepositoryImpl(
 
     private val apiKey = BuildConfig.OPEN_WEATHER_API_KEY
 
-    override suspend fun getWeather(latitude: Double, longitude: Double): Weather {
-        val response = api.getWeather(
-            lat = latitude,
-            lon = longitude,
-            apiKey = apiKey,
-        )
-        return response.toDomain()
-    }
+    override suspend fun getWeather(latitude: Double, longitude: Double): ApiResult<Weather> =
+        apiCall {
+            val response = api.getWeather(
+                lat = latitude,
+                lon = longitude,
+                apiKey = apiKey,
+            )
+            response.toDomain()
+        }
 }

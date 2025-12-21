@@ -35,6 +35,7 @@ include(
     // Core
     ":core:ui",
     ":core:location",
+    ":core:network",
     ":core:utils",
     ":core:test-utils",
 
