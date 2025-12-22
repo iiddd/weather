@@ -93,9 +93,6 @@ fun DetailedWeatherScreen(
     val fusedLocationTracker = remember { FusedLocationTracker(context = context) }
     val coroutineScope = rememberCoroutineScope()
 
-    val defaultLatitude = 52.35
-    val defaultLongitude = 4.91
-
     var hasLocationPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -112,7 +109,9 @@ fun DetailedWeatherScreen(
     var shouldShowPermissionRationaleDialog by remember { mutableStateOf(false) }
     var shouldShowOpenSettingsDialog by remember { mutableStateOf(false) }
     var isInitialPermissionRequestCompleted by remember { mutableStateOf(false) }
-    var hasLoadedDefaultWeather by remember { mutableStateOf(false) }
+
+    var hasRequestedWeatherForCurrentLocation by remember { mutableStateOf(false) }
+    var shouldShowLoadingSpinnerForLocationFlow by remember { mutableStateOf(true) }
 
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -120,6 +119,8 @@ fun DetailedWeatherScreen(
         hasLocationPermission =
             permissionResults[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
                     permissionResults[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+        isInitialPermissionRequestCompleted = true
     }
 
     fun isLocationPermissionPermanentlyDenied(): Boolean {
@@ -186,31 +187,40 @@ fun DetailedWeatherScreen(
 
     LaunchedEffect(key1 = Unit) {
         if (!hasLocationPermission && !isInitialPermissionRequestCompleted) {
+            shouldShowLoadingSpinnerForLocationFlow = true
             requestLocationPermission()
         }
     }
 
     LaunchedEffect(key1 = hasLocationPermission) {
-        if (hasLocationPermission) {
-            hasLoadedDefaultWeather = false
-            val coordinate = fusedLocationTracker.getLastKnownLocation()
-            val latitude = coordinate?.latitude ?: defaultLatitude
-            val longitude = coordinate?.longitude ?: defaultLongitude
-            viewModel.loadWeatherWithGeocoding(
-                context = context,
-                latitude = latitude,
-                longitude = longitude
-            )
-        } else if (!hasLoadedDefaultWeather) {
-            hasLoadedDefaultWeather = true
-            viewModel.loadWeather(
-                latitude = defaultLatitude,
-                longitude = defaultLongitude
-            )
+        if (!hasLocationPermission) {
+            shouldShowLoadingSpinnerForLocationFlow = true
+            hasRequestedWeatherForCurrentLocation = false
+            return@LaunchedEffect
         }
+
+        if (hasRequestedWeatherForCurrentLocation) return@LaunchedEffect
+
+        shouldShowLoadingSpinnerForLocationFlow = true
+        val coordinate = fusedLocationTracker.getLastKnownLocation()
+        if (coordinate == null) {
+            shouldShowLoadingSpinnerForLocationFlow = true
+            return@LaunchedEffect
+        }
+
+        hasRequestedWeatherForCurrentLocation = true
+        viewModel.loadWeatherWithGeocoding(
+            context = context,
+            latitude = coordinate.latitude,
+            longitude = coordinate.longitude
+        )
+        shouldShowLoadingSpinnerForLocationFlow = false
     }
 
-    if (isLoadingState.value) {
+    val shouldShowLoadingSpinner =
+        isLoadingState.value || (weatherState.value == null && shouldShowLoadingSpinnerForLocationFlow)
+
+    if (shouldShowLoadingSpinner) {
         LoadingSpinner()
     } else {
         DetailedWeatherContent(
@@ -218,17 +228,26 @@ fun DetailedWeatherScreen(
             onRefresh = {
                 coroutineScope.launch {
                     if (!hasLocationPermission) {
+                        shouldShowLoadingSpinnerForLocationFlow = true
                         requestLocationPermission()
-                    } else {
-                        val coordinate = fusedLocationTracker.getLastKnownLocation()
-                        val latitude = coordinate?.latitude ?: defaultLatitude
-                        val longitude = coordinate?.longitude ?: defaultLongitude
-                        viewModel.loadWeatherWithGeocoding(
-                            context = context,
-                            latitude = latitude,
-                            longitude = longitude
-                        )
+                        return@launch
                     }
+
+                    shouldShowLoadingSpinnerForLocationFlow = true
+                    hasRequestedWeatherForCurrentLocation = false
+
+                    val coordinate = fusedLocationTracker.getLastKnownLocation()
+                    if (coordinate == null) {
+                        shouldShowLoadingSpinnerForLocationFlow = true
+                        return@launch
+                    }
+
+                    viewModel.loadWeatherWithGeocoding(
+                        context = context,
+                        latitude = coordinate.latitude,
+                        longitude = coordinate.longitude
+                    )
+                    shouldShowLoadingSpinnerForLocationFlow = false
                 }
             }
         )
