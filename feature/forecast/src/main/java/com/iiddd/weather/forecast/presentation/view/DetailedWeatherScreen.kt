@@ -195,7 +195,6 @@ fun DetailedWeatherScreen(
     LaunchedEffect(key1 = hasLocationPermission) {
         if (!hasLocationPermission) {
             shouldShowLoadingSpinnerForLocationFlow = true
-            hasRequestedWeatherForCurrentLocation = false
             return@LaunchedEffect
         }
 
@@ -208,7 +207,6 @@ fun DetailedWeatherScreen(
             return@LaunchedEffect
         }
 
-        hasRequestedWeatherForCurrentLocation = true
         viewModel.loadWeatherWithGeocoding(
             context = context,
             latitude = coordinate.latitude,
@@ -228,26 +226,19 @@ fun DetailedWeatherScreen(
             onRefresh = {
                 coroutineScope.launch {
                     if (!hasLocationPermission) {
-                        shouldShowLoadingSpinnerForLocationFlow = true
                         requestLocationPermission()
                         return@launch
                     }
 
-                    shouldShowLoadingSpinnerForLocationFlow = true
                     hasRequestedWeatherForCurrentLocation = false
 
-                    val coordinate = fusedLocationTracker.getLastKnownLocation()
-                    if (coordinate == null) {
-                        shouldShowLoadingSpinnerForLocationFlow = true
-                        return@launch
-                    }
+                    val coordinate = fusedLocationTracker.getLastKnownLocation() ?: return@launch
 
                     viewModel.loadWeatherWithGeocoding(
                         context = context,
                         latitude = coordinate.latitude,
                         longitude = coordinate.longitude
                     )
-                    shouldShowLoadingSpinnerForLocationFlow = false
                 }
             }
         )
@@ -255,13 +246,12 @@ fun DetailedWeatherScreen(
 
     if (shouldShowPermissionRationaleDialog) {
         AlertDialog(
-            onDismissRequest = { shouldShowPermissionRationaleDialog = false },
+            onDismissRequest = { },
             title = { Text(text = stringResource(id = ForecastR.string.permission_required)) },
             text = { Text(text = stringResource(id = ForecastR.string.permission_rationale)) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        shouldShowPermissionRationaleDialog = false
                         isInitialPermissionRequestCompleted = true
                         locationPermissionLauncher.launch(
                             arrayOf(
@@ -274,7 +264,7 @@ fun DetailedWeatherScreen(
             },
             dismissButton = {
                 TextButton(
-                    onClick = { shouldShowPermissionRationaleDialog = false }
+                    onClick = { }
                 ) { Text(text = stringResource(id = ForecastR.string.cancel)) }
             }
         )
@@ -282,13 +272,12 @@ fun DetailedWeatherScreen(
 
     if (shouldShowOpenSettingsDialog) {
         AlertDialog(
-            onDismissRequest = { shouldShowOpenSettingsDialog = false },
+            onDismissRequest = { },
             title = { Text(text = stringResource(id = ForecastR.string.permission_blocked)) },
             text = { Text(text = stringResource(id = ForecastR.string.permission_blocked_text)) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        shouldShowOpenSettingsDialog = false
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                             data = Uri.fromParts("package", context.packageName, null)
                         }
@@ -298,7 +287,7 @@ fun DetailedWeatherScreen(
             },
             dismissButton = {
                 TextButton(
-                    onClick = { shouldShowOpenSettingsDialog = false }
+                    onClick = { }
                 ) { Text(text = stringResource(id = ForecastR.string.cancel)) }
             }
         )
