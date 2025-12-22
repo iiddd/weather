@@ -1,8 +1,12 @@
 package com.iiddd.weather.forecast.di
 
+import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
+import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import com.iiddd.weather.forecast.BuildConfig
 import com.iiddd.weather.forecast.data.api.OpenWeatherApi
+import com.iiddd.weather.forecast.data.location.AndroidCityNameResolver
 import com.iiddd.weather.forecast.data.repository.WeatherRepositoryImpl
+import com.iiddd.weather.forecast.domain.location.CityNameResolver
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -21,6 +25,10 @@ object ForecastModule {
     val OPENWEATHER_RETROFIT = named("openweather_retrofit")
 
     val module = module {
+        single<DispatcherProvider> {
+            DefaultDispatcherProvider()
+        }
+
         factory {
             Json {
                 ignoreUnknownKeys = true
@@ -30,16 +38,29 @@ object ForecastModule {
 
         factory {
             HttpLoggingInterceptor().apply {
-                level = if (BuildConfig.DEBUG)
+                level = if (BuildConfig.DEBUG) {
                     HttpLoggingInterceptor.Level.BODY
-                else
+                } else {
                     HttpLoggingInterceptor.Level.NONE
+                }
             }
         }
 
-        viewModel { ForecastViewModel(weatherRepository = get()) }
+        single<CityNameResolver> {
+            AndroidCityNameResolver(
+                applicationContext = get()
+            )
+        }
 
-        single(OPENWEATHER_RETROFIT) {
+        viewModel {
+            ForecastViewModel(
+                weatherRepository = get(),
+                cityNameResolver = get(),
+                dispatcherProvider = get()
+            )
+        }
+
+        single(qualifier = OPENWEATHER_RETROFIT) {
             val json = get<Json>()
             val contentType = "application/json".toMediaType()
 
@@ -67,7 +88,7 @@ object ForecastModule {
         }
 
         factory<OpenWeatherApi> {
-            get<Retrofit>(OPENWEATHER_RETROFIT).create(OpenWeatherApi::class.java)
+            get<Retrofit>(qualifier = OPENWEATHER_RETROFIT).create(OpenWeatherApi::class.java)
         }
     }
 }

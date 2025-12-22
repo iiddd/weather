@@ -20,7 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.NavEntry
-import com.iiddd.weather.forecast.presentation.view.DetailedWeatherScreen
+import com.iiddd.weather.forecast.presentation.view.DetailedWeatherRoute
 import com.iiddd.weather.search.presentation.view.SearchScreen
 import com.iiddd.weather.settings.presentation.view.SettingsView
 import com.iiddd.weather.ui.navigation.Destination
@@ -60,7 +60,7 @@ fun MainView() {
                 onBack = { backStack.popSafe() },
                 entryProvider = { destination: Destination ->
                     when (destination) {
-                        Destination.Home -> NavEntry(destination) { DetailedWeatherScreen() }
+                        Destination.Home -> NavEntry(destination) { DetailedWeatherRoute() }
 
                         Destination.Search -> NavEntry(destination) {
                             SearchScreen(
@@ -73,7 +73,7 @@ fun MainView() {
                         Destination.Settings -> NavEntry(destination) { SettingsView() }
 
                         is Destination.Details -> NavEntry(destination) {
-                            DetailedWeatherScreen(
+                            DetailedWeatherRoute(
                                 initialLatitude = destination.latitude,
                                 initialLongitude = destination.longitude
                             )
