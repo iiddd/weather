@@ -14,13 +14,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun LoadingSpinner(
-    isLoading: Boolean,
     modifier: Modifier = Modifier,
     indicatorScale: Float = 2f,
     strokeWidth: Dp = 2.dp
 ) {
-    if (!isLoading) return
-
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -36,5 +33,5 @@ fun LoadingSpinner(
 @Preview
 @Composable
 private fun LoadingSpinnerPreview() {
-    LoadingSpinner(isLoading = true)
+    LoadingSpinner()
 }

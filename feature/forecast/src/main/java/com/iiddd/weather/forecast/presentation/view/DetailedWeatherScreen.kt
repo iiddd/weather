@@ -64,7 +64,7 @@ fun DetailedWeatherScreen(
         }
 
         if (isLoadingState.value) {
-            LoadingSpinner(isLoading = true)
+            LoadingSpinner()
             return
         }
 
@@ -211,7 +211,7 @@ fun DetailedWeatherScreen(
     }
 
     if (isLoadingState.value) {
-        LoadingSpinner(isLoading = true)
+        LoadingSpinner()
     } else {
         DetailedWeatherContent(
             weatherState = weatherState,
