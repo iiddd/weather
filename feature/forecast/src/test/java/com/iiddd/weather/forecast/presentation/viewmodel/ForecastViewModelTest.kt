@@ -36,7 +36,7 @@ class ForecastViewModelTest {
             whenever(repository.getWeather(latitude = 1.0, longitude = 2.0))
                 .thenReturn(ApiResult.Success(weather))
 
-            viewModel.loadWeather(lat = 1.0, lon = 2.0)
+            viewModel.loadWeather(latitude = 1.0, longitude = 2.0)
 
             assertEquals(weather, viewModel.weather.value)
         }
@@ -47,7 +47,7 @@ class ForecastViewModelTest {
             whenever(repository.getWeather(latitude = 1.0, longitude = 2.0))
                 .thenReturn(ApiResult.Failure(ApiError.Network("boom")))
 
-            viewModel.loadWeather(lat = 1.0, lon = 2.0)
+            viewModel.loadWeather(latitude = 1.0, longitude = 2.0)
 
             assertNull(viewModel.weather.value)
         }
@@ -59,7 +59,7 @@ class ForecastViewModelTest {
             whenever(repository.getWeather(latitude = 1.0, longitude = 2.0))
                 .thenReturn(ApiResult.Success(repoWeather))
 
-            viewModel.loadWeather(lat = 1.0, lon = 2.0, city = "ProvidedCity")
+            viewModel.loadWeather(latitude = 1.0, longitude = 2.0, city = "ProvidedCity")
 
             val state = viewModel.weather.value
             assertEquals("ProvidedCity", state?.city)
@@ -74,7 +74,7 @@ class ForecastViewModelTest {
             whenever(repository.getWeather(latitude = 1.0, longitude = 2.0))
                 .thenReturn(ApiResult.Success(repoWeather))
 
-            viewModel.loadWeather(lat = 1.0, lon = 2.0, city = "ProvidedCity")
+            viewModel.loadWeather(latitude = 1.0, longitude = 2.0, city = "ProvidedCity")
 
             val state = viewModel.weather.value
             assertEquals("ProvidedCity", state?.city)

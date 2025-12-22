@@ -29,14 +29,24 @@ class ForecastViewModel(
     private val _weather = MutableStateFlow<Weather?>(null)
     val weather: StateFlow<Weather?> = _weather
 
-    fun loadWeather(lat: Double, lon: Double, city: String? = null) {
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    fun loadWeather(latitude: Double, longitude: Double, city: String? = null) {
         viewModelScope.launch(dispatcherProvider.main) {
-            when (val result = weatherRepository.getWeather(latitude = lat, longitude = lon)) {
-                is ApiResult.Success -> {
-                    val value = result.value
-                    _weather.value = if (city != null) value.copy(city = city) else value
+            _isLoading.value = true
+            try {
+                when (val result =
+                    weatherRepository.getWeather(latitude = latitude, longitude = longitude)) {
+                    is ApiResult.Success -> {
+                        val value = result.value
+                        _weather.value = if (city != null) value.copy(city = city) else value
+                    }
+
+                    is ApiResult.Failure -> _weather.value = null
                 }
-                is ApiResult.Failure -> _weather.value = null
+            } finally {
+                _isLoading.value = false
             }
         }
     }
@@ -47,14 +57,20 @@ class ForecastViewModel(
         longitude: Double
     ) {
         viewModelScope.launch(dispatcherProvider.main) {
-            when (val result =
-                weatherRepository.getWeather(latitude = latitude, longitude = longitude)) {
-                is ApiResult.Success -> {
-                    val city = resolveCityName(context, latitude, longitude)
-                    val value = result.value
-                    _weather.value = if (city != null) value.copy(city = city) else value
+            _isLoading.value = true
+            try {
+                when (val result =
+                    weatherRepository.getWeather(latitude = latitude, longitude = longitude)) {
+                    is ApiResult.Success -> {
+                        val city = resolveCityName(context, latitude, longitude)
+                        val value = result.value
+                        _weather.value = if (city != null) value.copy(city = city) else value
+                    }
+
+                    is ApiResult.Failure -> _weather.value = null
                 }
-                is ApiResult.Failure -> _weather.value = null
+            } finally {
+                _isLoading.value = false
             }
         }
     }
@@ -76,7 +92,6 @@ class ForecastViewModel(
 }
 
 @Suppress("DEPRECATION")
-// Compatibility function for Geocoder.getFromLocation
 suspend fun Geocoder.getFromLocationCompat(
     latitude: Double,
     longitude: Double,

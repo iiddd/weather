@@ -1,83 +1,91 @@
-# Copilot Instructions
+# Copilot instructions for this repository
 
-This is a modern Android application.
+## Language
+•	Generate Kotlin code only
+•	Do not output code in other languages unless explicitly requested
 
-## Platform
-- Android only
-- minSdk = 31
-- compileSdk = 36
-- Java/Kotlin (Project only uses Kotlin) target = 21
-
-## UI
-- Jetpack Compose only
-- No XML layouts
-- Material 3
-
-## Navigation
-- Use Jetpack Navigation 3 (androidx.navigation3)
-- Navigation stack is a mutable list of Destination objects
-- Destinations are sealed objects that hold state and navigation arguments
-- No XML navigation graphs
-- No Fragments
-- No SafeArgs
-- No Voyager
-
-## Architecture
-- MVVM + Clean architecture pattern
-- SOLID
-- Feature-based modularisation
-- Each feature module owns its ViewModels and repository implementations
-- core modules contain only shared abstractions and utilities
-
-## State & lifecycle
-- Navigation state must survive configuration changes
-- Do not pass Android Context through navigation
-- Avoid global singletons
-
-## What NOT to suggest
-- Fragment-based navigation
-- XML NavHost or NavHostFragment
-- Legacy Navigation Component
-
-## Naming conventions (important)
-
-- Do NOT abbreviate words in names.
-- Use full, explicit names for:
-    - functions
-    - methods
-    - variables
-    - parameters
-    - classes
-    - objects
-    - constants
+## Naming conventions (strict)
+•	Do NOT abbreviate words in names
+•	Use full, explicit names for:
+•	functions
+•	methods
+•	variables
+•	parameters
+•	classes
+•	objects
+•	constants
 
 ### Examples
 
-Correct:
-- navigationBackStack
-- destinationArguments
-- selectedDestination
-- replaceCurrentDestination
-- navigationEntryProvider
+#### Correct:
+•	navigationBackStack
+•	destinationArguments
+•	selectedDestination
+•	replaceCurrentDestination
+•	navigationEntryProvider
 
-Incorrect:
-- nav
-- args
-- dest
-- curr
-- cfg
-- vm (use ViewModel)
-- repo (use Repository)
+#### Incorrect:
+•	nav
+•	args
+•	dest
+•	curr
+•	cfg
+•	vm (use ViewModel)
+•	repo (use Repository)
 
-### Allowed abbreviations
-- Widely accepted technical abbreviations only:
-    - UI, UX
-    - API
-    - URL
-    - ID
-    - DTO
-    - JSON
-    - HTTP
-    - JVM
+If unsure, always prefer a full descriptive name.
 
-If unsure, prefer a full descriptive name.
+## Kotlin style rules
+
+### Named arguments
+•	Always use Kotlin named arguments when calling functions or constructors
+•	Exceptions:
+•	the function has exactly one parameter
+•	very common standard library calls where names reduce readability
+
+#### Correct:
+NavEntry(
+destination = destination
+) {
+DetailedWeatherScreen(
+initialLatitude = destination.latitude,
+initialLongitude = destination.longitude
+)
+}
+
+#### Incorrect:
+NavEntry(destination) {
+DetailedWeatherScreen(destination.latitude, destination.longitude)
+}
+
+### Lambdas
+•	Always use explicit parameter names in lambdas
+•	Do NOT use _ for ignored parameters unless absolutely unavoidable
+
+#### Correct:
+onBack = {
+navigationBackStack.pop()
+}
+
+#### Incorrect:
+onBack = { _ -> backStack.pop() }
+
+### Jetpack Compose rules
+•	Prefer explicit state names
+•	selectedTabDestination instead of selectedTab
+•	Avoid shortened composable names
+•	Prefer immutable state where possible
+•	Do not hide important logic inside remember without clear intent
+
+## Architecture assumptions
+•	MVVM
+•	Unidirectional data flow
+•	Explicit navigation state objects
+•	Navigation destinations are value objects
+•	Navigation stack is an explicit mutable list
+
+## Output expectations
+•	Prefer correctness and clarity over brevity
+•	Avoid speculative or placeholder APIs
+•	Do not invent abstractions unless explicitly requested
+•	When unsure, ask instead of guessing

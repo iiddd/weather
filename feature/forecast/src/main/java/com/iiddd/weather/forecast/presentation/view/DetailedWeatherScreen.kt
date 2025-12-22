@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.iiddd.weather.core.ui.components.LoadingSpinner
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import com.iiddd.weather.location.data.FusedLocationTracker
 import kotlinx.coroutines.launch
@@ -38,191 +39,248 @@ fun DetailedWeatherScreen(
 ) {
     val context = LocalContext.current
 
+    val weatherState = viewModel.weather.collectAsState()
+    val isLoadingState = viewModel.isLoading.collectAsState()
+
     if (initialLatitude != null && initialLongitude != null) {
-        val weatherState = viewModel.weather.collectAsState()
-        LaunchedEffect(initialLatitude, initialLongitude, initialCity) {
+        LaunchedEffect(
+            key1 = initialLatitude,
+            key2 = initialLongitude,
+            key3 = initialCity
+        ) {
             if (initialCity != null) {
-                viewModel.loadWeather(initialLatitude, initialLongitude, initialCity)
+                viewModel.loadWeather(
+                    latitude = initialLatitude,
+                    longitude = initialLongitude,
+                    city = initialCity
+                )
             } else {
-                viewModel.loadWeatherWithGeocoding(context, initialLatitude, initialLongitude)
+                viewModel.loadWeatherWithGeocoding(
+                    context = context,
+                    latitude = initialLatitude,
+                    longitude = initialLongitude
+                )
             }
         }
+
+        if (isLoadingState.value) {
+            LoadingSpinner(isLoading = true)
+            return
+        }
+
         DetailedWeatherContent(
             weatherState = weatherState,
             onRefresh = {
                 if (initialCity != null) {
-                    viewModel.loadWeather(initialLatitude, initialLongitude, initialCity)
+                    viewModel.loadWeather(
+                        latitude = initialLatitude,
+                        longitude = initialLongitude,
+                        city = initialCity
+                    )
                 } else {
-                    viewModel.loadWeatherWithGeocoding(context, initialLatitude, initialLongitude)
+                    viewModel.loadWeatherWithGeocoding(
+                        context = context,
+                        latitude = initialLatitude,
+                        longitude = initialLongitude
+                    )
                 }
             }
         )
         return
     }
 
-    val weatherState = viewModel.weather.collectAsState()
     val activity = context as? Activity
-    val tracker = remember { FusedLocationTracker(context) }
-    val scope = rememberCoroutineScope()
+    val fusedLocationTracker = remember { FusedLocationTracker(context = context) }
+    val coroutineScope = rememberCoroutineScope()
 
-    val defaultLat = 52.35
-    val defaultLon = 4.91
+    val defaultLatitude = 52.35
+    val defaultLongitude = 4.91
 
-    var hasPermission by remember {
+    var hasLocationPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
-                context, Manifest.permission.ACCESS_FINE_LOCATION
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED ||
                     ContextCompat.checkSelfPermission(
-                        context, Manifest.permission.ACCESS_COARSE_LOCATION
+                        context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED
         )
     }
 
-    var showRationale by remember { mutableStateOf(false) }
-    var showOpenSettings by remember { mutableStateOf(false) }
-    var initialPermissionRequested by remember { mutableStateOf(false) }
-    var hasLoadedDefault by remember { mutableStateOf(false) }
+    var shouldShowPermissionRationaleDialog by remember { mutableStateOf(false) }
+    var shouldShowOpenSettingsDialog by remember { mutableStateOf(false) }
+    var isInitialPermissionRequestCompleted by remember { mutableStateOf(false) }
+    var hasLoadedDefaultWeather by remember { mutableStateOf(false) }
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        hasPermission = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissionResults ->
+        hasLocationPermission =
+            permissionResults[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                    permissionResults[Manifest.permission.ACCESS_COARSE_LOCATION] == true
     }
 
-    fun isPermissionPermanentlyDenied(): Boolean {
+    fun isLocationPermissionPermanentlyDenied(): Boolean {
         if (activity == null) return false
-        if (!initialPermissionRequested) return false
-        val fineDenied = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
-        val coarseDenied = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
-        val shouldShowFine = ActivityCompat.shouldShowRequestPermissionRationale(
-            activity,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-        val shouldShowCoarse = ActivityCompat.shouldShowRequestPermissionRationale(
-            activity,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-        return (fineDenied && !shouldShowFine) || (coarseDenied && !shouldShowCoarse)
+        if (!isInitialPermissionRequestCompleted) return false
+
+        val isFineLocationPermissionDenied =
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+
+        val isCoarseLocationPermissionDenied =
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+
+        val shouldShowFineLocationRationale =
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                activity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+
+        val shouldShowCoarseLocationRationale =
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                activity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+
+        return (isFineLocationPermissionDenied && !shouldShowFineLocationRationale) ||
+                (isCoarseLocationPermissionDenied && !shouldShowCoarseLocationRationale)
     }
 
     fun requestLocationPermission() {
-        if (isPermissionPermanentlyDenied()) {
-            showOpenSettings = true
-        } else {
-            val shouldShow = activity?.let {
+        if (isLocationPermissionPermanentlyDenied()) {
+            shouldShowOpenSettingsDialog = true
+            return
+        }
+
+        val shouldShowRationale =
+            activity?.let { currentActivity ->
                 ActivityCompat.shouldShowRequestPermissionRationale(
-                    it,
+                    currentActivity,
                     Manifest.permission.ACCESS_FINE_LOCATION
-                ) ||
-                        ActivityCompat.shouldShowRequestPermissionRationale(
-                            it,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                        )
+                ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                    currentActivity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
             } ?: false
 
-            if (shouldShow) {
-                showRationale = true
-            } else {
-                initialPermissionRequested = true
-                permissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
+        if (shouldShowRationale) {
+            shouldShowPermissionRationaleDialog = true
+        } else {
+            isInitialPermissionRequestCompleted = true
+            locationPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                 )
-            }
+            )
         }
     }
 
-    LaunchedEffect(Unit) {
-        if (!hasPermission && !initialPermissionRequested) {
+    LaunchedEffect(key1 = Unit) {
+        if (!hasLocationPermission && !isInitialPermissionRequestCompleted) {
             requestLocationPermission()
         }
     }
 
-    LaunchedEffect(hasPermission) {
-        if (hasPermission) {
-            hasLoadedDefault = false
-            val coord = tracker.getLastKnownLocation()
-            val lat = coord?.latitude ?: defaultLat
-            val lon = coord?.longitude ?: defaultLon
+    LaunchedEffect(key1 = hasLocationPermission) {
+        if (hasLocationPermission) {
+            hasLoadedDefaultWeather = false
+            val coordinate = fusedLocationTracker.getLastKnownLocation()
+            val latitude = coordinate?.latitude ?: defaultLatitude
+            val longitude = coordinate?.longitude ?: defaultLongitude
             viewModel.loadWeatherWithGeocoding(
                 context = context,
-                latitude = lat,
-                longitude = lon)
-        } else if (!hasLoadedDefault) {
-            hasLoadedDefault = true
-            viewModel.loadWeather(defaultLat, defaultLon)
+                latitude = latitude,
+                longitude = longitude
+            )
+        } else if (!hasLoadedDefaultWeather) {
+            hasLoadedDefaultWeather = true
+            viewModel.loadWeather(
+                latitude = defaultLatitude,
+                longitude = defaultLongitude
+            )
         }
     }
 
-    DetailedWeatherContent(
-        weatherState = weatherState,
-        onRefresh = {
-            scope.launch {
-                if (!hasPermission) {
-                    requestLocationPermission()
-                } else {
-                    val coordinate = tracker.getLastKnownLocation()
-                    val latitude = coordinate?.latitude ?: defaultLat
-                    val longitude = coordinate?.longitude ?: defaultLon
-                    viewModel.loadWeatherWithGeocoding(context, latitude, longitude)
-                }
-            }
-        }
-    )
-
-    if (showRationale) {
-        AlertDialog(
-            onDismissRequest = { showRationale = false },
-            title = { Text(text = stringResource(ForecastR.string.permission_required)) },
-            text = { Text(text = stringResource(ForecastR.string.permission_rationale)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    showRationale = false
-                    initialPermissionRequested = true
-                    permissionLauncher.launch(
-                        arrayOf(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
+    if (isLoadingState.value) {
+        LoadingSpinner(isLoading = true)
+    } else {
+        DetailedWeatherContent(
+            weatherState = weatherState,
+            onRefresh = {
+                coroutineScope.launch {
+                    if (!hasLocationPermission) {
+                        requestLocationPermission()
+                    } else {
+                        val coordinate = fusedLocationTracker.getLastKnownLocation()
+                        val latitude = coordinate?.latitude ?: defaultLatitude
+                        val longitude = coordinate?.longitude ?: defaultLongitude
+                        viewModel.loadWeatherWithGeocoding(
+                            context = context,
+                            latitude = latitude,
+                            longitude = longitude
                         )
-                    )
-                }) { Text(stringResource(ForecastR.string.allow)) }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showRationale = false
-                }) { Text(stringResource(ForecastR.string.cancel)) }
+                    }
+                }
             }
         )
     }
 
-    if (showOpenSettings) {
+    if (shouldShowPermissionRationaleDialog) {
         AlertDialog(
-            onDismissRequest = { showOpenSettings = false },
-            title = { Text(text = stringResource(ForecastR.string.permission_blocked)) },
-            text = { Text(text = stringResource(ForecastR.string.permission_blocked_text)) },
+            onDismissRequest = { shouldShowPermissionRationaleDialog = false },
+            title = { Text(text = stringResource(id = ForecastR.string.permission_required)) },
+            text = { Text(text = stringResource(id = ForecastR.string.permission_rationale)) },
             confirmButton = {
-                TextButton(onClick = {
-                    showOpenSettings = false
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.fromParts("package", context.packageName, null)
+                TextButton(
+                    onClick = {
+                        shouldShowPermissionRationaleDialog = false
+                        isInitialPermissionRequestCompleted = true
+                        locationPermissionLauncher.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
+                        )
                     }
-                    context.startActivity(intent)
-                }) { Text(stringResource(ForecastR.string.open_settings)) }
+                ) { Text(text = stringResource(id = ForecastR.string.allow)) }
             },
             dismissButton = {
-                TextButton(onClick = {
-                    showOpenSettings = false
-                }) { Text(stringResource(ForecastR.string.cancel)) }
+                TextButton(
+                    onClick = { shouldShowPermissionRationaleDialog = false }
+                ) { Text(text = stringResource(id = ForecastR.string.cancel)) }
+            }
+        )
+    }
+
+    if (shouldShowOpenSettingsDialog) {
+        AlertDialog(
+            onDismissRequest = { shouldShowOpenSettingsDialog = false },
+            title = { Text(text = stringResource(id = ForecastR.string.permission_blocked)) },
+            text = { Text(text = stringResource(id = ForecastR.string.permission_blocked_text)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        shouldShowOpenSettingsDialog = false
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", context.packageName, null)
+                        }
+                        context.startActivity(intent)
+                    }
+                ) { Text(text = stringResource(id = ForecastR.string.open_settings)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { shouldShowOpenSettingsDialog = false }
+                ) { Text(text = stringResource(id = ForecastR.string.cancel)) }
             }
         )
     }
