@@ -9,7 +9,6 @@ import com.iiddd.weather.search.domain.SearchRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 data class SearchUiState(
     val query: String = "",
@@ -37,16 +36,15 @@ class SearchViewModel(
         _uiState.value = _uiState.value.copy(loading = true, error = null)
         viewModelScope.launch(dispatcherProvider.main) {
             try {
-                val list = withContext(dispatcherProvider.io) {
-                    repository.searchLocation(q, 1)
-                }
+                val list = repository.searchLocation(q, 1)
                 val first = list.firstOrNull()
                 val marker = first?.let { LatLng(it.lat, it.lon) }
                 val title = first?.name ?: q
                 _uiState.value =
                     _uiState.value.copy(marker = marker, markerTitle = title, loading = false)
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(loading = false, error = e.message ?: "error")
+                _uiState.value =
+                    _uiState.value.copy(loading = false, error = e.message ?: "error")
             }
         }
     }

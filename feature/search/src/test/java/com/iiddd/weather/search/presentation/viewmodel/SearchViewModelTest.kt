@@ -18,14 +18,14 @@ class SearchViewModelTest {
 
     private val dispatcherProvider = UnitTestDispatcherProvider()
 
-    private lateinit var repo: SearchRepository
+    private lateinit var repository: SearchRepository
     private lateinit var viewModel: SearchViewModel
 
     @BeforeEach
     fun setUp() {
-        repo = mock()
+        repository = mock()
         viewModel = SearchViewModel(
-            repository = repo,
+            repository = repository,
             dispatcherProvider = dispatcherProvider
         )
     }
@@ -44,7 +44,7 @@ class SearchViewModelTest {
     @Test
     fun `search with empty results updates marker title and clears loading`() =
         runTest(dispatcherProvider.dispatcher) {
-            whenever(repo.searchLocation("q", 1)).thenReturn(emptyList())
+            whenever(repository.searchLocation("q", 1)).thenReturn(emptyList())
 
             viewModel.onQueryChange("q")
             viewModel.search()
@@ -60,7 +60,7 @@ class SearchViewModelTest {
     @Test
     fun `search when repository throws sets error and clears loading`() =
         runTest(dispatcherProvider.dispatcher) {
-            whenever(repo.searchLocation("boom", 1)).thenThrow(RuntimeException("boom"))
+            whenever(repository.searchLocation("boom", 1)).thenThrow(RuntimeException("boom"))
 
             viewModel.onQueryChange("boom")
             viewModel.search()
@@ -81,7 +81,7 @@ class SearchViewModelTest {
                 on { lon } doReturn 20.0
                 on { name } doReturn "Place"
             }
-            whenever(repo.searchLocation("q", 1)).thenReturn(listOf(result))
+            whenever(repository.searchLocation("q", 1)).thenReturn(listOf(result))
 
             viewModel.onQueryChange("q")
             viewModel.search()
@@ -104,7 +104,7 @@ class SearchViewModelTest {
             on { lon } doReturn 20.0
             on { name } doReturn "Place"
         }
-        whenever(repo.searchLocation("q", 1)).thenReturn(listOf(result))
+        whenever(repository.searchLocation("q", 1)).thenReturn(listOf(result))
 
         viewModel.onQueryChange("q")
         viewModel.search()

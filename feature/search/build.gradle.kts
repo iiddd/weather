@@ -24,6 +24,7 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(project(":core:ui"))
+    implementation(project(":core:network"))
     implementation(project(":core:utils"))
 
     // UI extras
@@ -33,13 +34,6 @@ dependencies {
     // Maps
     implementation(libs.play.services.maps)
     implementation(libs.maps.compose)
-
-    // Network / etc
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.serialization)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.kotlinx.serialization.json)
 
     // Koin
     implementation(libs.koin.android)
