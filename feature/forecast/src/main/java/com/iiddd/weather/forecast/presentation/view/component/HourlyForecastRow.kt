@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -37,8 +38,7 @@ fun HourlyForecastRow(
 ) {
     if (forecasts.isEmpty()) return
 
-    val startIndex = Int.MAX_VALUE / 2 - (Int.MAX_VALUE / 2 % forecasts.size)
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = startIndex)
+    val listState = rememberLazyListState()
 
     Card(
         modifier = modifier.wrapContentWidth().height(rowHeight),
@@ -53,8 +53,10 @@ fun HourlyForecastRow(
                 horizontalArrangement = Arrangement.spacedBy(spacing),
                 modifier = Modifier.wrapContentWidth().height(rowHeight)
             ) {
-                items(count = Int.MAX_VALUE) { index ->
-                    val item = forecasts[index % forecasts.size]
+                items(
+                    items = forecasts,
+                    key = { forecast -> "${forecast.time}-${forecast.icon}-${forecast.temp}" }
+                ) { item ->
                     HourlyWeatherCard(
                         forecast = item,
                         modifier = Modifier.padding(cardPadding)
