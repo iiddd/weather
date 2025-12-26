@@ -13,13 +13,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.ui.NavDisplay
 import com.iiddd.weather.forecast.presentation.view.DetailedWeatherRoute
 import com.iiddd.weather.search.presentation.view.SearchScreen
 import com.iiddd.weather.settings.presentation.view.SettingsView
@@ -29,50 +25,83 @@ import com.iiddd.weather.ui.navigation.popSafe
 
 @Composable
 fun MainView() {
-    val backStack = remember { NavigationBackStack(Destination.Home) }
-    val tabs = remember { listOf(Destination.Home, Destination.Search, Destination.Settings) }
-    var selectedTab by remember { mutableStateOf<Destination>(Destination.Home) }
+    val navigationBackStack = androidx.compose.runtime.remember {
+        NavigationBackStack(startDestination = Destination.Home)
+    }
 
-    BackHandler(enabled = backStack.entries.size > 1) {
-        backStack.popSafe()
+    val bottomTabDestinations = androidx.compose.runtime.remember {
+        listOf(
+            Destination.Home,
+            Destination.Search,
+            Destination.Settings
+        )
+    }
+
+    BackHandler(enabled = navigationBackStack.entries.size > 1) {
+        navigationBackStack.popSafe()
+    }
+
+    val currentDestination: Destination = navigationBackStack.entries.last()
+
+    val selectedBottomTabDestination: Destination = when (currentDestination) {
+        Destination.Home -> Destination.Home
+        Destination.Search -> Destination.Search
+        Destination.Settings -> Destination.Settings
+        is Destination.Details -> Destination.Home
     }
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                tabs.forEach { tab ->
+                bottomTabDestinations.forEach { tabDestination: Destination ->
                     NavigationBarItem(
-                        selected = selectedTab::class == tab::class,
+                        selected = selectedBottomTabDestination::class == tabDestination::class,
                         onClick = {
-                            selectedTab = tab
-                            backStack.replaceCurrent(tab)
+                            navigationBackStack.replaceCurrent(destination = tabDestination)
                         },
-                        label = { Text(tabLabel(tab)) },
-                        icon = { Icon(tabIcon(tab), contentDescription = tabLabel(tab)) }
+                        label = { Text(text = tabLabel(destination = tabDestination)) },
+                        icon = {
+                            Icon(
+                                imageVector = tabIcon(destination = tabDestination),
+                                contentDescription = tabLabel(destination = tabDestination)
+                            )
+                        }
                     )
                 }
             }
         }
-    ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
+    ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
             NavDisplay(
-                backStack = backStack.entries,
-                onBack = { backStack.popSafe() },
+                backStack = navigationBackStack.entries,
+                onBack = {
+                    navigationBackStack.popSafe()
+                },
                 entryProvider = { destination: Destination ->
                     when (destination) {
-                        Destination.Home -> NavEntry(destination) { DetailedWeatherRoute() }
+                        Destination.Home -> NavEntry(key = destination) {
+                            DetailedWeatherRoute()
+                        }
 
-                        Destination.Search -> NavEntry(destination) {
+                        Destination.Search -> NavEntry(key = destination) {
                             SearchScreen(
-                                onOpenDetails = { lat, lon ->
-                                    backStack.push(Destination.Details(lat, lon))
+                                onOpenDetails = { latitude: Double, longitude: Double ->
+                                    navigationBackStack.replaceCurrent(destination = Destination.Home)
+                                    navigationBackStack.push(
+                                        destination = Destination.Details(
+                                            latitude = latitude,
+                                            longitude = longitude
+                                        )
+                                    )
                                 }
                             )
                         }
 
-                        Destination.Settings -> NavEntry(destination) { SettingsView() }
+                        Destination.Settings -> NavEntry(key = destination) {
+                            SettingsView()
+                        }
 
-                        is Destination.Details -> NavEntry(destination) {
+                        is Destination.Details -> NavEntry(key = destination) {
                             DetailedWeatherRoute(
                                 initialLatitude = destination.latitude,
                                 initialLongitude = destination.longitude
