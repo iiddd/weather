@@ -56,6 +56,7 @@ fun SearchContent(
                 mapSize = Size(coords.size.width.toFloat(), coords.size.height.toFloat())
             }
     ) {
+        //TODO: Unite into a single composable when GoogleMap supports preview mode
         if (isPreview) {
             Box(
                 modifier = Modifier
