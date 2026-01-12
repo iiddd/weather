@@ -11,9 +11,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.iiddd.weather.core.ui.theme.WeatherTheme
 
 @Composable
-fun LoadingSpinner(
+fun LoadingScreen(
     modifier: Modifier = Modifier,
     indicatorScale: Float = 2f,
     strokeWidth: Dp = 2.dp
@@ -32,6 +33,8 @@ fun LoadingSpinner(
 
 @Preview
 @Composable
-private fun LoadingSpinnerPreview() {
-    LoadingSpinner()
+private fun LoadingScreenPreview() {
+    WeatherTheme {
+        LoadingScreen()
+    }
 }

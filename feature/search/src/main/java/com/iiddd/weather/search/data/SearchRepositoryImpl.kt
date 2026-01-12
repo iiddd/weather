@@ -1,7 +1,6 @@
 package com.iiddd.weather.search.data
 
-import com.iiddd.weather.core.network.ApiResult.Failure
-import com.iiddd.weather.core.network.ApiResult.Success
+import com.iiddd.weather.core.network.ApiResult
 import com.iiddd.weather.core.network.apiCall
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
@@ -16,29 +15,30 @@ class SearchRepositoryImpl(
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider(),
 ) : SearchRepository {
 
-    override suspend fun searchLocation(query: String, maxResults: Int): List<Location> =
-        withContext(dispatcherProvider.io) {
+    override suspend fun searchLocation(
+        query: String,
+        maxResults: Int
+    ): ApiResult<List<Location>> =
+        withContext(context = dispatcherProvider.io) {
             apiCall {
-                geocodingApi.geocode(query, apiKey, "en")
-            }.let { result ->
-                when (result) {
-                    is Success -> {
-                        result.value.results
-                            .take(maxResults)
-                            .mapNotNull { r ->
-                                val loc = r.geometry?.location ?: return@mapNotNull null
-                                Location(
-                                    lat = loc.lat,
-                                    lon = loc.lng,
-                                    name = r.formattedAddress ?: query
-                                )
-                            }
-                    }
+                val response = geocodingApi.geocode(
+                    address = query,
+                    apiKey = apiKey,
+                    language = "en"
+                )
 
-                    is Failure -> {
-                        throw RuntimeException(result.error.toString())
+                response.results
+                    .take(maxResults)
+                    .mapNotNull { responseResult ->
+                        val geometryLocation = responseResult.geometry?.location
+                            ?: return@mapNotNull null
+
+                        Location(
+                            lat = geometryLocation.lat,
+                            lon = geometryLocation.lng,
+                            name = responseResult.formattedAddress ?: query
+                        )
                     }
-                }
             }
         }
 }

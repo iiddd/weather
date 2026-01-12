@@ -2,6 +2,7 @@ package com.iiddd.weather.forecast.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iiddd.weather.core.network.ApiError
 import com.iiddd.weather.core.network.ApiResult
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
@@ -25,6 +26,9 @@ class ForecastViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    private val _error = MutableStateFlow<ApiError?>(null)
+    val error: StateFlow<ApiError?> = _error
+
     fun loadWeather(
         latitude: Double,
         longitude: Double,
@@ -32,6 +36,8 @@ class ForecastViewModel(
     ) {
         viewModelScope.launch(context = dispatcherProvider.main) {
             _isLoading.value = true
+            _error.value = null
+
             try {
                 val (result, resolvedCity) = withContext(context = dispatcherProvider.io) {
                     val weatherResult = weatherRepository.getWeather(
@@ -55,15 +61,21 @@ class ForecastViewModel(
                         } else {
                             value
                         }
+                        _error.value = null
                     }
 
                     is ApiResult.Failure -> {
                         _weather.value = null
+                        _error.value = result.error
                     }
                 }
             } finally {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun clearError() {
+        _error.value = null
     }
 }

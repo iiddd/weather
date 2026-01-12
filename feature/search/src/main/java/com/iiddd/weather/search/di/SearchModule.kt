@@ -1,5 +1,7 @@
 package com.iiddd.weather.search.di
 
+import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
+import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import com.iiddd.weather.search.BuildConfig
 import com.iiddd.weather.search.R
 import com.iiddd.weather.search.data.SearchRepositoryImpl
@@ -23,6 +25,10 @@ object SearchModule {
     val GOOGLE_MAPS_RETROFIT = named("google_maps_retrofit")
 
     val module = module {
+        single<DispatcherProvider> {
+            DefaultDispatcherProvider()
+        }
+
         factory {
             Json {
                 ignoreUnknownKeys = true
@@ -32,10 +38,11 @@ object SearchModule {
 
         factory {
             HttpLoggingInterceptor().apply {
-                level = if (BuildConfig.DEBUG)
+                level = if (BuildConfig.DEBUG) {
                     HttpLoggingInterceptor.Level.BODY
-                else
+                } else {
                     HttpLoggingInterceptor.Level.NONE
+                }
             }
         }
 
@@ -64,18 +71,22 @@ object SearchModule {
             get<Retrofit>(GOOGLE_MAPS_RETROFIT).create(GeocodingApi::class.java)
         }
 
-        single { androidContext().getString(R.string.google_maps_key) }
+        single {
+            androidContext().getString(R.string.google_maps_key)
+        }
 
         single<SearchRepository> {
             SearchRepositoryImpl(
-                geocodingApi = get(),
-                apiKey = get()
+                geocodingApi = get<GeocodingApi>(),
+                apiKey = get<String>(),
+                dispatcherProvider = get<DispatcherProvider>()
             )
         }
 
         viewModel {
             SearchViewModel(
-                repository = get(),
+                repository = get<SearchRepository>(),
+                dispatcherProvider = get<DispatcherProvider>()
             )
         }
     }

@@ -3,7 +3,7 @@ package com.iiddd.weather.forecast.presentation.view
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import com.iiddd.weather.core.ui.components.LoadingSpinner
+import com.iiddd.weather.core.ui.components.LoadingScreen
 import com.iiddd.weather.forecast.domain.model.Weather
 
 @Composable
@@ -28,7 +28,7 @@ internal fun DetailedWeatherInitialCoordinatesSection(
     }
 
     if (isLoading) {
-        LoadingSpinner()
+        LoadingScreen()
         return
     }
 

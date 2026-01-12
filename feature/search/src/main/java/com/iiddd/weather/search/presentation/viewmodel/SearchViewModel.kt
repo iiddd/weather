@@ -3,8 +3,11 @@ package com.iiddd.weather.search.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.iiddd.weather.core.network.ApiResult
+import com.iiddd.weather.core.network.toUiMessage
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
+import com.iiddd.weather.search.domain.Location
 import com.iiddd.weather.search.domain.SearchRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,34 +25,68 @@ class SearchViewModel(
     private val repository: SearchRepository,
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(SearchUiState())
-    val uiState: StateFlow<SearchUiState> = _uiState
 
-    fun onQueryChange(q: String) {
-        _uiState.value = _uiState.value.copy(query = q, error = null)
+    private val mutableUiState = MutableStateFlow(SearchUiState())
+    val uiState: StateFlow<SearchUiState> = mutableUiState
+
+    fun onQueryChange(query: String) {
+        mutableUiState.value = mutableUiState.value.copy(
+            query = query,
+            error = null
+        )
     }
 
     fun search() {
-        val q = _uiState.value.query.trim()
-        if (q.isEmpty()) return
+        val searchQuery = mutableUiState.value.query.trim()
+        if (searchQuery.isEmpty()) return
 
-        _uiState.value = _uiState.value.copy(loading = true, error = null)
-        viewModelScope.launch(dispatcherProvider.main) {
-            try {
-                val list = repository.searchLocation(q, 1)
-                val first = list.firstOrNull()
-                val marker = first?.let { LatLng(it.lat, it.lon) }
-                val title = first?.name ?: q
-                _uiState.value =
-                    _uiState.value.copy(marker = marker, markerTitle = title, loading = false)
-            } catch (e: Exception) {
-                _uiState.value =
-                    _uiState.value.copy(loading = false, error = e.message ?: "error")
+        mutableUiState.value = mutableUiState.value.copy(
+            loading = true,
+            error = null
+        )
+
+        viewModelScope.launch(context = dispatcherProvider.main) {
+            val result: ApiResult<List<Location>> = repository.searchLocation(
+                query = searchQuery,
+                maxResults = 1
+            )
+
+            when (result) {
+                is ApiResult.Success -> {
+                    val firstLocation = result.value.firstOrNull()
+
+                    val marker = firstLocation?.let { location: Location ->
+                        LatLng(location.lat, location.lon)
+                    }
+
+                    val markerTitle = firstLocation?.name ?: searchQuery
+
+                    mutableUiState.value = mutableUiState.value.copy(
+                        marker = marker,
+                        markerTitle = markerTitle,
+                        loading = false,
+                        error = null
+                    )
+                }
+
+                is ApiResult.Failure -> {
+                    mutableUiState.value = mutableUiState.value.copy(
+                        loading = false,
+                        error = result.error.toUiMessage()
+                    )
+                }
             }
         }
     }
 
+    fun retrySearch() {
+        search()
+    }
+
     fun clearMarker() {
-        _uiState.value = _uiState.value.copy(marker = null, markerTitle = null)
+        mutableUiState.value = mutableUiState.value.copy(
+            marker = null,
+            markerTitle = null
+        )
     }
 }
