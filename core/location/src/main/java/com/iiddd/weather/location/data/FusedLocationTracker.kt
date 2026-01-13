@@ -16,7 +16,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.iiddd.weather.location.domain.Coordinate
+import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.LocationTracker
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -33,7 +33,7 @@ class FusedLocationTracker(
 
     private val tag = "FusedLocationTracker"
 
-    override suspend fun getLastKnownLocation(): Coordinate? {
+    override suspend fun getLastKnownLocation(): Coordinates? {
         if (!hasLocationPermission()) return null
 
         // Ensure the whole operation cannot exceed the timeout.
@@ -117,7 +117,7 @@ class FusedLocationTracker(
 
 /* ===== Helpers ===== */
 
-private fun Location.toCoordinate() = Coordinate(latitude, longitude)
+private fun Location.toCoordinate() = Coordinates(latitude, longitude)
 
 private suspend fun <T> Task<T>.awaitOrNull(onCancel: (() -> Unit)? = null): T? =
     suspendCancellableCoroutine { continuation: CancellableContinuation<T?> ->

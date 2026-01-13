@@ -13,6 +13,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
@@ -25,13 +26,13 @@ import com.iiddd.weather.ui.navigation.popSafe
 
 @Composable
 fun MainView() {
-    val navigationBackStack = androidx.compose.runtime.remember {
-        NavigationBackStack(startDestination = Destination.Home)
+    val navigationBackStack: NavigationBackStack = remember {
+        NavigationBackStack(startDestination = Destination.Weather())
     }
 
-    val bottomTabDestinations = androidx.compose.runtime.remember {
+    val bottomTabDestinations: List<Destination> = remember {
         listOf(
-            Destination.Home,
+            Destination.Weather(),
             Destination.Search,
             Destination.Settings
         )
@@ -44,10 +45,9 @@ fun MainView() {
     val currentDestination: Destination = navigationBackStack.entries.last()
 
     val selectedBottomTabDestination: Destination = when (currentDestination) {
-        Destination.Home -> Destination.Home
+        is Destination.Weather -> Destination.Weather()
         Destination.Search -> Destination.Search
         Destination.Settings -> Destination.Settings
-        is Destination.Details -> Destination.Home
     }
 
     Scaffold(
@@ -59,7 +59,9 @@ fun MainView() {
                         onClick = {
                             navigationBackStack.replaceCurrent(destination = tabDestination)
                         },
-                        label = { Text(text = tabLabel(destination = tabDestination)) },
+                        label = {
+                            Text(text = tabLabel(destination = tabDestination))
+                        },
                         icon = {
                             Icon(
                                 imageVector = tabIcon(destination = tabDestination),
@@ -79,33 +81,49 @@ fun MainView() {
                 },
                 entryProvider = { destination: Destination ->
                     when (destination) {
-                        Destination.Home -> NavEntry(key = destination) {
-                            DetailedWeatherRoute()
+                        is Destination.Weather -> {
+                            NavEntry(
+                                key = destination,
+                                contentKey = weatherContentKey(destination = destination)
+                            ) { entryDestination: Destination ->
+                                val weatherDestination: Destination.Weather =
+                                    entryDestination as Destination.Weather
+
+                                DetailedWeatherRoute(
+                                    latitude = weatherDestination.latitude,
+                                    longitude = weatherDestination.longitude
+                                )
+                            }
                         }
 
-                        Destination.Search -> NavEntry(key = destination) {
-                            SearchScreen(
-                                onOpenDetails = { latitude: Double, longitude: Double ->
-                                    navigationBackStack.replaceCurrent(destination = Destination.Home)
-                                    navigationBackStack.push(
-                                        destination = Destination.Details(
-                                            latitude = latitude,
-                                            longitude = longitude
+                        Destination.Search -> {
+                            NavEntry(
+                                key = destination,
+                                contentKey = "Destination.Search"
+                            ) { _: Destination ->
+                                SearchScreen(
+                                    onOpenDetails = { latitude: Double, longitude: Double ->
+                                        navigationBackStack.replaceCurrent(
+                                            destination = Destination.Weather()
                                         )
-                                    )
-                                }
-                            )
+                                        navigationBackStack.push(
+                                            destination = Destination.Weather(
+                                                latitude = latitude,
+                                                longitude = longitude
+                                            )
+                                        )
+                                    }
+                                )
+                            }
                         }
 
-                        Destination.Settings -> NavEntry(key = destination) {
-                            SettingsView()
-                        }
-
-                        is Destination.Details -> NavEntry(key = destination) {
-                            DetailedWeatherRoute(
-                                initialLatitude = destination.latitude,
-                                initialLongitude = destination.longitude
-                            )
+                        Destination.Settings -> {
+                            NavEntry(
+                                key = destination,
+                                contentKey = "Destination.Settings"
+                            ) { _: Destination ->
+                                SettingsView()
+                            }
                         }
                     }
                 }
@@ -114,15 +132,18 @@ fun MainView() {
     }
 }
 
+private fun weatherContentKey(destination: Destination.Weather): String {
+    return "Destination.Weather(latitude=${destination.latitude},longitude=${destination.longitude})"
+}
+
 private fun tabLabel(destination: Destination): String = when (destination) {
-    Destination.Home -> "Home"
+    is Destination.Weather -> "Weather"
     Destination.Search -> "Search"
     Destination.Settings -> "Settings"
-    is Destination.Details -> "Details"
 }
 
 private fun tabIcon(destination: Destination) = when (destination) {
-    Destination.Home, is Destination.Details -> Icons.Default.Home
+    is Destination.Weather -> Icons.Default.Home
     Destination.Search -> Icons.Default.Search
     Destination.Settings -> Icons.Default.Settings
 }

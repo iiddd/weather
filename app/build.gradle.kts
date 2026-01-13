@@ -58,6 +58,7 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
+    implementation(project(":core:location"))
     implementation(project(":feature:forecast"))
     implementation(project(":feature:search"))
     implementation(project(":feature:settings"))

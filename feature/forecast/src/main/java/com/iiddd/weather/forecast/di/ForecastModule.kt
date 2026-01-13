@@ -48,7 +48,7 @@ object ForecastModule {
 
         single<CityNameResolver> {
             AndroidCityNameResolver(
-                applicationContext = get()
+                applicationContext = get(),
             )
         }
 
@@ -56,7 +56,8 @@ object ForecastModule {
             ForecastViewModel(
                 weatherRepository = get(),
                 cityNameResolver = get(),
-                dispatcherProvider = get()
+                locationTracker = get(),
+                dispatcherProvider = get(),
             )
         }
 
@@ -83,7 +84,7 @@ object ForecastModule {
 
         single<WeatherRepository> {
             WeatherRepositoryImpl(
-                api = get<OpenWeatherApi>()
+                api = get(),
             )
         }
 

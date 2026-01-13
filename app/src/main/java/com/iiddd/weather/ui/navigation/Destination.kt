@@ -1,12 +1,13 @@
 package com.iiddd.weather.ui.navigation
 
 sealed interface Destination {
-    data object Home : Destination
+
     data object Search : Destination
+
     data object Settings : Destination
 
-    data class Details(
-        val latitude: Double,
-        val longitude: Double
+    data class Weather(
+        val latitude: Double? = null,
+        val longitude: Double? = null
     ) : Destination
 }

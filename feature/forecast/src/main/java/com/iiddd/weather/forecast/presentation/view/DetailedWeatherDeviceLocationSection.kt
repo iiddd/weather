@@ -69,7 +69,7 @@ internal fun DetailedWeatherDeviceLocationSection(
         return
     }
 
-    DetailedWeatherContent(
+    DetailedWeatherScreenContent(
         weatherState = weatherState,
         onRefresh = {
             coroutineScope.launch {

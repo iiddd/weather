@@ -23,7 +23,7 @@ import com.iiddd.weather.forecast.presentation.view.component.HourlyForecastRow
 import com.iiddd.weather.forecast.presentation.view.component.WeatherView
 
 @Composable
-fun DetailedWeatherContent(
+fun DetailedWeatherScreenContent(
     weatherState: State<Weather?>,
     onRefresh: () -> Unit
 ) {
@@ -50,7 +50,7 @@ fun DetailedWeatherContent(
 
 @Preview(showBackground = true)
 @Composable
-fun DetailedWeatherContentPreview() {
+fun DetailedWeatherScreenContentPreview() {
     val mockState = remember {
         mutableStateOf(
             Weather(
@@ -69,7 +69,7 @@ fun DetailedWeatherContentPreview() {
     }
 
     WeatherTheme {
-        DetailedWeatherContent(
+        DetailedWeatherScreenContent(
             weatherState = mockState,
             onRefresh = {}
         )

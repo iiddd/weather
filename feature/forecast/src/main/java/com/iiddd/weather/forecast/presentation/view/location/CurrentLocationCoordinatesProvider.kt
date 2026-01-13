@@ -4,11 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.iiddd.weather.location.data.FusedLocationTracker
-
-data class Coordinates(
-    val latitude: Double,
-    val longitude: Double
-)
+import com.iiddd.weather.location.domain.Coordinates
 
 class CurrentLocationCoordinatesProvider internal constructor(
     private val getLastKnownCoordinatesOrNull: suspend () -> Coordinates?

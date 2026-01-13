@@ -1,31 +1,40 @@
 package com.iiddd.weather.forecast.presentation.view
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiEvent
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DetailedWeatherRoute(
-    viewModel: ForecastViewModel = koinViewModel(),
-    initialLatitude: Double? = null,
-    initialLongitude: Double? = null,
-    initialCity: String? = null
+    forecastViewModel: ForecastViewModel = koinViewModel(),
+    latitude: Double?,
+    longitude: Double?,
 ) {
-    val weatherState = viewModel.weather.collectAsState()
-    val isLoadingState = viewModel.isLoading.collectAsState()
+    val forecastUiState by forecastViewModel
+        .forecastUiState
+        .collectAsStateWithLifecycle()
 
-    DetailedWeatherScreen(
-        weatherState = weatherState,
-        isLoading = isLoadingState.value,
-        initialLatitude = initialLatitude,
-        initialLongitude = initialLongitude,
-        initialCity = initialCity,
-        loadWeather = { latitude: Double, longitude: Double, cityOverride: String? ->
-            viewModel.loadWeather(
+    LaunchedEffect(
+        key1 = latitude,
+        key2 = longitude,
+    ) {
+        forecastViewModel.onEvent(
+            forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(
                 latitude = latitude,
                 longitude = longitude,
-                cityOverride = cityOverride
+            )
+        )
+    }
+
+    DetailedWeatherScreen(
+        forecastUiState = forecastUiState,
+        onRefreshRequested = {
+            forecastViewModel.onEvent(
+                forecastUiEvent = ForecastUiEvent.RefreshRequested
             )
         }
     )

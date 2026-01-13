@@ -32,7 +32,7 @@ internal fun DetailedWeatherInitialCoordinatesSection(
         return
     }
 
-    DetailedWeatherContent(
+    DetailedWeatherScreenContent(
         weatherState = weatherState,
         onRefresh = {
             loadWeatherForInitialCoordinates(

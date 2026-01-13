@@ -15,6 +15,14 @@ sealed interface ApiError {
         val message: String? = null
     ) : ApiError
 
+    /**
+     * App-level validation / precondition failures (not a server/network failure).
+     * Examples: missing coordinates, invalid user input, unsupported state.
+     */
+    data class Input(
+        val message: String? = null
+    ) : ApiError
+
     data class Unknown(val message: String? = null) : ApiError
 }
 
@@ -25,5 +33,6 @@ fun ApiError.toUiMessage(): String =
         is ApiError.Http -> "Server error (`${code}`). Please try again."
         is ApiError.Serialization -> "Response parsing error. Please try again."
         is ApiError.Mapping -> "Unexpected data error. Please try again."
+        is ApiError.Input -> message ?: "Invalid input. Please try again."
         is ApiError.Unknown -> "Unknown error. Please try again."
     }

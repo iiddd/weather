@@ -52,9 +52,7 @@ fun WeatherView(
                 Text(text = "Temp: ${weather.currentTemp}°")
             }
             Spacer(modifier = Modifier.height(12.dp))
-            Button(onClick = onRefresh) {
-                Text(text = "Refresh")
-            }
+            RefreshButton(onRefresh = onRefresh)
         }
     }
 }
