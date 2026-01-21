@@ -53,8 +53,7 @@ fun DetailedWeatherRoute(
         key3 = hasLocationPermission,
     ) {
         val shouldLoadWeather =
-            isNavigationCoordinatesProvided ||
-                    (shouldRequestDeviceLocation && hasLocationPermission)
+            isNavigationCoordinatesProvided || hasLocationPermission
 
         if (!shouldLoadWeather) return@LaunchedEffect
 
