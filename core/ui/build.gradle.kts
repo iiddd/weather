@@ -1,6 +1,6 @@
 plugins {
-    id("library")
-    id("compose")
+    id("com.iiddd.weather.android.library")
+    id("com.iiddd.weather.android.compose")
 }
 android { namespace = "com.iiddd.weather.core.ui" }
 

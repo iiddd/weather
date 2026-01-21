@@ -1,5 +1,5 @@
 plugins {
-    id("library")
+    id("com.iiddd.weather.android.library")
 }
 android { namespace = "com.iiddd.weather.core.network" }
 

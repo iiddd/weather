@@ -1,19 +1,15 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
+    id("com.iiddd.weather.android.application")
+    id("com.iiddd.weather.android.compose")
+
     alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.iiddd.weather"
-    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.iiddd.weather"
-        minSdk = 31
-        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -30,22 +26,6 @@ android {
                 "proguard-rules.pro",
             )
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
-    }
-
-    buildFeatures {
-        compose = true
-        buildConfig = true
     }
 
     packaging {
@@ -65,12 +45,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.material)
-    implementation(platform(libs.compose.bom))
 
     // Compose
-    implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.compose.activity)
     implementation(libs.compose.material.icons.extended)
@@ -86,7 +63,5 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
 
-    // Test
-    debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
 }

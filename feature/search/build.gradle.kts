@@ -1,9 +1,9 @@
 import java.util.Properties
 
 plugins {
-    id("library")
-    id("compose")
-    id("junit")
+    id("com.iiddd.weather.android.library")
+    id("com.iiddd.weather.android.compose")
+    id("com.iiddd.weather.android.junit")
 
     alias(libs.plugins.kotlin.serialization)
 }
