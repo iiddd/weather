@@ -11,6 +11,10 @@ plugins {
 android {
     namespace = "com.iiddd.weather.search"
 
+    buildFeatures {
+        resValues = true
+    }
+
     defaultConfig {
         val props = Properties().apply {
             val f = rootProject.file("apikeys.properties")

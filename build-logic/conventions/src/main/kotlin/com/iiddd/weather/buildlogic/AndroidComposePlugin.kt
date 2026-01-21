@@ -1,12 +1,12 @@
 package com.iiddd.weather.buildlogic
 
-import com.android.build.gradle.LibraryExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
-import org.gradle.api.artifacts.VersionCatalogsExtension
 
 class AndroidComposePlugin : Plugin<Project> {
 
@@ -15,17 +15,19 @@ class AndroidComposePlugin : Plugin<Project> {
 
         plugins.withId("com.android.library") {
             extensions.configure<LibraryExtension> {
-                buildFeatures { compose = true }
+                buildFeatures {
+                    compose = true
+                }
             }
         }
 
-        val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+        val versionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
         dependencies {
-            add("implementation", platform(libs.findLibrary("compose-bom").get()))
-            add("implementation", libs.findLibrary("compose-ui").get())
-            add("implementation", libs.findLibrary("compose-ui-tooling-preview").get())
-            add("debugImplementation", libs.findLibrary("compose-ui-tooling").get())
+            add("implementation", platform(versionCatalog.findLibrary("compose-bom").get()))
+            add("implementation", versionCatalog.findLibrary("compose-ui").get())
+            add("implementation", versionCatalog.findLibrary("compose-ui-tooling-preview").get())
+            add("debugImplementation", versionCatalog.findLibrary("compose-ui-tooling").get())
         }
     }
 }

@@ -1,35 +1,28 @@
 package com.iiddd.weather.buildlogic
 
-import com.android.build.gradle.BaseExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.withType
 
 class JunitPlugin : Plugin<Project> {
 
-    override fun apply(project: Project) = with(project) {
-        plugins.withId("com.android.library") { enableJUnitPlatform() }
-        plugins.withId("com.android.application") { enableJUnitPlatform() }
+    override fun apply(target: Project) = with(target) {
 
-        tasks.withType(Test::class.java).configureEach {
+        tasks.withType<Test>().configureEach {
             useJUnitPlatform()
         }
 
-        val libs = extensions.getByType<org.gradle.api.artifacts.VersionCatalogsExtension>()
+        val versionCatalog = extensions.getByType<VersionCatalogsExtension>()
             .named("libs")
 
         dependencies {
-            add("testImplementation", platform(libs.findLibrary("junit-bom").get()))
-            add("testImplementation", libs.findLibrary("junit-jupiter").get())
-            add("testRuntimeOnly", libs.findLibrary("junit-platform-launcher").get())
-        }
-    }
-
-    private fun Project.enableJUnitPlatform() {
-        extensions.configure(BaseExtension::class.java) {
-            testOptions.unitTests.all { it.useJUnitPlatform() }
+            add("testImplementation", platform(versionCatalog.findLibrary("junit-bom").get()))
+            add("testImplementation", versionCatalog.findLibrary("junit-jupiter").get())
+            add("testRuntimeOnly", versionCatalog.findLibrary("junit-platform-launcher").get())
         }
     }
 }
