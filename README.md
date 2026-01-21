@@ -107,6 +107,11 @@ GOOGLE_MAPS_API_KEY=your_google_maps_key_here
 
 ## 🧰 Build Commands
 
+Install Pre-commit hooks:
+```bash
+scripts/git-hooks/install.sh
+```
+
 Clean project:
 ```bash
 ./gradlew clean

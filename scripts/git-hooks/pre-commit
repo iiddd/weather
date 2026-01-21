@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running pre-commit checks…"
+./gradlew preCommit --daemon
+
+echo "✅ pre-commit checks passed"
