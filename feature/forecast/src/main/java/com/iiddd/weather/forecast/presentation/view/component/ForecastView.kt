@@ -10,8 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.forecast.domain.model.DailyForecast
 import com.iiddd.weather.forecast.domain.model.HourlyForecast
@@ -40,7 +40,7 @@ fun ForecastView(
     }
 }
 
-@Preview(showBackground = true)
+@WeatherPreview
 @Composable
 fun ForecastViewPreview_Empty() {
     WeatherTheme {
@@ -48,7 +48,7 @@ fun ForecastViewPreview_Empty() {
     }
 }
 
-@Preview(showBackground = true)
+@WeatherPreview
 @Composable
 fun ForecastViewPreview_WithData() {
     val mock = Weather(

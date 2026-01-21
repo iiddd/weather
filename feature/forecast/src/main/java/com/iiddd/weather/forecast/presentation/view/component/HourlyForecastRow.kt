@@ -20,9 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.iiddd.weather.core.ui.components.WeatherPreview
+import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.forecast.domain.model.HourlyForecast
 
 @Composable
@@ -41,7 +42,9 @@ fun HourlyForecastRow(
     val listState = rememberLazyListState()
 
     Card(
-        modifier = modifier.wrapContentWidth().height(rowHeight),
+        modifier = modifier
+            .wrapContentWidth()
+            .height(rowHeight),
         shape = RoundedCornerShape(cornerRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -51,7 +54,9 @@ fun HourlyForecastRow(
                 state = listState,
                 contentPadding = PaddingValues(horizontal = horizontalPadding),
                 horizontalArrangement = Arrangement.spacedBy(spacing),
-                modifier = Modifier.wrapContentWidth().height(rowHeight)
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .height(rowHeight)
             ) {
                 items(
                     items = forecasts,
@@ -99,7 +104,7 @@ fun HourlyForecastRow(
     }
 }
 
-@Preview(showBackground = true)
+@WeatherPreview
 @Composable
 fun HourlyForecastRowPreview() {
     val mockForecasts = listOf(
@@ -112,5 +117,7 @@ fun HourlyForecastRowPreview() {
         HourlyForecast(time = "15:00", temp = 19.0, icon = "11d"),
     )
 
-    HourlyForecastRow(forecasts = mockForecasts)
+    WeatherTheme {
+        HourlyForecastRow(forecasts = mockForecasts)
+    }
 }

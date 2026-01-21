@@ -6,6 +6,8 @@ import com.iiddd.weather.core.network.ApiError
 import com.iiddd.weather.core.network.toUiMessage
 import com.iiddd.weather.core.ui.components.ErrorScreen
 import com.iiddd.weather.core.ui.components.LoadingScreen
+import com.iiddd.weather.core.ui.components.WeatherPreview
+import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiState
 
@@ -56,5 +58,42 @@ fun DetailedWeatherScreen(
                 onRefresh = onRefreshRequested,
             )
         }
+    }
+}
+
+@WeatherPreview
+@Composable
+private fun DetailedWeatherScreenPreviewHappyFlow() {
+    WeatherTheme {
+        val mockState = rememberUpdatedState(
+            newValue = Weather(
+                currentTemp = 13.0,
+                description = "Clear",
+                hourly = emptyList(),
+                daily = emptyList()
+            )
+        )
+        DetailedWeatherScreenContent(
+            weatherState = mockState,
+            onRefresh = {}
+        )
+    }
+}
+
+@WeatherPreview
+@Composable
+private fun DetailedWeatherScreenPreviewError() {
+    WeatherTheme {
+        DetailedWeatherScreen(
+            forecastUiState = ForecastUiState.Error(
+                apiError = ApiError.Network(
+                    message = "Unable to connect to the server."
+                )
+            ),
+            shouldRequestDeviceLocation = false,
+            hasLocationPermission = false,
+            onRequestLocationPermission = {},
+            onRefreshRequested = {}
+        )
     }
 }

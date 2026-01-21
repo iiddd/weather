@@ -17,8 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.iiddd.weather.core.ui.components.WeatherPreview
+import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.forecast.domain.model.HourlyForecast
 import com.iiddd.weather.forecast.presentation.icons.resolveWeatherIcon
 
@@ -65,7 +66,7 @@ fun HourlyWeatherCard(
     }
 }
 
-@Preview
+@WeatherPreview
 @Composable
 private fun HourlyWeatherWidgetPreview() {
     val hour = HourlyForecast(
@@ -74,7 +75,9 @@ private fun HourlyWeatherWidgetPreview() {
         icon = "01d"
     )
 
-    HourlyWeatherCard(
-        forecast = hour
-    )
+    WeatherTheme {
+        HourlyWeatherCard(
+            forecast = hour
+        )
+    }
 }

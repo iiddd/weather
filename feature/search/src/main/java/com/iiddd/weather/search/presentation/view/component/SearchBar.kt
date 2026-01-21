@@ -23,8 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 
@@ -114,7 +114,7 @@ fun SearchBar(
 }
 
 @Composable
-@Preview(showBackground = true)
+@WeatherPreview
 fun SearchBarPreview() {
     val fakeState = SearchUiState(
         query = "Amsterdam",

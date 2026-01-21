@@ -7,6 +7,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.iiddd.weather.core.ui.components.WeatherPreview
+import com.iiddd.weather.core.ui.theme.WeatherTheme
 
 @Composable
 fun RefreshButton(onRefresh: () -> Unit) {
@@ -17,5 +19,13 @@ fun RefreshButton(onRefresh: () -> Unit) {
         Button(onClick = onRefresh) {
             Text("Refresh")
         }
+    }
+}
+
+@WeatherPreview
+@Composable
+private fun RefreshButtonPreview() {
+    WeatherTheme {
+        RefreshButton(onRefresh = {})
     }
 }
