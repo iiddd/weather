@@ -73,7 +73,9 @@ class ForecastViewModel(
                             longitude = longitude,
                         )
                     } else {
-                        val lastKnownCoordinate = locationTracker.getLastKnownLocation()
+                        val currentCoordinate = locationTracker.getCurrentLocationOrNull()
+                        val lastKnownCoordinate = currentCoordinate ?: locationTracker.getLastKnownLocation()
+
                         if (lastKnownCoordinate != null) {
                             LatitudeLongitudeResult.Success(
                                 latitude = lastKnownCoordinate.latitude,
