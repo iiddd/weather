@@ -18,9 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
-import com.iiddd.weather.forecast.domain.model.DailyForecast
-import com.iiddd.weather.forecast.domain.model.HourlyForecast
 import com.iiddd.weather.forecast.domain.model.Weather
+import com.iiddd.weather.forecast.presentation.previewfixtures.PreviewWeatherProvider
 import com.iiddd.weather.forecast.presentation.view.component.HourlyForecastRow
 import com.iiddd.weather.forecast.presentation.view.component.WeatherView
 
@@ -61,18 +60,7 @@ fun DetailedWeatherScreenContent(
 fun DetailedWeatherScreenContentPreview() {
     val mockState = remember {
         mutableStateOf(
-            Weather(
-                currentTemp = 13,
-                description = "Clear",
-                hourly = listOf(
-                    HourlyForecast(time = "09:00", temp = 13, icon = "01d"),
-                    HourlyForecast(time = "12:00", temp = 15, icon = "02d")
-                ),
-                daily = listOf(
-                    DailyForecast(day = "Mon", tempDay = 16, tempNight = 8, icon = "01d"),
-                    DailyForecast(day = "Tue", tempDay = 17, tempNight = 9, icon = "02d")
-                )
-            )
+            PreviewWeatherProvider.sampleWeather
         )
     }
 
