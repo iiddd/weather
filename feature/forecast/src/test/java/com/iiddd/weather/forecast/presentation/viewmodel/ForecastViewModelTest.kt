@@ -23,7 +23,6 @@ class ForecastViewModelTest {
     private lateinit var weatherRepository: WeatherRepository
     private lateinit var cityNameResolver: CityNameResolver
     private lateinit var locationTracker: LocationTracker
-
     private lateinit var forecastViewModel: ForecastViewModel
 
     @BeforeEach
@@ -44,7 +43,7 @@ class ForecastViewModelTest {
     @Test
     fun `LoadWeatherRequested with coordinates emits Content when repository succeeds`() =
         runTest(context = dispatcherProvider.dispatcher) {
-            val weather = Weather(currentTemp = 10.0, description = "desc")
+            val weather = Weather(currentTemp = 10, description = "desc")
             whenever(
                 weatherRepository.getWeather(
                     latitude = 1.0,
@@ -102,7 +101,7 @@ class ForecastViewModelTest {
     @Test
     fun `LoadWeatherRequested applies resolved city name to weather when available`() =
         runTest(context = dispatcherProvider.dispatcher) {
-            val repositoryWeather = Weather(currentTemp = 5.0, description = "sunny")
+            val repositoryWeather = Weather(currentTemp = 5, description = "sunny")
             whenever(
                 weatherRepository.getWeather(
                     latitude = 1.0,
@@ -135,7 +134,7 @@ class ForecastViewModelTest {
         runTest(context = dispatcherProvider.dispatcher) {
             val repositoryWeather =
                 Weather(
-                    currentTemp = 7.0,
+                    currentTemp = 7,
                     description = "cloudy",
                     city = "RepositoryCity",
                 )
@@ -170,13 +169,10 @@ class ForecastViewModelTest {
     @Test
     fun `LoadWeatherRequested without coordinates uses current location when available`() =
         runTest(context = dispatcherProvider.dispatcher) {
-            whenever(locationTracker.getCurrentLocationOrNull())
+            whenever(locationTracker.getLastKnownLocation())
                 .thenReturn(Coordinates(latitude = 11.0, longitude = 22.0))
 
-            whenever(locationTracker.getLastKnownLocation())
-                .thenReturn(null)
-
-            val weather = Weather(currentTemp = 1.0, description = "ok")
+            val weather = Weather(currentTemp = 1, description = "ok")
             whenever(
                 weatherRepository.getWeather(
                     latitude = 11.0,
@@ -205,9 +201,6 @@ class ForecastViewModelTest {
     @Test
     fun `LoadWeatherRequested without coordinates emits Error when no location available`() =
         runTest(context = dispatcherProvider.dispatcher) {
-            whenever(locationTracker.getCurrentLocationOrNull())
-                .thenReturn(null)
-
             whenever(locationTracker.getLastKnownLocation())
                 .thenReturn(null)
 
