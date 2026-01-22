@@ -48,9 +48,9 @@ fun DetailedWeatherRoute(
     }
 
     val destinationKey = remember(latitude, longitude) {
-        val lat = latitude?.toStableString() ?: "device"
-        val lon = longitude?.toStableString() ?: "device"
-        "DetailedWeather:$lat,$lon"
+        val lat = latitude?.toStableString() ?: DEVICE_LOCATION_KEY
+        val lon = longitude?.toStableString() ?: DEVICE_LOCATION_KEY
+        "$DETAILED_WEATHER_ROUTE_PREFIX:$lat,$lon"
     }
 
     val loadKey = remember(
@@ -106,5 +106,13 @@ private data class LoadKey(
     val isNavigationCoordinatesProvided: Boolean,
 )
 
+private const val DEVICE_LOCATION_KEY = "device"
+private const val DETAILED_WEATHER_ROUTE_PREFIX = "DetailedWeather"
+private const val COORDINATE_KEY_DECIMALS = 5
+
 private fun Double.toStableString(): String =
-    String.format(Locale.US, "%.5f", this)
+    String.format(
+        Locale.US,
+        "%.${COORDINATE_KEY_DECIMALS}f",
+        this,
+    )
