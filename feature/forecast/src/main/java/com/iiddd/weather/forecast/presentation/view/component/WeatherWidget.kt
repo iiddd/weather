@@ -62,15 +62,15 @@ fun WeatherViewPreview() {
     val mockWeather: State<Weather?> = remember {
         mutableStateOf(
             Weather(
-                currentTemp = 13.0,
+                currentTemp = 13,
                 description = "Clear",
                 hourly = listOf(
-                    HourlyForecast(time = "09:00", temp = 13.0, icon = "01d"),
-                    HourlyForecast(time = "12:00", temp = 15.0, icon = "02d")
+                    HourlyForecast(time = "09:00", temp = 13, icon = "01d"),
+                    HourlyForecast(time = "12:00", temp = 15, icon = "02d")
                 ),
                 daily = listOf(
-                    DailyForecast(day = "Mon", tempDay = 16.0, tempNight = 8.0, icon = "01d"),
-                    DailyForecast(day = "Tue", tempDay = 17.0, tempNight = 9.0, icon = "02d")
+                    DailyForecast(day = "Mon", tempDay = 16, tempNight = 8, icon = "01d"),
+                    DailyForecast(day = "Tue", tempDay = 17, tempNight = 9, icon = "02d")
                 )
             )
         )

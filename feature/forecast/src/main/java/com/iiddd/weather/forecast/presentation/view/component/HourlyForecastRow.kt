@@ -108,13 +108,13 @@ fun HourlyForecastRow(
 @Composable
 fun HourlyForecastRowPreview() {
     val mockForecasts = listOf(
-        HourlyForecast(time = "09:00", temp = 13.0, icon = "01d"),
-        HourlyForecast(time = "10:00", temp = 14.0, icon = "02d"),
-        HourlyForecast(time = "11:00", temp = 15.0, icon = "03d"),
-        HourlyForecast(time = "12:00", temp = 16.0, icon = "04d"),
-        HourlyForecast(time = "13:00", temp = 17.0, icon = "09d"),
-        HourlyForecast(time = "14:00", temp = 18.0, icon = "10d"),
-        HourlyForecast(time = "15:00", temp = 19.0, icon = "11d"),
+        HourlyForecast(time = "09:00", temp = 13, icon = "01d"),
+        HourlyForecast(time = "10:00", temp = 14, icon = "02d"),
+        HourlyForecast(time = "11:00", temp = 15, icon = "03d"),
+        HourlyForecast(time = "12:00", temp = 16, icon = "04d"),
+        HourlyForecast(time = "13:00", temp = 17, icon = "09d"),
+        HourlyForecast(time = "14:00", temp = 18, icon = "10d"),
+        HourlyForecast(time = "15:00", temp = 19, icon = "11d"),
     )
 
     WeatherTheme {

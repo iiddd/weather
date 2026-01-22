@@ -36,7 +36,7 @@ fun HourlyWeatherCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
@@ -59,7 +59,7 @@ fun HourlyWeatherCard(
             )
 
             Text(
-                text = "${forecast.temp.toInt()}°",
+                text = "${forecast.temp}°",
                 style = MaterialTheme.typography.bodyLarge
             )
         }
@@ -71,7 +71,7 @@ fun HourlyWeatherCard(
 private fun HourlyWeatherWidgetPreview() {
     val hour = HourlyForecast(
         time = "09:00",
-        temp = 13.0,
+        temp = 13,
         icon = "01d"
     )
 

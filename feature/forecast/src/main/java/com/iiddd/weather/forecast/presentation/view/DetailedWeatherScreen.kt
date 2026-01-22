@@ -67,7 +67,7 @@ private fun DetailedWeatherScreenPreviewHappyFlow() {
     WeatherTheme {
         val mockState = rememberUpdatedState(
             newValue = Weather(
-                currentTemp = 13.0,
+                currentTemp = 13,
                 description = "Clear",
                 hourly = emptyList(),
                 daily = emptyList()
