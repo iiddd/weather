@@ -7,8 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iiddd.weather.forecast.presentation.logic.WeatherLoadInput
 import com.iiddd.weather.forecast.presentation.view.permission.rememberLocationPermissionController
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiEvent
+import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiState
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -24,12 +26,20 @@ fun DetailedWeatherRoute(
 
     val locationPermissionController = rememberLocationPermissionController()
 
-    val isNavigationCoordinatesProvided = latitude != null && longitude != null
-    val shouldRequestDeviceLocation = !isNavigationCoordinatesProvided
+    val shouldRequestDeviceLocation = latitude == null || longitude == null
     val hasLocationPermission = locationPermissionController.hasLocationPermission
+    val isContentVisible = forecastUiState is ForecastUiState.Content
+
+    val loadInput = WeatherLoadInput(
+        latitude = latitude,
+        longitude = longitude,
+        hasLocationPermission = hasLocationPermission,
+        shouldRequestDeviceLocation = shouldRequestDeviceLocation,
+        isContentVisible = isContentVisible,
+    )
 
     var hasRequestedLocationPermissionAtStartup by rememberSaveable {
-        mutableStateOf(value = false)
+        mutableStateOf(false)
     }
 
     LaunchedEffect(
@@ -47,21 +57,14 @@ fun DetailedWeatherRoute(
         locationPermissionController.requestLocationPermission()
     }
 
-    LaunchedEffect(
-        key1 = latitude,
-        key2 = longitude,
-        key3 = hasLocationPermission,
-    ) {
-        val shouldLoadWeather =
-            isNavigationCoordinatesProvided || hasLocationPermission
-
-        if (!shouldLoadWeather) return@LaunchedEffect
+    LaunchedEffect(loadInput) {
+        if (!loadInput.shouldLoadWeather) return@LaunchedEffect
 
         forecastViewModel.onEvent(
-            forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(
-                latitude = latitude,
-                longitude = longitude,
-            ),
+            ForecastUiEvent.LoadWeatherRequested(
+                latitude = loadInput.latitude,
+                longitude = loadInput.longitude,
+            )
         )
     }
 
@@ -73,9 +76,7 @@ fun DetailedWeatherRoute(
             locationPermissionController.requestLocationPermission()
         },
         onRefreshRequested = {
-            forecastViewModel.onEvent(
-                forecastUiEvent = ForecastUiEvent.RefreshRequested,
-            )
+            forecastViewModel.onEvent(ForecastUiEvent.RefreshRequested)
         },
     )
 }

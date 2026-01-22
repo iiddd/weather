@@ -34,12 +34,12 @@ class ForecastViewModel(
     fun onEvent(forecastUiEvent: ForecastUiEvent) {
         when (forecastUiEvent) {
             is ForecastUiEvent.LoadWeatherRequested -> {
-                latestRequestedLatitude = forecastUiEvent.latitude
-                latestRequestedLongitude = forecastUiEvent.longitude
+                val resolvedLatitude = forecastUiEvent.latitude ?: latestRequestedLatitude
+                val resolvedLongitude = forecastUiEvent.longitude ?: latestRequestedLongitude
 
                 loadWeatherForCoordinatesOrCurrentLocation(
-                    latitude = forecastUiEvent.latitude,
-                    longitude = forecastUiEvent.longitude,
+                    latitude = resolvedLatitude,
+                    longitude = resolvedLongitude,
                 )
             }
 
@@ -73,9 +73,7 @@ class ForecastViewModel(
                             longitude = longitude,
                         )
                     } else {
-                        val currentCoordinate = locationTracker.getCurrentLocationOrNull()
-                        val lastKnownCoordinate = currentCoordinate ?: locationTracker.getLastKnownLocation()
-
+                        val lastKnownCoordinate = locationTracker.getLastKnownLocation()
                         if (lastKnownCoordinate != null) {
                             LatitudeLongitudeResult.Success(
                                 latitude = lastKnownCoordinate.latitude,
@@ -103,10 +101,9 @@ class ForecastViewModel(
                 }
 
                 is LatitudeLongitudeResult.Failure -> {
-                    mutableForecastUiState.value =
-                        ForecastUiState.Error(
-                            apiError = resolvedLatitudeLongitudeResult.apiError,
-                        )
+                    mutableForecastUiState.value = ForecastUiState.Error(
+                        apiError = resolvedLatitudeLongitudeResult.apiError,
+                    )
                 }
             }
         }
