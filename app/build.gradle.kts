@@ -36,11 +36,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:ui"))
-    implementation(project(":core:location"))
-    implementation(project(":feature:forecast"))
-    implementation(project(":feature:search"))
-    implementation(project(":feature:settings"))
+    implementation(projects.core.ui)
+    implementation(projects.core.location)
+    implementation(projects.feature.forecast)
+    implementation(projects.feature.search)
+    implementation(projects.feature.settings)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

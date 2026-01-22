@@ -4,7 +4,7 @@ plugins {
 android { namespace = "com.iiddd.weather.core.network" }
 
 dependencies {
-    implementation(project(":core:utils"))
+    implementation(projects.core.utils)
 
     // Retrofit / OkHttp / Serialization (shared across app)
     api(libs.retrofit)

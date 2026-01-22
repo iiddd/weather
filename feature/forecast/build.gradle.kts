@@ -23,10 +23,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:location"))
-    implementation(project(":core:network"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
+    implementation(projects.core.location)
+    implementation(projects.core.network)
+    implementation(projects.core.ui)
+    implementation(projects.core.utils)
 
     implementation(libs.androidx.core.ktx)
 
