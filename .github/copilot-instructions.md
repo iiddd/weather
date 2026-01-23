@@ -156,3 +156,89 @@ Recommended UI state approach:
     - use dedicated permission and location helper files
     - expose usage via remember* controllers/providers
 - If location is denied/unavailable, show generic Error screen rather than partial UI.
+
+## UI composition conventions (strict)
+
+### Layered Compose structure (mandatory)
+
+All screens **must** follow this structure:
+MainView -> *Route -> *Screen -> *ScreenContent
+
+### Responsibilities per layer
+
+#### Route (`*Route`)
+- Owns side effects and orchestration
+- Responsibilities:
+    - Dependency injection (ViewModel, controllers)
+    - `collectAsStateWithLifecycle`
+    - `LaunchedEffect`
+    - Permission and location triggers
+    - Deciding **when** data should be loaded
+    - Calling `ViewModel.onEvent(...)`
+
+- Route **may**:
+    - Hold transient UI coordination state (for example: latestLoadedKey)
+    - Gate repeated requests
+
+- Route **must not**:
+    - Render UI directly
+    - Contain layout logic
+
+---
+
+#### Screen (`*Screen`)
+- Pure UI state rendering layer
+- Responsibilities:
+    - Render based on explicit UI state models (`Loading`, `Error`, `Content`)
+    - Forward user intents via lambdas
+
+- Screen **must not**:
+    - Perform side effects
+    - Request permissions
+    - Access location APIs
+    - Trigger network calls directly
+    - Use `LaunchedEffect`
+
+---
+
+#### ScreenContent (`*ScreenContent`)
+- Stateless layout-only composable
+- Responsibilities:
+    - Layout, visuals, previews
+
+- ScreenContent **must**:
+    - Be fully previewable
+    - Accept plain data models
+
+- ScreenContent **must not**:
+    - Use ViewModel
+    - Use `rememberSaveable`
+    - Use `LaunchedEffect`
+    - Perform navigation or side effects
+
+---
+
+### Permissions and location
+
+- Permission handling and location acquisition **must always live in Route**
+- UI must react only to explicit UI state (`Error` if unavailable)
+- Partial or degraded UI is not allowed when permissions are missing
+
+---
+
+### Data loading invariant
+
+- Network and location requests:
+    - Must be triggered exactly once per logical navigation entry
+    - Must be guarded against recomposition-triggered repeats
+    - Must never be triggered from `Screen` or `ScreenContent`
+
+---
+
+### Preview data
+
+- Preview-only data providers:
+    - Must live in `presentation.previewfixtures`
+    - Must not leak into domain or data layers
+    - Must be safe to use in multiple previews
+

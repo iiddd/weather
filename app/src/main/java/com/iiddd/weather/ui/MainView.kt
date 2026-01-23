@@ -19,7 +19,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.iiddd.weather.forecast.presentation.view.DetailedWeatherRoute
 import com.iiddd.weather.search.presentation.view.SearchScreen
-import com.iiddd.weather.settings.presentation.view.SettingsView
+import com.iiddd.weather.settings.presentation.view.SettingsRoute
 import com.iiddd.weather.ui.navigation.Destination
 import com.iiddd.weather.ui.navigation.NavigationBackStack
 import com.iiddd.weather.ui.navigation.popSafe
@@ -122,7 +122,7 @@ fun MainView() {
                                 key = destination,
                                 contentKey = "Destination.Settings"
                             ) { _: Destination ->
-                                SettingsView()
+                                SettingsRoute()
                             }
                         }
                     }
