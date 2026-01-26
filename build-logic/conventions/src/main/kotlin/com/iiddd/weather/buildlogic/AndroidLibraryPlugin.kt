@@ -13,7 +13,6 @@ class AndroidLibraryPlugin : Plugin<Project> {
 
     override fun apply(target: Project) = with(target) {
         pluginManager.apply("com.android.library")
-        // AGP 9: Kotlin встроен, org.jetbrains.kotlin.android не нужен
 
         extensions.configure<LibraryExtension> {
             compileSdk = 36

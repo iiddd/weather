@@ -23,12 +23,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
+
     implementation(projects.core.location)
     implementation(projects.core.network)
     implementation(projects.core.ui)
     implementation(projects.core.utils)
-
-    implementation(libs.androidx.core.ktx)
 
     // UI extras
     implementation(libs.compose.material3)
@@ -39,6 +39,6 @@ dependencies {
     implementation(libs.koin.compose)
 
     // Testing
-    testImplementation(project(":core:test-utils"))
+    testImplementation(projects.core.testUtils)
     testImplementation(libs.mockito.kotlin)
 }

@@ -38,11 +38,13 @@ android {
 dependencies {
     implementation(projects.core.ui)
     implementation(projects.core.location)
+    implementation(projects.core.preferences)
     implementation(projects.feature.forecast)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.material)
 

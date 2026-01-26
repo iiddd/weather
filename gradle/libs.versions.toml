@@ -4,29 +4,34 @@ agp = "9.0.0"
 appcompat = "1.7.1"
 composeBom = "2025.12.01"
 coreKtx = "1.17.0"
-coroutines-test = "1.10.2"
+datastore = "1.2.0"
 junitJupiter = "6.0.1"
 koin = "4.1.1"
 kotlin = "2.3.0"
+kotlinxCoroutines = "1.10.2"
 kotlinxSerialization = "1.9.0"
 lifecycleRuntimeKtx = "2.10.0"
-maps-compose = "7.0.0"
+mapsCompose = "7.0.0"
 material = "1.13.0"
 mockito = "6.1.0"
 navigation3 = "1.0.0"
 okhttp = "5.3.2"
-play-services-location = "21.3.0"
-play-services-maps = "19.2.0"
+playServicesLocation = "21.3.0"
+playServicesMaps = "19.2.0"
 retrofit = "3.0.0"
 retrofitKotlinxSerialization = "1.0.0"
 
 [libraries]
 #Core
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-compose-ui-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+compose-ui-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+#DataStore
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 #Compose
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -51,11 +56,11 @@ koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", versi
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junitJupiter" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines-test" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito" }
 
 #Maps
-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose" }
+maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "mapsCompose" }
 
 #Network
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
@@ -67,9 +72,10 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerialization" }
 
 #Play Services
-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
-play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-services-maps" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 
+#Build
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 

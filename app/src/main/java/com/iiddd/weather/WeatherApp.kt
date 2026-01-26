@@ -1,7 +1,7 @@
 package com.iiddd.weather
 
 import android.app.Application
-import com.iiddd.weather.di.locationWiringModule
+import com.iiddd.weather.di.ApplicationModule
 import com.iiddd.weather.forecast.di.ForecastModule
 import com.iiddd.weather.search.di.SearchModule
 import org.koin.android.ext.koin.androidContext
@@ -13,7 +13,7 @@ class WeatherApp : Application() {
         startKoin {
             androidContext(this@WeatherApp)
             modules(
-                locationWiringModule,
+                ApplicationModule.module,
                 ForecastModule.module,
                 SearchModule.module,
             )

@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.iiddd.weather.core.ui.theme.WeatherTheme
-import com.iiddd.weather.core.ui.theme.WeatherThemeDefaults
+import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 
 @Composable
 fun ErrorScreen(
@@ -31,7 +31,7 @@ fun ErrorScreen(
         ) {
             Text(
                 text = errorMessage,
-                color = WeatherThemeDefaults.colorScheme.error
+                color = WeatherThemeTokens.colors.error
             )
 
             Button(

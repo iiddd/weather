@@ -49,3 +49,4 @@ include(
     ":feature:settings",
     ":feature:forecast",
 )
+include(":core:preferences")
