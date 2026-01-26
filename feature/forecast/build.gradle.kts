@@ -23,12 +23,18 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-
+    // Modules
     implementation(projects.core.location)
     implementation(projects.core.network)
     implementation(projects.core.ui)
     implementation(projects.core.utils)
+
+    //Lifecycle
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    implementation(libs.androidx.core.ktx)
 
     // UI extras
     implementation(libs.compose.material3)
