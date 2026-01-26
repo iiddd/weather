@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import com.iiddd.weather.core.ui.systembars.WeatherWindowInsets
 import com.iiddd.weather.forecast.presentation.view.DetailedWeatherRoute
 import com.iiddd.weather.search.presentation.view.SearchScreen
 import com.iiddd.weather.settings.presentation.view.SettingsRoute
@@ -51,6 +52,7 @@ fun MainView() {
     }
 
     Scaffold(
+        contentWindowInsets = WeatherWindowInsets.None,
         bottomBar = {
             NavigationBar {
                 bottomTabDestinations.forEach { tabDestination: Destination ->

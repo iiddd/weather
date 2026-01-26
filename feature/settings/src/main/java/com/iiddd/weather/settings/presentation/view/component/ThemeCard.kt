@@ -6,6 +6,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
@@ -73,19 +75,24 @@ internal fun ThemeCard(
         ),
     ) {
         Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(all = 8.dp),
         ) {
             Image(
                 painter = painterResource(id = themeDrawableRes),
                 contentDescription = stringResource(id = contentDescriptionRes),
-                modifier = Modifier.height(120.dp),
+                modifier = Modifier
+                    .height(120.dp)
+                    .align(Alignment.CenterHorizontally),
             )
 
             Text(
                 text = stringResource(id = titleRes),
                 style = typography.labelMedium,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             )
         }
     }
