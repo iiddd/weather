@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iiddd.weather.core.ui.theme.ThemeMode
 import com.iiddd.weather.core.ui.theme.ThemeModeRepository
+import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
+import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -16,6 +18,7 @@ data class SettingsUiState(
 
 class SettingsViewModel(
     private val themeModeRepository: ThemeModeRepository,
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider(),
 ) : ViewModel() {
 
     val settingsUiState: StateFlow<SettingsUiState> =
@@ -30,7 +33,7 @@ class SettingsViewModel(
             )
 
     fun onThemeModeSelected(themeMode: ThemeMode) {
-        viewModelScope.launch {
+        viewModelScope.launch(context = dispatcherProvider.io) {
             themeModeRepository.setThemeMode(themeMode = themeMode)
         }
     }

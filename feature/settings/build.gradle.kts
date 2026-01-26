@@ -1,6 +1,7 @@
 plugins {
     id("com.iiddd.weather.android.library")
     id("com.iiddd.weather.android.compose")
+    id("com.iiddd.weather.android.junit")
 }
 
 android {
@@ -10,6 +11,7 @@ android {
 dependencies {
     // Modules
     implementation(projects.core.ui)
+    implementation(projects.core.utils)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.compose.material3)
@@ -22,4 +24,7 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+
+    // Testing
+    testImplementation(projects.core.testUtils)
 }
