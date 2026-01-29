@@ -7,14 +7,10 @@ sealed interface ForecastUiState {
     data object Loading : ForecastUiState
 
     data class Content(
-        val detailedWeatherContent: DetailedWeatherContent
+        val weather: Weather
     ) : ForecastUiState
 
     data class Error(
         val apiError: ApiError
     ) : ForecastUiState
 }
-
-data class DetailedWeatherContent(
-    val weather: Weather
-)

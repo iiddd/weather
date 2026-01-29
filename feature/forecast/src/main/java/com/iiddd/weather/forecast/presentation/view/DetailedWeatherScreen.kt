@@ -47,9 +47,7 @@ fun DetailedWeatherScreen(
         }
 
         is ForecastUiState.Content -> {
-            val weather: Weather = forecastUiState
-                .detailedWeatherContent
-                .weather
+            val weather: Weather = forecastUiState.weather
 
             val weatherState = rememberUpdatedState(newValue = weather)
 

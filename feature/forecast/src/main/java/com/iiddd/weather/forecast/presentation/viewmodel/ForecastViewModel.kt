@@ -8,6 +8,7 @@ import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import com.iiddd.weather.forecast.domain.location.CityNameResolver
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
+import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.LocationTracker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -65,46 +66,52 @@ class ForecastViewModel(
         viewModelScope.launch(context = dispatcherProvider.main) {
             mutableForecastUiState.value = ForecastUiState.Loading
 
-            val resolvedLatitudeLongitudeResult: LatitudeLongitudeResult =
-                withContext(context = dispatcherProvider.io) {
-                    if (latitude != null && longitude != null) {
-                        LatitudeLongitudeResult.Success(
-                            latitude = latitude,
-                            longitude = longitude,
-                        )
-                    } else {
-                        val lastKnownCoordinate = locationTracker.getLastKnownLocation()
-                        if (lastKnownCoordinate != null) {
-                            LatitudeLongitudeResult.Success(
-                                latitude = lastKnownCoordinate.latitude,
-                                longitude = lastKnownCoordinate.longitude,
-                            )
-                        } else {
-                            LatitudeLongitudeResult.Failure(
-                                apiError = ApiError.Input(
-                                    message = "Location is unavailable. Please enable location services and grant location permission.",
-                                ),
-                            )
-                        }
-                    }
-                }
+            val coordinatesResult: ApiResult<Coordinates> = resolveCoordinates(
+                latitude = latitude,
+                longitude = longitude,
+            )
 
-            when (resolvedLatitudeLongitudeResult) {
-                is LatitudeLongitudeResult.Success -> {
-                    latestRequestedLatitude = resolvedLatitudeLongitudeResult.latitude
-                    latestRequestedLongitude = resolvedLatitudeLongitudeResult.longitude
+            when (coordinatesResult) {
+                is ApiResult.Success -> {
+                    latestRequestedLatitude = coordinatesResult.value.latitude
+                    latestRequestedLongitude = coordinatesResult.value.longitude
 
                     loadWeatherAndCityNameAndEmitState(
-                        latitude = resolvedLatitudeLongitudeResult.latitude,
-                        longitude = resolvedLatitudeLongitudeResult.longitude,
+                        latitude = coordinatesResult.value.latitude,
+                        longitude = coordinatesResult.value.longitude,
                     )
                 }
 
-                is LatitudeLongitudeResult.Failure -> {
+                is ApiResult.Failure -> {
                     mutableForecastUiState.value = ForecastUiState.Error(
-                        apiError = resolvedLatitudeLongitudeResult.apiError,
+                        apiError = coordinatesResult.error,
                     )
                 }
+            }
+        }
+    }
+
+    private suspend fun resolveCoordinates(
+        latitude: Double?,
+        longitude: Double?,
+    ): ApiResult<Coordinates> = withContext(context = dispatcherProvider.io) {
+        if (latitude != null && longitude != null) {
+            ApiResult.Success(
+                value = Coordinates(
+                    latitude = latitude,
+                    longitude = longitude,
+                )
+            )
+        } else {
+            val lastKnownCoordinate = locationTracker.getLastKnownLocation()
+            if (lastKnownCoordinate != null) {
+                ApiResult.Success(value = lastKnownCoordinate)
+            } else {
+                ApiResult.Failure(
+                    error = ApiError.Input(
+                        message = "Location is unavailable. Please enable location services and grant location permission.",
+                    )
+                )
             }
         }
     }
@@ -136,19 +143,15 @@ class ForecastViewModel(
                     weatherResult.value
                 }
 
-                mutableForecastUiState.value =
-                    ForecastUiState.Content(
-                        detailedWeatherContent = DetailedWeatherContent(
-                            weather = updatedWeather,
-                        ),
-                    )
+                mutableForecastUiState.value = ForecastUiState.Content(
+                    weather = updatedWeather,
+                )
             }
 
             is ApiResult.Failure -> {
-                mutableForecastUiState.value =
-                    ForecastUiState.Error(
-                        apiError = weatherResult.error,
-                    )
+                mutableForecastUiState.value = ForecastUiState.Error(
+                    apiError = weatherResult.error,
+                )
             }
         }
     }
