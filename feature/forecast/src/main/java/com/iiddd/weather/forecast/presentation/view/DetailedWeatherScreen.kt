@@ -16,6 +16,7 @@ fun DetailedWeatherScreen(
     forecastUiState: ForecastUiState,
     shouldRequestDeviceLocation: Boolean,
     hasLocationPermission: Boolean,
+    isRefreshing: Boolean,
     onRequestLocationPermission: () -> Unit,
     onRefreshRequested: () -> Unit,
 ) {
@@ -48,16 +49,17 @@ fun DetailedWeatherScreen(
 
         is ForecastUiState.Content -> {
             val weather: Weather = forecastUiState.weather
-
             val weatherState = rememberUpdatedState(newValue = weather)
 
             DetailedWeatherScreenContent(
                 weatherState = weatherState,
+                isRefreshing = isRefreshing,
                 onRefresh = onRefreshRequested,
             )
         }
     }
 }
+
 
 @WeatherPreview
 @Composable
@@ -73,7 +75,8 @@ private fun DetailedWeatherScreenPreviewHappyFlow() {
         )
         DetailedWeatherScreenContent(
             weatherState = mockState,
-            onRefresh = {}
+            onRefresh = {},
+            isRefreshing = false
         )
     }
 }
@@ -91,7 +94,8 @@ private fun DetailedWeatherScreenPreviewError() {
             shouldRequestDeviceLocation = false,
             hasLocationPermission = false,
             onRequestLocationPermission = {},
-            onRefreshRequested = {}
+            onRefreshRequested = {},
+            isRefreshing = false
         )
     }
 }

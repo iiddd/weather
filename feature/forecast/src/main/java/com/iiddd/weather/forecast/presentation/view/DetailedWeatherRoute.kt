@@ -10,6 +10,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iiddd.weather.core.ui.components.LoadingScreen
 import com.iiddd.weather.forecast.presentation.view.permission.rememberLocationPermissionController
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiEvent
+import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiState
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,13 +36,14 @@ fun DetailedWeatherRoute(
     val isAwaitingPermissionResponse = permissionStateWhenRequested != null &&
             permissionStateWhenRequested == hasLocationPermission
 
+    val isRefreshing = (forecastUiState as? ForecastUiState.Content)?.isRefreshing ?: false
+
     LaunchedEffect(
         shouldRequestDeviceLocation,
         hasLocationPermission,
     ) {
         val shouldRequestPermissionNow =
-            shouldRequestDeviceLocation &&
-                    !hasLocationPermission &&
+            shouldRequestDeviceLocation &&    !hasLocationPermission &&
                     !hasRequestedLocationPermissionAtStartup
 
         if (!shouldRequestPermissionNow) return@LaunchedEffect
@@ -51,10 +53,7 @@ fun DetailedWeatherRoute(
         locationPermissionController.requestLocationPermission()
     }
 
-    // Clear awaiting state once permission status actually changes
-    LaunchedEffect(
-        key1 = hasLocationPermission,
-    ) {
+    LaunchedEffect(key1 = hasLocationPermission) {
         if (permissionStateWhenRequested != null && permissionStateWhenRequested != hasLocationPermission) {
             permissionStateWhenRequested = null
         }
@@ -91,6 +90,7 @@ fun DetailedWeatherRoute(
         forecastUiState = forecastUiState,
         shouldRequestDeviceLocation = shouldRequestDeviceLocation,
         hasLocationPermission = hasLocationPermission,
+        isRefreshing = isRefreshing,
         onRequestLocationPermission = {
             permissionStateWhenRequested = hasLocationPermission
             locationPermissionController.requestLocationPermission()
