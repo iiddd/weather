@@ -30,58 +30,47 @@ class ForecastViewModel(
     val forecastUiState: StateFlow<ForecastUiState> =
         mutableForecastUiState.asStateFlow()
 
-    private var latestLoadedCoordinates: Coordinates? = null
-    private var isUsingDeviceLocation: Boolean = false
+    // Store the last request parameters for refresh
+    private var lastRequestParameters: RequestParameters? = null
+
+    private data class RequestParameters(
+        val latitude: Double?,
+        val longitude: Double?,
+        val useDeviceLocation: Boolean,
+    )
 
     fun onEvent(forecastUiEvent: ForecastUiEvent) {
         when (forecastUiEvent) {
             is ForecastUiEvent.LoadWeatherRequested -> {
-                val requestedCoordinates = if (forecastUiEvent.latitude != null && forecastUiEvent.longitude != null) {
-                    Coordinates(
-                        latitude = forecastUiEvent.latitude,
-                        longitude = forecastUiEvent.longitude,
-                    )
-                } else {
-                    null
-                }
+                val newRequestParameters = RequestParameters(
+                    latitude = forecastUiEvent.latitude,
+                    longitude = forecastUiEvent.longitude,
+                    useDeviceLocation = forecastUiEvent.useDeviceLocation,
+                )
 
-                val isDeviceLocationRequest = requestedCoordinates == null
+                // Skip if same request and already have content
                 val hasContent = mutableForecastUiState.value is ForecastUiState.Content
-
-                // If we already have content and receive a device location request,
-                // skip reloading - keep showing the current content
-                if (isDeviceLocationRequest && hasContent) {
+                if (hasContent && newRequestParameters == lastRequestParameters) {
                     return
                 }
 
-                val alreadyLoadedForSameRequest = when {
-                    requestedCoordinates != null && hasContent -> {
-                        requestedCoordinates == latestLoadedCoordinates
-                    }
-                    else -> false
-                }
+                lastRequestParameters = newRequestParameters
 
-                if (alreadyLoadedForSameRequest) {
-                    return
-                }
-
-                // Store coordinates immediately for refresh support
-                isUsingDeviceLocation = requestedCoordinates == null
-                if (requestedCoordinates != null) {
-                    latestLoadedCoordinates = requestedCoordinates
-                }
-
-                loadWeatherForCoordinatesOrCurrentLocation(
-                    coordinates = requestedCoordinates,
+                loadWeather(
+                    latitude = forecastUiEvent.latitude,
+                    longitude = forecastUiEvent.longitude,
+                    useDeviceLocation = forecastUiEvent.useDeviceLocation,
                     forceRefresh = false,
                 )
             }
 
             ForecastUiEvent.RefreshRequested -> {
-                // On refresh, use the last loaded coordinates regardless of how we got them
-                val coordinatesToRefresh = if (isUsingDeviceLocation) null else latestLoadedCoordinates
-                loadWeatherForCoordinatesOrCurrentLocation(
-                    coordinates = coordinatesToRefresh,
+                val parameters = lastRequestParameters ?: return
+
+                loadWeather(
+                    latitude = parameters.latitude,
+                    longitude = parameters.longitude,
+                    useDeviceLocation = parameters.useDeviceLocation,
                     forceRefresh = true,
                 )
             }
@@ -94,8 +83,10 @@ class ForecastViewModel(
         }
     }
 
-    private fun loadWeatherForCoordinatesOrCurrentLocation(
-        coordinates: Coordinates?,
+    private fun loadWeather(
+        latitude: Double?,
+        longitude: Double?,
+        useDeviceLocation: Boolean,
         forceRefresh: Boolean,
     ) {
         viewModelScope.launch(context = dispatcherProvider.main) {
@@ -109,18 +100,17 @@ class ForecastViewModel(
                 mutableForecastUiState.value = ForecastUiState.Loading
             }
 
-            val coordinatesResult: ApiResult<Coordinates> = resolveCoordinates(coordinates = coordinates)
+            val coordinatesResult: ApiResult<Coordinates> = resolveCoordinates(
+                latitude = latitude,
+                longitude = longitude,
+                useDeviceLocation = useDeviceLocation,
+            )
 
             when (coordinatesResult) {
                 is ApiResult.Success -> {
-                    val resolvedCoordinates = coordinatesResult.value
-
-                    // Update coordinates after successful resolution (for device location case)
-                    latestLoadedCoordinates = resolvedCoordinates
-
                     loadWeatherAndCityNameAndEmitState(
-                        latitude = resolvedCoordinates.latitude,
-                        longitude = resolvedCoordinates.longitude,
+                        latitude = coordinatesResult.value.latitude,
+                        longitude = coordinatesResult.value.longitude,
                     )
                 }
 
@@ -134,19 +124,35 @@ class ForecastViewModel(
     }
 
     private suspend fun resolveCoordinates(
-        coordinates: Coordinates?,
+        latitude: Double?,
+        longitude: Double?,
+        useDeviceLocation: Boolean,
     ): ApiResult<Coordinates> = withContext(context = dispatcherProvider.io) {
-        if (coordinates != null) {
-            return@withContext ApiResult.Success(value = coordinates)
+        // If explicit coordinates provided, use them
+        if (latitude != null && longitude != null) {
+            return@withContext ApiResult.Success(
+                value = Coordinates(
+                    latitude = latitude,
+                    longitude = longitude,
+                )
+            )
         }
 
-        // First try cached location
+        // If not using device location and no coordinates, this is an error
+        if (!useDeviceLocation) {
+            return@withContext ApiResult.Failure(
+                error = ApiError.Input(
+                    message = "No coordinates provided and device location not requested.",
+                )
+            )
+        }
+
+        // Try to get device location
         val lastKnownCoordinate = locationTracker.getLastKnownLocation()
         if (lastKnownCoordinate != null) {
             return@withContext ApiResult.Success(value = lastKnownCoordinate)
         }
 
-        // If cached location unavailable, request fresh location
         val currentLocation = locationTracker.getCurrentLocationOrNull()
         if (currentLocation != null) {
             return@withContext ApiResult.Success(value = currentLocation)

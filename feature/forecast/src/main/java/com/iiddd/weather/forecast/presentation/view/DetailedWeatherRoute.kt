@@ -19,6 +19,7 @@ fun DetailedWeatherRoute(
     forecastViewModel: ForecastViewModel = koinViewModel(),
     latitude: Double?,
     longitude: Double?,
+    useDeviceLocation: Boolean,
 ) {
     val forecastUiState by forecastViewModel
         .forecastUiState
@@ -27,8 +28,7 @@ fun DetailedWeatherRoute(
     val locationPermissionController = rememberLocationPermissionController()
     val hasLocationPermission = locationPermissionController.hasLocationPermission
 
-    val isNavigationCoordinatesProvided = latitude != null && longitude != null
-    val shouldRequestDeviceLocation = !isNavigationCoordinatesProvided
+    val hasExplicitCoordinates = latitude != null && longitude != null
 
     var hasRequestedLocationPermissionAtStartup by rememberSaveable { mutableStateOf(false) }
     var permissionStateWhenRequested by rememberSaveable { mutableStateOf<Boolean?>(null) }
@@ -38,12 +38,14 @@ fun DetailedWeatherRoute(
 
     val isRefreshing = (forecastUiState as? ForecastUiState.Content)?.isRefreshing ?: false
 
+    // Request permission at startup if using device location and don't have permission
     LaunchedEffect(
-        shouldRequestDeviceLocation,
+        useDeviceLocation,
         hasLocationPermission,
     ) {
         val shouldRequestPermissionNow =
-            shouldRequestDeviceLocation &&    !hasLocationPermission &&
+            useDeviceLocation &&
+                    !hasLocationPermission &&
                     !hasRequestedLocationPermissionAtStartup
 
         if (!shouldRequestPermissionNow) return@LaunchedEffect
@@ -53,23 +55,28 @@ fun DetailedWeatherRoute(
         locationPermissionController.requestLocationPermission()
     }
 
+    // Clear awaiting state when permission changes
     LaunchedEffect(key1 = hasLocationPermission) {
         if (permissionStateWhenRequested != null && permissionStateWhenRequested != hasLocationPermission) {
             permissionStateWhenRequested = null
         }
     }
 
+    // Load weather when conditions are met
     LaunchedEffect(
         latitude,
         longitude,
+        useDeviceLocation,
         hasLocationPermission,
         isAwaitingPermissionResponse,
     ) {
         if (isAwaitingPermissionResponse) return@LaunchedEffect
 
-        val shouldLoadWeather =
-            isNavigationCoordinatesProvided ||
-                    (shouldRequestDeviceLocation && hasLocationPermission)
+        val shouldLoadWeather = when {
+            hasExplicitCoordinates -> true
+            useDeviceLocation && hasLocationPermission -> true
+            else -> false
+        }
 
         if (!shouldLoadWeather) return@LaunchedEffect
 
@@ -77,6 +84,7 @@ fun DetailedWeatherRoute(
             ForecastUiEvent.LoadWeatherRequested(
                 latitude = latitude,
                 longitude = longitude,
+                useDeviceLocation = useDeviceLocation,
             )
         )
     }
@@ -88,7 +96,7 @@ fun DetailedWeatherRoute(
 
     DetailedWeatherScreen(
         forecastUiState = forecastUiState,
-        shouldRequestDeviceLocation = shouldRequestDeviceLocation,
+        useDeviceLocation = useDeviceLocation,
         hasLocationPermission = hasLocationPermission,
         isRefreshing = isRefreshing,
         onRequestLocationPermission = {

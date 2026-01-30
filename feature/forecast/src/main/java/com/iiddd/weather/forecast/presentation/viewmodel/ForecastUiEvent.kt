@@ -4,6 +4,7 @@ sealed interface ForecastUiEvent {
     data class LoadWeatherRequested(
         val latitude: Double?,
         val longitude: Double?,
+        val useDeviceLocation: Boolean,
     ) : ForecastUiEvent
 
     data object RefreshRequested : ForecastUiEvent

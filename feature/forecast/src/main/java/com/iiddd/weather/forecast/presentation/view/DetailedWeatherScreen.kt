@@ -14,13 +14,13 @@ import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiState
 @Composable
 fun DetailedWeatherScreen(
     forecastUiState: ForecastUiState,
-    shouldRequestDeviceLocation: Boolean,
+    useDeviceLocation: Boolean,
     hasLocationPermission: Boolean,
     isRefreshing: Boolean,
     onRequestLocationPermission: () -> Unit,
     onRefreshRequested: () -> Unit,
 ) {
-    if (shouldRequestDeviceLocation && !hasLocationPermission) {
+    if (useDeviceLocation && !hasLocationPermission) {
         ErrorScreen(
             errorMessage = "Location permission is required to load weather for your current location.",
             onRetry = onRequestLocationPermission,
@@ -35,7 +35,7 @@ fun DetailedWeatherScreen(
 
         is ForecastUiState.Error -> {
             val shouldRetryByRequestingPermission =
-                shouldRequestDeviceLocation && forecastUiState.apiError is ApiError.Input
+                useDeviceLocation && forecastUiState.apiError is ApiError.Input
 
             ErrorScreen(
                 errorMessage = forecastUiState.apiError.toUiMessage(),
@@ -60,7 +60,6 @@ fun DetailedWeatherScreen(
     }
 }
 
-
 @WeatherPreview
 @Composable
 private fun DetailedWeatherScreenPreviewHappyFlow() {
@@ -70,13 +69,13 @@ private fun DetailedWeatherScreenPreviewHappyFlow() {
                 currentTemp = 13,
                 description = "Clear",
                 hourly = emptyList(),
-                daily = emptyList()
+                daily = emptyList(),
             )
         )
         DetailedWeatherScreenContent(
             weatherState = mockState,
             onRefresh = {},
-            isRefreshing = false
+            isRefreshing = false,
         )
     }
 }
@@ -88,14 +87,14 @@ private fun DetailedWeatherScreenPreviewError() {
         DetailedWeatherScreen(
             forecastUiState = ForecastUiState.Error(
                 apiError = ApiError.Network(
-                    message = "Unable to connect to the server."
+                    message = "Unable to connect to the server.",
                 )
             ),
-            shouldRequestDeviceLocation = false,
+            useDeviceLocation = false,
             hasLocationPermission = false,
             onRequestLocationPermission = {},
             onRefreshRequested = {},
-            isRefreshing = false
+            isRefreshing = false,
         )
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.iiddd.weather.core.ui.systembars.WeatherWindowInsets
@@ -23,7 +24,9 @@ import com.iiddd.weather.search.presentation.view.SearchScreen
 import com.iiddd.weather.settings.presentation.view.SettingsRoute
 import com.iiddd.weather.ui.navigation.Destination
 import com.iiddd.weather.ui.navigation.NavigationBackStack
+import com.iiddd.weather.ui.navigation.WeatherNavigationState
 import com.iiddd.weather.ui.navigation.popSafe
+import com.iiddd.weather.ui.navigation.rememberWeatherNavigationState
 
 @Composable
 fun MainView() {
@@ -31,11 +34,13 @@ fun MainView() {
         NavigationBackStack(startDestination = Destination.Weather())
     }
 
+    val weatherNavigationState: WeatherNavigationState = rememberWeatherNavigationState()
+
     val bottomTabDestinations: List<Destination> = remember {
         listOf(
             Destination.Weather(),
             Destination.Search,
-            Destination.Settings
+            Destination.Settings,
         )
     }
 
@@ -54,88 +59,122 @@ fun MainView() {
     Scaffold(
         contentWindowInsets = WeatherWindowInsets.None,
         bottomBar = {
-            NavigationBar {
-                bottomTabDestinations.forEach { tabDestination: Destination ->
-                    NavigationBarItem(
-                        selected = selectedBottomTabDestination::class == tabDestination::class,
-                        onClick = {
-                            navigationBackStack.replaceCurrent(destination = tabDestination)
-                        },
-                        label = {
-                            Text(text = tabLabel(destination = tabDestination))
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = tabIcon(destination = tabDestination),
-                                contentDescription = tabLabel(destination = tabDestination)
+            MainBottomNavigationBar(
+                bottomTabDestinations = bottomTabDestinations,
+                selectedBottomTabDestination = selectedBottomTabDestination,
+                onTabSelected = { tabDestination: Destination ->
+                    when (tabDestination) {
+                        is Destination.Weather -> {
+                            // Restore the last weather destination instead of empty one
+                            navigationBackStack.replaceCurrent(
+                                destination = weatherNavigationState.currentWeatherDestination
                             )
                         }
-                    )
-                }
-            }
-        }
-    ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
-            NavDisplay(
-                backStack = navigationBackStack.entries,
-                onBack = {
-                    navigationBackStack.popSafe()
-                },
-                entryProvider = { destination: Destination ->
-                    when (destination) {
-                        is Destination.Weather -> {
-                            NavEntry(
-                                key = destination,
-                                contentKey = weatherContentKey(destination = destination)
-                            ) { entryDestination: Destination ->
-                                val weatherDestination: Destination.Weather =
-                                    entryDestination as Destination.Weather
-
-                                DetailedWeatherRoute(
-                                    latitude = weatherDestination.latitude,
-                                    longitude = weatherDestination.longitude
-                                )
-                            }
-                        }
-
-                        Destination.Search -> {
-                            NavEntry(
-                                key = destination,
-                                contentKey = "Destination.Search"
-                            ) { _: Destination ->
-                                SearchScreen(
-                                    onOpenDetails = { latitude: Double, longitude: Double ->
-                                        navigationBackStack.replaceCurrent(
-                                            destination = Destination.Weather()
-                                        )
-                                        navigationBackStack.push(
-                                            destination = Destination.Weather(
-                                                latitude = latitude,
-                                                longitude = longitude
-                                            )
-                                        )
-                                    }
-                                )
-                            }
-                        }
-
-                        Destination.Settings -> {
-                            NavEntry(
-                                key = destination,
-                                contentKey = "Destination.Settings"
-                            ) { _: Destination ->
-                                SettingsRoute()
-                            }
+                        else -> {
+                            navigationBackStack.replaceCurrent(destination = tabDestination)
                         }
                     }
-                }
+                },
+            )
+        },
+    ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
+            MainNavDisplay(
+                navigationBackStack = navigationBackStack,
+                weatherNavigationState = weatherNavigationState,
             )
         }
     }
 }
 
+@Composable
+private fun MainBottomNavigationBar(
+    bottomTabDestinations: List<Destination>,
+    selectedBottomTabDestination: Destination,
+    onTabSelected: (Destination) -> Unit,
+) {
+    NavigationBar {
+        bottomTabDestinations.forEach { tabDestination: Destination ->
+            NavigationBarItem(
+                selected = selectedBottomTabDestination::class == tabDestination::class,
+                onClick = { onTabSelected(tabDestination) },
+                label = { Text(text = tabLabel(destination = tabDestination)) },
+                icon = {
+                    Icon(
+                        imageVector = tabIcon(destination = tabDestination),
+                        contentDescription = tabLabel(destination = tabDestination),
+                    )
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun MainNavDisplay(
+    navigationBackStack: NavigationBackStack,
+    weatherNavigationState: WeatherNavigationState,
+) {
+    NavDisplay(
+        backStack = navigationBackStack.entries,
+        onBack = { navigationBackStack.popSafe() },
+        entryProvider = { destination: Destination ->
+            when (destination) {
+                is Destination.Weather -> {
+                    NavEntry(
+                        key = destination,
+                        contentKey = weatherContentKey(destination = destination),
+                    ) { entryDestination: Destination ->
+                        val weatherDestination: Destination.Weather =
+                            entryDestination as Destination.Weather
+
+                        // Update the stored weather destination when displaying
+                        weatherNavigationState.updateWeatherDestination(destination = weatherDestination)
+
+                        DetailedWeatherRoute(
+                            latitude = weatherDestination.latitude,
+                            longitude = weatherDestination.longitude,
+                            useDeviceLocation = weatherDestination.useDeviceLocation,
+                        )
+                    }
+                }Destination.Search -> {
+                NavEntry(
+                    key = destination,
+                    contentKey = "Destination.Search",
+                ) { _: Destination ->
+                    SearchScreen(
+                        onOpenDetails = { latitude: Double, longitude: Double ->
+                            val newWeatherDestination = Destination.Weather(
+                                latitude = latitude,
+                                longitude = longitude,
+                                useDeviceLocation = false,
+                            )
+                            weatherNavigationState.updateWeatherDestination(
+                                destination = newWeatherDestination
+                            )
+                            navigationBackStack.replaceCurrent(
+                                destination = newWeatherDestination
+                            )
+                        },
+                    )
+                }
+            }
+
+                Destination.Settings -> {
+                    NavEntry(
+                        key = destination,
+                        contentKey = "Destination.Settings",
+                    ) { _: Destination ->
+                        SettingsRoute()
+                    }
+                }
+            }
+        },
+    )
+}
+
 private fun weatherContentKey(destination: Destination.Weather): String {
-    return "Destination.Weather(latitude=${destination.latitude},longitude=${destination.longitude})"
+    return "Destination.Weather(latitude=${destination.latitude},longitude=${destination.longitude},useDeviceLocation=${destination.useDeviceLocation})"
 }
 
 private fun tabLabel(destination: Destination): String = when (destination) {
@@ -144,7 +183,7 @@ private fun tabLabel(destination: Destination): String = when (destination) {
     Destination.Settings -> "Settings"
 }
 
-private fun tabIcon(destination: Destination) = when (destination) {
+private fun tabIcon(destination: Destination): ImageVector = when (destination) {
     is Destination.Weather -> Icons.Default.Home
     Destination.Search -> Icons.Default.Search
     Destination.Settings -> Icons.Default.Settings
