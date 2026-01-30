@@ -10,6 +10,7 @@ import com.iiddd.weather.forecast.domain.location.CityNameResolver
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
 import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.LocationTracker
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +31,6 @@ class ForecastViewModel(
         mutableForecastUiState.asStateFlow()
 
     private var latestLoadedCoordinates: Coordinates? = null
-    private var latestRequestedCoordinates: Coordinates? = null
     private var isUsingDeviceLocation: Boolean = false
 
     fun onEvent(forecastUiEvent: ForecastUiEvent) {
@@ -46,15 +46,14 @@ class ForecastViewModel(
                 }
 
                 val isDeviceLocationRequest = requestedCoordinates == null
+                val hasContent = mutableForecastUiState.value is ForecastUiState.Content
 
                 val alreadyLoadedForSameRequest = when {
-                    requestedCoordinates != null -> {
-                        requestedCoordinates == latestLoadedCoordinates &&
-                                mutableForecastUiState.value is ForecastUiState.Content
+                    requestedCoordinates != null && hasContent -> {
+                        requestedCoordinates == latestLoadedCoordinates
                     }
-                    isDeviceLocationRequest && isUsingDeviceLocation -> {
-                        latestLoadedCoordinates != null &&
-                                mutableForecastUiState.value is ForecastUiState.Content
+                    isDeviceLocationRequest && isUsingDeviceLocation && hasContent -> {
+                        true
                     }
                     else -> false
                 }
@@ -70,8 +69,9 @@ class ForecastViewModel(
             }
 
             ForecastUiEvent.RefreshRequested -> {
+                val coordinatesToRefresh = if (isUsingDeviceLocation) null else latestLoadedCoordinates
                 loadWeatherForCoordinatesOrCurrentLocation(
-                    coordinates = if (isUsingDeviceLocation) null else latestRequestedCoordinates,
+                    coordinates = coordinatesToRefresh,
                     forceRefresh = true,
                 )
             }
@@ -89,7 +89,9 @@ class ForecastViewModel(
         forceRefresh: Boolean,
     ) {
         viewModelScope.launch(context = dispatcherProvider.main) {
-            mutableForecastUiState.value = ForecastUiState.Loading
+            if (!forceRefresh || mutableForecastUiState.value !is ForecastUiState.Content) {
+                mutableForecastUiState.value = ForecastUiState.Loading
+            }
 
             val coordinatesResult: ApiResult<Coordinates> = resolveCoordinates(coordinates = coordinates)
 
@@ -98,7 +100,6 @@ class ForecastViewModel(
                     val resolvedCoordinates = coordinatesResult.value
 
                     isUsingDeviceLocation = coordinates == null
-                    latestRequestedCoordinates = resolvedCoordinates
 
                     loadWeatherAndCityNameAndEmitState(
                         latitude = resolvedCoordinates.latitude,
@@ -119,19 +120,26 @@ class ForecastViewModel(
         coordinates: Coordinates?,
     ): ApiResult<Coordinates> = withContext(context = dispatcherProvider.io) {
         if (coordinates != null) {
-            ApiResult.Success(value = coordinates)
-        } else {
+            return@withContext ApiResult.Success(value = coordinates)
+        }
+
+        // Retry getting location with delays - location may not be immediately available
+        repeat(times = LOCATION_RETRY_COUNT) { attempt ->
             val lastKnownCoordinate = locationTracker.getLastKnownLocation()
             if (lastKnownCoordinate != null) {
-                ApiResult.Success(value = lastKnownCoordinate)
-            } else {
-                ApiResult.Failure(
-                    error = ApiError.Input(
-                        message = "Location is unavailable. Please enable location services and grant location permission.",
-                    )
-                )
+                return@withContext ApiResult.Success(value = lastKnownCoordinate)
+            }
+
+            if (attempt < LOCATION_RETRY_COUNT - 1) {
+                delay(timeMillis = LOCATION_RETRY_DELAY_MILLISECONDS)
             }
         }
+
+        ApiResult.Failure(
+            error = ApiError.Input(
+                message = "Location is unavailable. Please enable location services and grant location permission.",
+            )
+        )
     }
 
     private suspend fun loadWeatherAndCityNameAndEmitState(
@@ -177,5 +185,10 @@ class ForecastViewModel(
                 )
             }
         }
+    }
+
+    private companion object {
+        const val LOCATION_RETRY_COUNT = 3
+        const val LOCATION_RETRY_DELAY_MILLISECONDS = 500L
     }
 }
