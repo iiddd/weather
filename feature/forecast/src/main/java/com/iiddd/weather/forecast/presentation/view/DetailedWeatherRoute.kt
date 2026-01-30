@@ -4,15 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.iiddd.weather.core.ui.components.LoadingScreen
 import com.iiddd.weather.forecast.presentation.view.permission.rememberLocationPermissionController
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiEvent
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import org.koin.androidx.compose.koinViewModel
-import java.util.Locale
 
 @Composable
 fun DetailedWeatherRoute(
@@ -31,10 +30,14 @@ fun DetailedWeatherRoute(
     val shouldRequestDeviceLocation = !isNavigationCoordinatesProvided
 
     var hasRequestedLocationPermissionAtStartup by rememberSaveable { mutableStateOf(false) }
+    var permissionStateWhenRequested by rememberSaveable { mutableStateOf<Boolean?>(null) }
+
+    val isAwaitingPermissionResponse = permissionStateWhenRequested != null &&
+            permissionStateWhenRequested == hasLocationPermission
 
     LaunchedEffect(
-        key1 = shouldRequestDeviceLocation,
-        key2 = hasLocationPermission,
+        shouldRequestDeviceLocation,
+        hasLocationPermission,
     ) {
         val shouldRequestPermissionNow =
             shouldRequestDeviceLocation &&
@@ -44,40 +47,32 @@ fun DetailedWeatherRoute(
         if (!shouldRequestPermissionNow) return@LaunchedEffect
 
         hasRequestedLocationPermissionAtStartup = true
+        permissionStateWhenRequested = hasLocationPermission
         locationPermissionController.requestLocationPermission()
     }
 
-    val destinationKey = remember(latitude, longitude) {
-        val lat = latitude?.toStableString() ?: DEVICE_LOCATION_KEY
-        val lon = longitude?.toStableString() ?: DEVICE_LOCATION_KEY
-        "$DETAILED_WEATHER_ROUTE_PREFIX:$lat,$lon"
-    }
-
-    val loadKey = remember(
-        destinationKey,
-        hasLocationPermission,
-        shouldRequestDeviceLocation,
-        isNavigationCoordinatesProvided,
+    // Clear awaiting state once permission status actually changes
+    LaunchedEffect(
+        key1 = hasLocationPermission,
     ) {
-        LoadKey(
-            destinationKey = destinationKey,
-            hasLocationPermission = hasLocationPermission,
-            shouldRequestDeviceLocation = shouldRequestDeviceLocation,
-            isNavigationCoordinatesProvided = isNavigationCoordinatesProvided,
-        )
+        if (permissionStateWhenRequested != null && permissionStateWhenRequested != hasLocationPermission) {
+            permissionStateWhenRequested = null
+        }
     }
 
-    var latestLoadedDestinationKey by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(
+        latitude,
+        longitude,
+        hasLocationPermission,
+        isAwaitingPermissionResponse,
+    ) {
+        if (isAwaitingPermissionResponse) return@LaunchedEffect
 
-    LaunchedEffect(key1 = loadKey) {
         val shouldLoadWeather =
-            loadKey.isNavigationCoordinatesProvided ||
-                    (loadKey.shouldRequestDeviceLocation && loadKey.hasLocationPermission)
+            isNavigationCoordinatesProvided ||
+                    (shouldRequestDeviceLocation && hasLocationPermission)
 
         if (!shouldLoadWeather) return@LaunchedEffect
-        if (latestLoadedDestinationKey == loadKey.destinationKey) return@LaunchedEffect
-
-        latestLoadedDestinationKey = loadKey.destinationKey
 
         forecastViewModel.onEvent(
             ForecastUiEvent.LoadWeatherRequested(
@@ -87,32 +82,21 @@ fun DetailedWeatherRoute(
         )
     }
 
+    if (isAwaitingPermissionResponse) {
+        LoadingScreen()
+        return
+    }
+
     DetailedWeatherScreen(
         forecastUiState = forecastUiState,
         shouldRequestDeviceLocation = shouldRequestDeviceLocation,
         hasLocationPermission = hasLocationPermission,
-        onRequestLocationPermission = { locationPermissionController.requestLocationPermission() },
+        onRequestLocationPermission = {
+            permissionStateWhenRequested = hasLocationPermission
+            locationPermissionController.requestLocationPermission()
+        },
         onRefreshRequested = {
-            latestLoadedDestinationKey = null
             forecastViewModel.onEvent(ForecastUiEvent.RefreshRequested)
         },
     )
 }
-
-private data class LoadKey(
-    val destinationKey: String,
-    val hasLocationPermission: Boolean,
-    val shouldRequestDeviceLocation: Boolean,
-    val isNavigationCoordinatesProvided: Boolean,
-)
-
-private const val DEVICE_LOCATION_KEY = "device"
-private const val DETAILED_WEATHER_ROUTE_PREFIX = "DetailedWeather"
-private const val COORDINATE_KEY_DECIMALS = 5
-
-private fun Double.toStableString(): String =
-    String.format(
-        Locale.US,
-        "%.${COORDINATE_KEY_DECIMALS}f",
-        this,
-    )

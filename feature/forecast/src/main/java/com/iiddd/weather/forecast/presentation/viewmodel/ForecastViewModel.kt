@@ -29,25 +29,50 @@ class ForecastViewModel(
     val forecastUiState: StateFlow<ForecastUiState> =
         mutableForecastUiState.asStateFlow()
 
-    private var latestRequestedLatitude: Double? = null
-    private var latestRequestedLongitude: Double? = null
+    private var latestLoadedCoordinates: Coordinates? = null
+    private var latestRequestedCoordinates: Coordinates? = null
+    private var isUsingDeviceLocation: Boolean = false
 
     fun onEvent(forecastUiEvent: ForecastUiEvent) {
         when (forecastUiEvent) {
             is ForecastUiEvent.LoadWeatherRequested -> {
-                val resolvedLatitude = forecastUiEvent.latitude ?: latestRequestedLatitude
-                val resolvedLongitude = forecastUiEvent.longitude ?: latestRequestedLongitude
+                val requestedCoordinates = if (forecastUiEvent.latitude != null && forecastUiEvent.longitude != null) {
+                    Coordinates(
+                        latitude = forecastUiEvent.latitude,
+                        longitude = forecastUiEvent.longitude,
+                    )
+                } else {
+                    null
+                }
+
+                val isDeviceLocationRequest = requestedCoordinates == null
+
+                val alreadyLoadedForSameRequest = when {
+                    requestedCoordinates != null -> {
+                        requestedCoordinates == latestLoadedCoordinates &&
+                                mutableForecastUiState.value is ForecastUiState.Content
+                    }
+                    isDeviceLocationRequest && isUsingDeviceLocation -> {
+                        latestLoadedCoordinates != null &&
+                                mutableForecastUiState.value is ForecastUiState.Content
+                    }
+                    else -> false
+                }
+
+                if (alreadyLoadedForSameRequest) {
+                    return
+                }
 
                 loadWeatherForCoordinatesOrCurrentLocation(
-                    latitude = resolvedLatitude,
-                    longitude = resolvedLongitude,
+                    coordinates = requestedCoordinates,
+                    forceRefresh = false,
                 )
             }
 
             ForecastUiEvent.RefreshRequested -> {
                 loadWeatherForCoordinatesOrCurrentLocation(
-                    latitude = latestRequestedLatitude,
-                    longitude = latestRequestedLongitude,
+                    coordinates = if (isUsingDeviceLocation) null else latestRequestedCoordinates,
+                    forceRefresh = true,
                 )
             }
 
@@ -60,25 +85,24 @@ class ForecastViewModel(
     }
 
     private fun loadWeatherForCoordinatesOrCurrentLocation(
-        latitude: Double?,
-        longitude: Double?,
+        coordinates: Coordinates?,
+        forceRefresh: Boolean,
     ) {
         viewModelScope.launch(context = dispatcherProvider.main) {
             mutableForecastUiState.value = ForecastUiState.Loading
 
-            val coordinatesResult: ApiResult<Coordinates> = resolveCoordinates(
-                latitude = latitude,
-                longitude = longitude,
-            )
+            val coordinatesResult: ApiResult<Coordinates> = resolveCoordinates(coordinates = coordinates)
 
             when (coordinatesResult) {
                 is ApiResult.Success -> {
-                    latestRequestedLatitude = coordinatesResult.value.latitude
-                    latestRequestedLongitude = coordinatesResult.value.longitude
+                    val resolvedCoordinates = coordinatesResult.value
+
+                    isUsingDeviceLocation = coordinates == null
+                    latestRequestedCoordinates = resolvedCoordinates
 
                     loadWeatherAndCityNameAndEmitState(
-                        latitude = coordinatesResult.value.latitude,
-                        longitude = coordinatesResult.value.longitude,
+                        latitude = resolvedCoordinates.latitude,
+                        longitude = resolvedCoordinates.longitude,
                     )
                 }
 
@@ -92,16 +116,10 @@ class ForecastViewModel(
     }
 
     private suspend fun resolveCoordinates(
-        latitude: Double?,
-        longitude: Double?,
+        coordinates: Coordinates?,
     ): ApiResult<Coordinates> = withContext(context = dispatcherProvider.io) {
-        if (latitude != null && longitude != null) {
-            ApiResult.Success(
-                value = Coordinates(
-                    latitude = latitude,
-                    longitude = longitude,
-                )
-            )
+        if (coordinates != null) {
+            ApiResult.Success(value = coordinates)
         } else {
             val lastKnownCoordinate = locationTracker.getLastKnownLocation()
             if (lastKnownCoordinate != null) {
@@ -142,6 +160,11 @@ class ForecastViewModel(
                 } else {
                     weatherResult.value
                 }
+
+                latestLoadedCoordinates = Coordinates(
+                    latitude = latitude,
+                    longitude = longitude,
+                )
 
                 mutableForecastUiState.value = ForecastUiState.Content(
                     weather = updatedWeather,
