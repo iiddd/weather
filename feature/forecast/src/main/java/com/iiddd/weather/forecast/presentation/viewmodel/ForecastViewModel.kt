@@ -10,6 +10,7 @@ import com.iiddd.weather.forecast.domain.location.CityNameResolver
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
 import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.LocationTracker
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -92,7 +93,7 @@ class ForecastViewModel(
                 mutableForecastUiState.value = ForecastUiState.Loading
             }
 
-            val coordinatesResult: ApiResult<Coordinates> = resolveCoordinates(
+            val coordinatesResult: ApiResult<Coordinates> = resolveCoordinatesWithRetry(
                 latitude = latitude,
                 longitude = longitude,
                 useDeviceLocation = useDeviceLocation,
@@ -115,13 +116,16 @@ class ForecastViewModel(
         }
     }
 
-    private suspend fun resolveCoordinates(
+    private suspend fun resolveCoordinatesWithRetry(
         latitude: Double?,
         longitude: Double?,
         useDeviceLocation: Boolean,
-    ): ApiResult<Coordinates> = withContext(context = dispatcherProvider.io) {
+        maxRetries: Int = 3,
+        retryDelayMilliseconds: Long = 500L,
+    ): ApiResult<Coordinates> {
+        // Explicit coordinates don't need retry
         if (latitude != null && longitude != null) {
-            return@withContext ApiResult.Success(
+            return ApiResult.Success(
                 value = Coordinates(
                     latitude = latitude,
                     longitude = longitude,
@@ -130,29 +134,51 @@ class ForecastViewModel(
         }
 
         if (!useDeviceLocation) {
-            return@withContext ApiResult.Failure(
+            return ApiResult.Failure(
                 error = ApiError.Input(
                     message = "No coordinates provided and device location not requested.",
                 )
             )
         }
 
-        val lastKnownCoordinate = locationTracker.getLastKnownLocation()
-        if (lastKnownCoordinate != null) {
-            return@withContext ApiResult.Success(value = lastKnownCoordinate)
+        // Retry logic for device location
+        repeat(times = maxRetries) { attempt ->
+            val result = resolveDeviceLocation()
+            if (result is ApiResult.Success) {
+                return result
+            }
+
+            // Don't delay after the last attempt
+            if (attempt < maxRetries - 1) {
+                delay(timeMillis = retryDelayMilliseconds)
+            }
         }
 
-        val currentLocation = locationTracker.getCurrentLocationOrNull()
-        if (currentLocation != null) {
-            return@withContext ApiResult.Success(value = currentLocation)
-        }
-
-        ApiResult.Failure(
+        return ApiResult.Failure(
             error = ApiError.Input(
                 message = "Location is unavailable. Please enable location services and grant location permission.",
             )
         )
     }
+
+    private suspend fun resolveDeviceLocation(): ApiResult<Coordinates> =
+        withContext(context = dispatcherProvider.io) {
+            val lastKnownCoordinate = locationTracker.getLastKnownLocation()
+            if (lastKnownCoordinate != null) {
+                return@withContext ApiResult.Success(value = lastKnownCoordinate)
+            }
+
+            val currentLocation = locationTracker.getCurrentLocationOrNull()
+            if (currentLocation != null) {
+                return@withContext ApiResult.Success(value = currentLocation)
+            }
+
+            ApiResult.Failure(
+                error = ApiError.Input(
+                    message = "Location is unavailable.",
+                )
+            )
+        }
 
     private suspend fun loadWeatherAndCityNameAndEmitState(
         latitude: Double,
