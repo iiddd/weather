@@ -8,6 +8,8 @@ import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
 import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.LocationTracker
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ForecastViewModelTest {
 
     private val dispatcherProvider = UnitTestDispatcherProvider()
@@ -59,14 +62,18 @@ class ForecastViewModelTest {
             ).thenReturn(null)
 
             forecastViewModel.onEvent(
-                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(latitude = 1.0, longitude = 2.0),
+                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(
+                    latitude = 1.0,
+                    longitude = 2.0,
+                    useDeviceLocation = false,
+                ),
             )
 
             val finalState = forecastViewModel.forecastUiState.value
             assertTrue(finalState is ForecastUiState.Content)
 
             val contentState = finalState as ForecastUiState.Content
-            assertEquals(weather, contentState.detailedWeatherContent.weather)
+            assertEquals(weather, contentState.weather)
         }
 
     @Test
@@ -88,7 +95,11 @@ class ForecastViewModelTest {
             ).thenReturn(null)
 
             forecastViewModel.onEvent(
-                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(latitude = 1.0, longitude = 2.0),
+                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(
+                    latitude = 1.0,
+                    longitude = 2.0,
+                    useDeviceLocation = false,
+                ),
             )
 
             val finalState = forecastViewModel.forecastUiState.value
@@ -117,27 +128,30 @@ class ForecastViewModelTest {
             ).thenReturn("ProvidedCity")
 
             forecastViewModel.onEvent(
-                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(latitude = 1.0, longitude = 2.0),
+                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(
+                    latitude = 1.0,
+                    longitude = 2.0,
+                    useDeviceLocation = false,
+                ),
             )
 
             val finalState = forecastViewModel.forecastUiState.value
             assertTrue(finalState is ForecastUiState.Content)
 
             val contentState = finalState as ForecastUiState.Content
-            assertEquals("ProvidedCity", contentState.detailedWeatherContent.weather.city)
-            assertEquals(repositoryWeather.currentTemp, contentState.detailedWeatherContent.weather.currentTemp)
-            assertEquals(repositoryWeather.description, contentState.detailedWeatherContent.weather.description)
+            assertEquals("ProvidedCity", contentState.weather.city)
+            assertEquals(repositoryWeather.currentTemp, contentState.weather.currentTemp)
+            assertEquals(repositoryWeather.description, contentState.weather.description)
         }
 
     @Test
     fun `LoadWeatherRequested overrides repository city with resolved city name`() =
         runTest(context = dispatcherProvider.dispatcher) {
-            val repositoryWeather =
-                Weather(
-                    currentTemp = 7,
-                    description = "cloudy",
-                    city = "RepositoryCity",
-                )
+            val repositoryWeather = Weather(
+                currentTemp = 5,
+                description = "sunny",
+                city = "RepositoryCity",
+            )
 
             whenever(
                 weatherRepository.getWeather(
@@ -154,20 +168,24 @@ class ForecastViewModelTest {
             ).thenReturn("ProvidedCity")
 
             forecastViewModel.onEvent(
-                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(latitude = 1.0, longitude = 2.0),
+                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(
+                    latitude = 1.0,
+                    longitude = 2.0,
+                    useDeviceLocation = false,
+                ),
             )
 
             val finalState = forecastViewModel.forecastUiState.value
             assertTrue(finalState is ForecastUiState.Content)
 
             val contentState = finalState as ForecastUiState.Content
-            assertEquals("ProvidedCity", contentState.detailedWeatherContent.weather.city)
-            assertEquals(repositoryWeather.currentTemp, contentState.detailedWeatherContent.weather.currentTemp)
-            assertEquals(repositoryWeather.description, contentState.detailedWeatherContent.weather.description)
+            assertEquals("ProvidedCity", contentState.weather.city)
+            assertEquals(repositoryWeather.currentTemp, contentState.weather.currentTemp)
+            assertEquals(repositoryWeather.description, contentState.weather.description)
         }
 
     @Test
-    fun `LoadWeatherRequested without coordinates uses current location when available`() =
+    fun `LoadWeatherRequested with useDeviceLocation uses current location when available`() =
         runTest(context = dispatcherProvider.dispatcher) {
             whenever(locationTracker.getLastKnownLocation())
                 .thenReturn(Coordinates(latitude = 11.0, longitude = 22.0))
@@ -188,25 +206,37 @@ class ForecastViewModelTest {
             ).thenReturn(null)
 
             forecastViewModel.onEvent(
-                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(latitude = null, longitude = null),
+                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(
+                    latitude = null,
+                    longitude = null,
+                    useDeviceLocation = true,
+                ),
             )
 
             val finalState = forecastViewModel.forecastUiState.value
             assertTrue(finalState is ForecastUiState.Content)
 
             val contentState = finalState as ForecastUiState.Content
-            assertEquals(weather, contentState.detailedWeatherContent.weather)
+            assertEquals(weather, contentState.weather)
         }
 
     @Test
-    fun `LoadWeatherRequested without coordinates emits Error when no location available`() =
+    fun `LoadWeatherRequested with useDeviceLocation emits Error when no location available`() =
         runTest(context = dispatcherProvider.dispatcher) {
             whenever(locationTracker.getLastKnownLocation())
                 .thenReturn(null)
+            whenever(locationTracker.getCurrentLocationOrNull())
+                .thenReturn(null)
 
             forecastViewModel.onEvent(
-                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(latitude = null, longitude = null),
+                forecastUiEvent = ForecastUiEvent.LoadWeatherRequested(
+                    latitude = null,
+                    longitude = null,
+                    useDeviceLocation = true,
+                ),
             )
+
+            advanceUntilIdle()
 
             val finalState = forecastViewModel.forecastUiState.value
             assertTrue(finalState is ForecastUiState.Error)
