@@ -162,7 +162,7 @@ Recommended UI state approach:
 ### Layered Compose structure (mandatory)
 
 All screens **must** follow this structure:
-MainView -> *Route -> *Screen -> *ScreenContent
+NavigationHost -> *Route -> *Screen -> *ScreenContent
 
 ### Responsibilities per layer
 
