@@ -28,6 +28,8 @@ Weather/
 ├── app/                     # Entry point: WeatherApp, MainActivity, DI initialization, navigation
 ├── build-logic/             # Gradle build logic (convention plugins)
 ├── core/
+│   ├── network/             # API calls Handling (Success, Error, Loading)
+│   ├── preferences/         # DataStore preferences handling
 │   ├── ui/                  # Compose theme, Material 3, shared UI components
 │   ├── utils/               # General utilities, extensions
 │   ├── location/            # FusedLocationProvider logic
