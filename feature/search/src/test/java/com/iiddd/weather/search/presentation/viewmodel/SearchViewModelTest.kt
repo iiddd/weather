@@ -20,79 +20,79 @@ class SearchViewModelTest {
 
     private val dispatcherProvider = UnitTestDispatcherProvider()
 
-    private lateinit var repository: SearchRepository
-    private lateinit var viewModel: SearchViewModel
+    private lateinit var searchRepository: SearchRepository
+    private lateinit var searchViewModel: SearchViewModel
 
     @BeforeEach
     fun setUp() {
-        repository = mock()
-        viewModel = SearchViewModel(
-            repository = repository,
-            dispatcherProvider = dispatcherProvider
+        searchRepository = mock()
+        searchViewModel = SearchViewModel(
+            searchRepository = searchRepository,
+            dispatcherProvider = dispatcherProvider,
         )
     }
 
     @Test
-    fun `on query change updates query`() = runTest(dispatcherProvider.dispatcher) {
-        viewModel.onQueryChange(query = "hello")
+    fun `on query change updates query`() = runTest(context = dispatcherProvider.dispatcher) {
+        searchViewModel.onQueryChange(query = "hello")
 
-        val state = viewModel.uiState.value
+        val state = searchViewModel.searchUiState.value
         assertEquals("hello", state.query)
-        assertNull(state.error)
-        assertFalse(state.loading)
+        assertNull(state.errorMessage)
+        assertFalse(state.isLoading)
         assertNull(state.marker)
         assertNull(state.markerTitle)
     }
 
     @Test
-    fun `search with empty results updates marker title and clears loading`() =
-        runTest(dispatcherProvider.dispatcher) {
+    fun `onSearch with empty results updates marker title and clears loading`() =
+        runTest(context = dispatcherProvider.dispatcher) {
             whenever(
-                repository.searchLocation(
+                searchRepository.searchLocation(
                     query = "q",
-                    maxResults = 1
+                    maxResults = 1,
                 )
             ).thenReturn(
                 ApiResult.Success(value = emptyList())
             )
 
-            viewModel.onQueryChange(query = "q")
-            viewModel.search()
+            searchViewModel.onQueryChange(query = "q")
+            searchViewModel.onSearch()
 
-            val state = viewModel.uiState.value
+            val state = searchViewModel.searchUiState.value
             assertEquals("q", state.query)
             assertNull(state.marker)
             assertEquals("q", state.markerTitle)
-            assertFalse(state.loading)
-            assertNull(state.error)
+            assertFalse(state.isLoading)
+            assertNull(state.errorMessage)
         }
 
     @Test
-    fun `search when repository returns ApiError sets error message and clears loading`() =
-        runTest(dispatcherProvider.dispatcher) {
+    fun `onSearch when repository returns ApiError sets error message and clears loading`() =
+        runTest(context = dispatcherProvider.dispatcher) {
             whenever(
-                repository.searchLocation(
+                searchRepository.searchLocation(
                     query = "boom",
-                    maxResults = 1
+                    maxResults = 1,
                 )
             ).thenReturn(
                 ApiResult.Failure(error = ApiError.Network(message = "boom"))
             )
 
-            viewModel.onQueryChange(query = "boom")
-            viewModel.search()
+            searchViewModel.onQueryChange(query = "boom")
+            searchViewModel.onSearch()
 
-            val state = viewModel.uiState.value
+            val state = searchViewModel.searchUiState.value
             assertEquals("boom", state.query)
             assertNull(state.marker)
             assertNull(state.markerTitle)
-            assertFalse(state.loading)
-            assertEquals("Network error. Check your connection and retry.", state.error)
+            assertFalse(state.isLoading)
+            assertEquals("Network error. Check your connection and retry.", state.errorMessage)
         }
 
     @Test
-    fun `search when repository returns result sets marker and title`() =
-        runTest(dispatcherProvider.dispatcher) {
+    fun `onSearch when repository returns result sets marker and title`() =
+        runTest(context = dispatcherProvider.dispatcher) {
             val location = mock<Location> {
                 on { lat } doReturn 10.0
                 on { lon } doReturn 20.0
@@ -100,18 +100,18 @@ class SearchViewModelTest {
             }
 
             whenever(
-                repository.searchLocation(
+                searchRepository.searchLocation(
                     query = "q",
-                    maxResults = 1
+                    maxResults = 1,
                 )
             ).thenReturn(
                 ApiResult.Success(value = listOf(location))
             )
 
-            viewModel.onQueryChange(query = "q")
-            viewModel.search()
+            searchViewModel.onQueryChange(query = "q")
+            searchViewModel.onSearch()
 
-            val state = viewModel.uiState.value
+            val state = searchViewModel.searchUiState.value
             assertEquals("q", state.query)
             assertNotNull(state.marker)
 
@@ -119,12 +119,12 @@ class SearchViewModelTest {
             assertEquals(10.0, marker.latitude)
             assertEquals(20.0, marker.longitude)
             assertEquals("Place", state.markerTitle)
-            assertFalse(state.loading)
-            assertNull(state.error)
+            assertFalse(state.isLoading)
+            assertNull(state.errorMessage)
         }
 
     @Test
-    fun `clear marker clears marker and title`() = runTest(dispatcherProvider.dispatcher) {
+    fun `onClearMarker clears marker and title`() = runTest(context = dispatcherProvider.dispatcher) {
         val location = mock<Location> {
             on { lat } doReturn 10.0
             on { lon } doReturn 20.0
@@ -132,28 +132,28 @@ class SearchViewModelTest {
         }
 
         whenever(
-            repository.searchLocation(
+            searchRepository.searchLocation(
                 query = "q",
-                maxResults = 1
+                maxResults = 1,
             )
         ).thenReturn(
             ApiResult.Success(value = listOf(location))
         )
 
-        viewModel.onQueryChange(query = "q")
-        viewModel.search()
+        searchViewModel.onQueryChange(query = "q")
+        searchViewModel.onSearch()
 
-        val before = viewModel.uiState.value
+        val before = searchViewModel.searchUiState.value
         assertNotNull(before.marker)
         assertEquals("Place", before.markerTitle)
 
-        viewModel.clearMarker()
+        searchViewModel.onClearMarker()
 
-        val state = viewModel.uiState.value
+        val state = searchViewModel.searchUiState.value
         assertNull(state.marker)
         assertNull(state.markerTitle)
         assertEquals("q", state.query)
-        assertFalse(state.loading)
-        assertNull(state.error)
+        assertFalse(state.isLoading)
+        assertNull(state.errorMessage)
     }
 }

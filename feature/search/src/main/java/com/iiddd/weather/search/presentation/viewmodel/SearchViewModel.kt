@@ -13,42 +13,34 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-data class SearchUiState(
-    val query: String = "",
-    val marker: LatLng? = null,
-    val markerTitle: String? = null,
-    val loading: Boolean = false,
-    val error: String? = null
-)
-
 class SearchViewModel(
-    private val repository: SearchRepository,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val searchRepository: SearchRepository,
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider(),
 ) : ViewModel() {
 
-    private val mutableUiState = MutableStateFlow(SearchUiState())
-    val uiState: StateFlow<SearchUiState> = mutableUiState
+    private val mutableSearchUiState = MutableStateFlow(SearchUiState())
+    val searchUiState: StateFlow<SearchUiState> = mutableSearchUiState
 
     fun onQueryChange(query: String) {
-        mutableUiState.value = mutableUiState.value.copy(
+        mutableSearchUiState.value = mutableSearchUiState.value.copy(
             query = query,
-            error = null
+            errorMessage = null,
         )
     }
 
-    fun search() {
-        val searchQuery = mutableUiState.value.query.trim()
+    fun onSearch() {
+        val searchQuery = mutableSearchUiState.value.query.trim()
         if (searchQuery.isEmpty()) return
 
-        mutableUiState.value = mutableUiState.value.copy(
-            loading = true,
-            error = null
+        mutableSearchUiState.value = mutableSearchUiState.value.copy(
+            isLoading = true,
+            errorMessage = null,
         )
 
         viewModelScope.launch(context = dispatcherProvider.main) {
-            val result: ApiResult<List<Location>> = repository.searchLocation(
+            val result: ApiResult<List<Location>> = searchRepository.searchLocation(
                 query = searchQuery,
-                maxResults = 1
+                maxResults = 1,
             )
 
             when (result) {
@@ -61,32 +53,32 @@ class SearchViewModel(
 
                     val markerTitle = firstLocation?.name ?: searchQuery
 
-                    mutableUiState.value = mutableUiState.value.copy(
+                    mutableSearchUiState.value = mutableSearchUiState.value.copy(
                         marker = marker,
                         markerTitle = markerTitle,
-                        loading = false,
-                        error = null
+                        isLoading = false,
+                        errorMessage = null,
                     )
                 }
 
                 is ApiResult.Failure -> {
-                    mutableUiState.value = mutableUiState.value.copy(
-                        loading = false,
-                        error = result.error.toUiMessage()
+                    mutableSearchUiState.value = mutableSearchUiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.error.toUiMessage(),
                     )
                 }
             }
         }
     }
 
-    fun retrySearch() {
-        search()
+    fun onRetrySearch() {
+        onSearch()
     }
 
-    fun clearMarker() {
-        mutableUiState.value = mutableUiState.value.copy(
+    fun onClearMarker() {
+        mutableSearchUiState.value = mutableSearchUiState.value.copy(
             marker = null,
-            markerTitle = null
+            markerTitle = null,
         )
     }
 }

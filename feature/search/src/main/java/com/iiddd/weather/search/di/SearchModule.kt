@@ -3,7 +3,7 @@ package com.iiddd.weather.search.di
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import com.iiddd.weather.search.BuildConfig
-import com.iiddd.weather.search.R
+import com.iiddd.weather.search.R as SearchR
 import com.iiddd.weather.search.data.SearchRepositoryImpl
 import com.iiddd.weather.search.data.api.GeocodingApi
 import com.iiddd.weather.search.domain.SearchRepository
@@ -71,8 +71,8 @@ object SearchModule {
             get<Retrofit>(GOOGLE_MAPS_RETROFIT).create(GeocodingApi::class.java)
         }
 
-        single {
-            androidContext().getString(R.string.google_maps_key)
+        single<String> {
+            androidContext().getString(SearchR.string.google_maps_key)
         }
 
         single<SearchRepository> {
@@ -85,8 +85,8 @@ object SearchModule {
 
         viewModel {
             SearchViewModel(
-                repository = get<SearchRepository>(),
-                dispatcherProvider = get<DispatcherProvider>()
+                searchRepository = get<SearchRepository>(),
+                dispatcherProvider = get<DispatcherProvider>(),
             )
         }
     }

@@ -20,7 +20,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.iiddd.weather.core.ui.systembars.WeatherWindowInsets
 import com.iiddd.weather.forecast.presentation.view.DetailedWeatherRoute
-import com.iiddd.weather.search.presentation.view.SearchScreen
+import com.iiddd.weather.search.presentation.view.SearchRoute
 import com.iiddd.weather.settings.presentation.view.SettingsRoute
 import com.iiddd.weather.ui.navigation.Destination
 import com.iiddd.weather.ui.navigation.NavigationBackStack
@@ -140,7 +140,7 @@ private fun MainNavDisplay(
                     key = destination,
                     contentKey = destination.toString(),
                 ) { _: Destination ->
-                    SearchScreen(
+                    SearchRoute(
                         onOpenDetails = { latitude: Double, longitude: Double ->
                             val newWeatherDestination = Destination.Weather(
                                 latitude = latitude,

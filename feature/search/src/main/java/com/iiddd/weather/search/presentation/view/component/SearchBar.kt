@@ -30,55 +30,49 @@ import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 
 @Composable
 fun SearchBar(
-    uiState: SearchUiState,
+    searchUiState: SearchUiState,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
 
-    Column(
-        modifier = modifier
-    ) {
-        Card(
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
+    Column(modifier = modifier) {
+        Card(elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(all = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 TextField(
-                    value = uiState.query,
+                    value = searchUiState.query,
                     onValueChange = { query: String -> onQueryChange(query) },
                     placeholder = { Text(text = "Search city") },
                     modifier = Modifier.weight(weight = 1f),
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Search
-                    ),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(
                         onSearch = {
-                            if (uiState.query.isBlank() || uiState.loading) return@KeyboardActions
+                            if (searchUiState.query.isBlank() || searchUiState.isLoading) return@KeyboardActions
                             softwareKeyboardController?.hide()
                             onSearch()
-                        }
+                        },
                     ),
                     trailingIcon = {
                         IconButton(
                             onClick = {
-                                if (uiState.query.isBlank() || uiState.loading) return@IconButton
+                                if (searchUiState.query.isBlank() || searchUiState.isLoading) return@IconButton
                                 softwareKeyboardController?.hide()
                                 onSearch()
-                            }
+                            },
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Search,
-                                contentDescription = "Search"
+                                contentDescription = "Search",
                             )
                         }
-                    }
+                    },
                 )
             }
         }
@@ -86,13 +80,13 @@ fun SearchBar(
         Spacer(modifier = Modifier.height(height = 8.dp))
 
         when {
-            uiState.loading -> {
+            searchUiState.isLoading -> {
                 Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(all = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         CircularProgressIndicator(modifier = Modifier.padding(all = 4.dp))
                         Spacer(modifier = Modifier.width(width = 8.dp))
@@ -101,11 +95,11 @@ fun SearchBar(
                 }
             }
 
-            uiState.error != null -> {
+            searchUiState.errorMessage != null -> {
                 Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
                     Text(
                         modifier = Modifier.padding(all = 8.dp),
-                        text = uiState.error
+                        text = searchUiState.errorMessage,
                     )
                 }
             }
@@ -113,25 +107,48 @@ fun SearchBar(
     }
 }
 
-@Composable
 @WeatherPreview
-fun SearchBarPreview() {
-    val fakeState = SearchUiState(
+@Composable
+private fun SearchBarPreview() {
+    val searchUiState = SearchUiState(
         query = "Amsterdam",
         marker = null,
         markerTitle = null,
-        loading = false,
-        error = null
+        isLoading = false,
+        errorMessage = null,
     )
 
     WeatherTheme {
         SearchBar(
-            uiState = fakeState,
+            searchUiState = searchUiState,
             onQueryChange = {},
             onSearch = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 8.dp)
+                .padding(all = 8.dp),
+        )
+    }
+}
+
+@WeatherPreview
+@Composable
+private fun SearchBarPreviewLoading() {
+    val searchUiState = SearchUiState(
+        query = "Amsterdam",
+        marker = null,
+        markerTitle = null,
+        isLoading = true,
+        errorMessage = null,
+    )
+
+    WeatherTheme {
+        SearchBar(
+            searchUiState = searchUiState,
+            onQueryChange = {},
+            onSearch = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 8.dp),
         )
     }
 }
