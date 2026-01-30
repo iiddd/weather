@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 WeatherTheme {
                     TransparentStatusBarEffect()
-                    MainView()
+                    NavigationHost()
                 }
             }
         }

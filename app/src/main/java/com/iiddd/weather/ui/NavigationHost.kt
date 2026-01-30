@@ -29,7 +29,7 @@ import com.iiddd.weather.ui.navigation.popSafe
 import com.iiddd.weather.ui.navigation.rememberWeatherNavigationState
 
 @Composable
-fun MainView() {
+fun NavigationHost() {
     val navigationBackStack: NavigationBackStack = remember {
         NavigationBackStack(startDestination = Destination.Weather())
     }
