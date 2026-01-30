@@ -65,7 +65,6 @@ fun MainView() {
                 onTabSelected = { tabDestination: Destination ->
                     when (tabDestination) {
                         is Destination.Weather -> {
-                            // Restore the last weather destination instead of empty one
                             navigationBackStack.replaceCurrent(
                                 destination = weatherNavigationState.currentWeatherDestination
                             )
@@ -123,12 +122,11 @@ private fun MainNavDisplay(
                 is Destination.Weather -> {
                     NavEntry(
                         key = destination,
-                        contentKey = weatherContentKey(destination = destination),
+                        contentKey = destination.toString(),
                     ) { entryDestination: Destination ->
                         val weatherDestination: Destination.Weather =
                             entryDestination as Destination.Weather
 
-                        // Update the stored weather destination when displaying
                         weatherNavigationState.updateWeatherDestination(destination = weatherDestination)
 
                         DetailedWeatherRoute(
@@ -140,7 +138,7 @@ private fun MainNavDisplay(
                 }Destination.Search -> {
                 NavEntry(
                     key = destination,
-                    contentKey = "Destination.Search",
+                    contentKey = destination.toString(),
                 ) { _: Destination ->
                     SearchScreen(
                         onOpenDetails = { latitude: Double, longitude: Double ->
@@ -163,7 +161,7 @@ private fun MainNavDisplay(
                 Destination.Settings -> {
                     NavEntry(
                         key = destination,
-                        contentKey = "Destination.Settings",
+                        contentKey = destination.toString(),
                     ) { _: Destination ->
                         SettingsRoute()
                     }
@@ -171,10 +169,6 @@ private fun MainNavDisplay(
             }
         },
     )
-}
-
-private fun weatherContentKey(destination: Destination.Weather): String {
-    return "Destination.Weather(latitude=${destination.latitude},longitude=${destination.longitude},useDeviceLocation=${destination.useDeviceLocation})"
 }
 
 private fun tabLabel(destination: Destination): String = when (destination) {

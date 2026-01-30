@@ -19,6 +19,14 @@ class WeatherNavigationState(
         currentWeatherDestination = destination
     }
 
+    fun resetToDeviceLocation() {
+        currentWeatherDestination = Destination.Weather(
+            latitude = null,
+            longitude = null,
+            useDeviceLocation = true,
+        )
+    }
+
     companion object {
         val Saver: Saver<WeatherNavigationState, List<Any?>> = Saver(
             save = { state ->

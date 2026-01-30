@@ -30,14 +30,7 @@ class ForecastViewModel(
     val forecastUiState: StateFlow<ForecastUiState> =
         mutableForecastUiState.asStateFlow()
 
-    // Store the last request parameters for refresh
     private var lastRequestParameters: RequestParameters? = null
-
-    private data class RequestParameters(
-        val latitude: Double?,
-        val longitude: Double?,
-        val useDeviceLocation: Boolean,
-    )
 
     fun onEvent(forecastUiEvent: ForecastUiEvent) {
         when (forecastUiEvent) {
@@ -48,7 +41,6 @@ class ForecastViewModel(
                     useDeviceLocation = forecastUiEvent.useDeviceLocation,
                 )
 
-                // Skip if same request and already have content
                 val hasContent = mutableForecastUiState.value is ForecastUiState.Content
                 if (hasContent && newRequestParameters == lastRequestParameters) {
                     return
@@ -128,7 +120,6 @@ class ForecastViewModel(
         longitude: Double?,
         useDeviceLocation: Boolean,
     ): ApiResult<Coordinates> = withContext(context = dispatcherProvider.io) {
-        // If explicit coordinates provided, use them
         if (latitude != null && longitude != null) {
             return@withContext ApiResult.Success(
                 value = Coordinates(
@@ -138,7 +129,6 @@ class ForecastViewModel(
             )
         }
 
-        // If not using device location and no coordinates, this is an error
         if (!useDeviceLocation) {
             return@withContext ApiResult.Failure(
                 error = ApiError.Input(
@@ -147,7 +137,6 @@ class ForecastViewModel(
             )
         }
 
-        // Try to get device location
         val lastKnownCoordinate = locationTracker.getLastKnownLocation()
         if (lastKnownCoordinate != null) {
             return@withContext ApiResult.Success(value = lastKnownCoordinate)
