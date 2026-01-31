@@ -11,9 +11,9 @@ import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 
 @Composable
 internal fun Map(
+    modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
     isPreview: Boolean = false,
-    modifier: Modifier = Modifier,
 ) {
     if (isPreview) {
         Box(
