@@ -15,7 +15,7 @@ object ApplicationModule {
         // Location
         single<LocationTracker> {
             FusedLocationTracker(
-                context = androidContext(),
+                applicationContext = androidContext(),
             )
         }
 

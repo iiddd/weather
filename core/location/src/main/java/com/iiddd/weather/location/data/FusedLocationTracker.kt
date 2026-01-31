@@ -19,152 +19,174 @@ import com.google.android.gms.tasks.Task
 import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.LocationTracker
 import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
 
 class FusedLocationTracker(
-    private val context: Context,
-    private val fused: FusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(context),
-    private val timeoutMs: Long = 5_000L,
-    private val priority: Int = Priority.PRIORITY_BALANCED_POWER_ACCURACY,
+    private val applicationContext: Context,
+    private val fusedLocationProviderClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(applicationContext),
+    private val timeoutMilliseconds: Long = 10_000L,
+    private val locationPriority: Int = Priority.PRIORITY_HIGH_ACCURACY,
+    private val maxLocationAgeMilliseconds: Long = 60_000L,
 ) : LocationTracker {
 
     private val tag = "FusedLocationTracker"
 
     override suspend fun getLastKnownLocation(): Coordinates? {
-        if (!hasLocationPermission()) return null
+        if (!hasLocationPermission()) {
+            Log.d(tag, "getLastKnownLocation: No location permission")
+            return null
+        }
 
-        return withTimeoutOrNull(timeMillis = timeoutMs) {
-            val current = currentFixOrNull()
-            if (current != null) {
+        return withTimeoutOrNull(timeMillis = timeoutMilliseconds) {
+            // Strategy 1: Try last known location first (instant if available and fresh)
+            val lastLocation = lastLocationOrNull()
+            if (lastLocation != null && isLocationFresh(location = lastLocation)) {
                 Log.d(
                     tag,
-                    "currentFix -> lat=${current.latitude}, lon=${current.longitude}, provider=${current.provider}",
+                    "lastLocation (fresh) -> lat=${lastLocation.latitude}, lon=${lastLocation.longitude}",
                 )
-                return@withTimeoutOrNull current.toCoordinate()
+                return@withTimeoutOrNull lastLocation.toCoordinates()
             }
 
-            val active = requestSingleUpdateOrNull()
-            if (active != null) {
+            // Strategy 2: Try to get current location and active fix in parallel
+            val location = getFirstAvailableLocation()
+            if (location != null) {
                 Log.d(
                     tag,
-                    "activeFix -> lat=${active.latitude}, lon=${active.longitude}, provider=${active.provider}",
+                    "parallelFix -> lat=${location.latitude}, lon=${location.longitude}",
                 )
-                return@withTimeoutOrNull active.toCoordinate()
+                return@withTimeoutOrNull location.toCoordinates()
             }
 
-            val last = lastLocationOrNull()
-            if (last != null) {
+            // Strategy 3: Fall back to stale last location if nothing else worked
+            if (lastLocation != null) {
                 Log.d(
                     tag,
-                    "lastLocation (fallback) -> lat=${last.latitude}, lon=${last.longitude}, provider=${last.provider}",
+                    "lastLocation (stale fallback) -> lat=${lastLocation.latitude}, lon=${lastLocation.longitude}",
                 )
-                return@withTimeoutOrNull last.toCoordinate()
+                return@withTimeoutOrNull lastLocation.toCoordinates()
             }
 
+            Log.d(tag, "getLastKnownLocation: No location available")
             null
         }
     }
 
     override suspend fun getCurrentLocationOrNull(): Coordinates? {
-        if (!hasLocationPermission()) return null
+        if (!hasLocationPermission()) {
+            Log.d(tag, "getCurrentLocationOrNull: No location permission")
+            return null
+        }
 
-        return withTimeoutOrNull(timeMillis = timeoutMs) {
-            val current = currentFixOrNull()
-            if (current != null) {
+        return withTimeoutOrNull(timeMillis = timeoutMilliseconds) {
+            val location = getFirstAvailableLocation()
+            if (location != null) {
                 Log.d(
                     tag,
-                    "getCurrentLocationOrNull.currentFix -> lat=${current.latitude}, lon=${current.longitude}, provider=${current.provider}",
+                    "getCurrentLocationOrNull -> lat=${location.latitude}, lon=${location.longitude}",
                 )
-                return@withTimeoutOrNull current.toCoordinate()
+                return@withTimeoutOrNull location.toCoordinates()
             }
 
-            val active = requestSingleUpdateOrNull()
-            if (active != null) {
-                Log.d(
-                    tag,
-                    "getCurrentLocationOrNull.activeFix -> lat=${active.latitude}, lon=${active.longitude}, provider=${active.provider}",
-                )
-                return@withTimeoutOrNull active.toCoordinate()
-            }
-
+            Log.d(tag, "getCurrentLocationOrNull: No location available")
             null
         }
     }
 
+    private suspend fun getFirstAvailableLocation(): Location? = coroutineScope {
+        val currentLocationDeferred = async { currentFixOrNull() }
+        val activeLocationDeferred = async { requestSingleUpdateOrNull() }
+
+        // Return whichever completes first with a valid result
+        val currentLocation = currentLocationDeferred.await()
+        if (currentLocation != null) {
+            activeLocationDeferred.cancel()
+            return@coroutineScope currentLocation
+        }
+
+        activeLocationDeferred.await()
+    }
+
+    private fun isLocationFresh(location: Location): Boolean {
+        val locationAge = System.currentTimeMillis() - location.time
+        return locationAge < maxLocationAgeMilliseconds
+    }
+
     private fun hasLocationPermission(): Boolean {
-        val fine = ContextCompat.checkSelfPermission(
-            context,
+        val fineLocationGranted = ContextCompat.checkSelfPermission(
+            applicationContext,
             Manifest.permission.ACCESS_FINE_LOCATION,
         ) == PackageManager.PERMISSION_GRANTED
 
-        val coarse = ContextCompat.checkSelfPermission(
-            context,
+        val coarseLocationGranted = ContextCompat.checkSelfPermission(
+            applicationContext,
             Manifest.permission.ACCESS_COARSE_LOCATION,
         ) == PackageManager.PERMISSION_GRANTED
 
-        return fine || coarse
+        return fineLocationGranted || coarseLocationGranted
     }
 
     @SuppressLint("MissingPermission")
     private suspend fun lastLocationOrNull(): Location? =
-        fused.lastLocation.awaitOrNull()
+        fusedLocationProviderClient.lastLocation.awaitOrNull()
 
     @SuppressLint("MissingPermission")
     private suspend fun currentFixOrNull(): Location? =
-        fused.getCurrentLocation(priority, null).awaitOrNull()
+        fusedLocationProviderClient.getCurrentLocation(locationPriority, null).awaitOrNull()
 
     @SuppressLint("MissingPermission")
     private suspend fun requestSingleUpdateOrNull(): Location? =
         suspendCancellableCoroutine { continuation: CancellableContinuation<Location?> ->
-            val request = LocationRequest.Builder(priority, 1000L)
+            val locationRequest = LocationRequest.Builder(locationPriority, 1000L)
                 .setMinUpdateIntervalMillis(0)
+                .setMaxUpdates(1)
                 .build()
 
-            val callback = object : LocationCallback() {
+            val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {
                     val location = result.lastLocation
-                    if (!continuation.isActive) return
-                    continuation.resume(value = location)
+                    fusedLocationProviderClient.removeLocationUpdates(this)
+                    if (continuation.isActive) {
+                        continuation.resume(value = location)
+                    }
                 }
             }
 
-            fused.requestLocationUpdates(request, callback, Looper.getMainLooper())
+            fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper(),
+            )
 
             continuation.invokeOnCancellation {
-                try {
-                    fused.removeLocationUpdates(callback)
-                } catch (_: Exception) {
-                    /* ignore */
-                }
+                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             }
         }
 }
 
-private fun Location.toCoordinate(): Coordinates =
+private fun Location.toCoordinates(): Coordinates =
     Coordinates(
         latitude = latitude,
         longitude = longitude,
     )
 
-private suspend fun <T> Task<T>.awaitOrNull(
-    onCancel: (() -> Unit)? = null,
-): T? =
+private suspend fun <T> Task<T>.awaitOrNull(): T? =
     suspendCancellableCoroutine { continuation: CancellableContinuation<T?> ->
-        val listener = OnCompleteListener<T> { task ->
-            if (!continuation.isActive) return@OnCompleteListener
-            continuation.resume(value = if (task.isSuccessful) task.result else null)
+        val completionListener = OnCompleteListener<T> { task ->
+            if (continuation.isActive) {
+                continuation.resume(value = if (task.isSuccessful) task.result else null)
+            }
         }
 
-        addOnCompleteListener(listener)
+        addOnCompleteListener(completionListener)
 
         continuation.invokeOnCancellation {
-            onCancel?.invoke()
-            runCatching {
-                val method = this::class.java.methods.firstOrNull { method -> method.name == "removeOnCompleteListener" }
-                method?.invoke(this, listener)
-            }
+            // Task completion listeners cannot be removed, but the result will be ignored
+            // since continuation.isActive will be false
         }
     }
