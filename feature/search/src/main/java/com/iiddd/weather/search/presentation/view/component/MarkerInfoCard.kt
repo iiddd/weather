@@ -23,11 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.google.android.gms.maps.model.LatLng
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.search.R as SearchR
 
 @Composable
 fun MarkerInfoCard(
@@ -81,7 +83,7 @@ fun MarkerInfoCard(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
-                            contentDescription = "Add favorite",
+                            contentDescription = stringResource(id = SearchR.string.marker_add_favorite_content_description),
                             tint = WeatherThemeTokens.colors.primary,
                         )
                     }
@@ -97,7 +99,7 @@ fun MarkerInfoCard(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Close,
-                    contentDescription = "Close",
+                    contentDescription = stringResource(id = SearchR.string.marker_close_content_description),
                     tint = WeatherThemeTokens.colors.onSurface,
                 )
             }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SearchBar -->
+    <string name="search_city_placeholder">Search city</string>
+    <string name="search_icon_content_description">Search</string>
+    <string name="search_loading_text">Searching…</string>
+
+    <!-- MarkerInfoCard -->
+    <string name="marker_add_favorite_content_description">Add favorite</string>
+    <string name="marker_close_content_description">Close</string>
+    <string name="marker_default_title">Result</string>
+</resources>

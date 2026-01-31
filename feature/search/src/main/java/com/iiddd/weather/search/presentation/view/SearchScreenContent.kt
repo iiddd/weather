@@ -16,6 +16,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -24,6 +25,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.search.R as SearchR
 import com.iiddd.weather.search.presentation.view.component.Map
 import com.iiddd.weather.search.presentation.view.component.MarkerInfoCard
 import com.iiddd.weather.search.presentation.view.component.SearchBar
@@ -49,6 +51,8 @@ fun SearchScreenContent(
     val markerVerticalOffset = dimens.spacingLarge
     val markerOffsetPx = with(density) { markerVerticalOffset.toPx() }
     val tailHeightPx = with(density) { markerVerticalOffset.toPx() }
+
+    val defaultMarkerTitle = stringResource(id = SearchR.string.marker_default_title)
 
     Box(
         modifier = Modifier
@@ -90,7 +94,7 @@ fun SearchScreenContent(
             }
 
             MarkerInfoCard(
-                title = searchUiState.markerTitle ?: searchUiState.query.ifBlank { "Result" },
+                title = searchUiState.markerTitle ?: searchUiState.query.ifBlank { defaultMarkerTitle },
                 markerLatLng = markerLatLng,
                 onOpenDetails = { latitude: Double?, longitude: Double? ->
                     onOpenDetails(

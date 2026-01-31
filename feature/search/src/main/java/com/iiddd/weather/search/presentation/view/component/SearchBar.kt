@@ -22,10 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.search.R as SearchR
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 
 @Composable
@@ -51,7 +53,7 @@ fun SearchBar(
                     onValueChange = { query: String -> onQueryChange(query) },
                     placeholder = {
                         Text(
-                            text = "Search city",
+                            text = stringResource(id = SearchR.string.search_city_placeholder),
                             style = WeatherThemeTokens.typography.bodyLarge,
                         )
                     },
@@ -76,7 +78,7 @@ fun SearchBar(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Search,
-                                contentDescription = "Search",
+                                contentDescription = stringResource(id = SearchR.string.search_icon_content_description),
                             )
                         }
                     },
@@ -101,7 +103,7 @@ fun SearchBar(
                         )
                         Spacer(modifier = Modifier.width(width = dimens.spacingSmall))
                         Text(
-                            text = "Searching...",
+                            text = stringResource(id = SearchR.string.search_loading_text),
                             style = WeatherThemeTokens.typography.bodyMedium,
                         )
                     }
