@@ -32,14 +32,14 @@ fun HourlyForecastWidget(
     if (forecasts.isEmpty()) return
 
     val dimens = WeatherThemeTokens.dimens
-    val surfaceColor = WeatherThemeTokens.colors.surface
+    val backgroundColor = WeatherThemeTokens.colors.background
     val listState = rememberLazyListState()
 
     Card(
         modifier = modifier.height(height = dimens.cardHeightMedium),
         shape = RoundedCornerShape(size = dimens.cornerRadiusLarge),
-        colors = CardDefaults.cardColors(containerColor = surfaceColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationSmall),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationNone),
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -69,11 +69,12 @@ fun HourlyForecastWidget(
                     .background(
                         brush = Brush.horizontalGradient(
                             colors = listOf(
-                                surfaceColor,
-                                surfaceColor.copy(alpha = 0f),
+                                backgroundColor,
+                                backgroundColor.copy(alpha = 0f),
                             ),
                         ),
-                    )    .align(alignment = Alignment.CenterStart),
+                    )
+                    .align(alignment = Alignment.CenterStart),
             )
 
             // Right fade
@@ -84,8 +85,8 @@ fun HourlyForecastWidget(
                     .background(
                         brush = Brush.horizontalGradient(
                             colors = listOf(
-                                surfaceColor.copy(alpha = 0f),
-                                surfaceColor,
+                                backgroundColor.copy(alpha = 0f),
+                                backgroundColor,
                             ),
                         ),
                     )

@@ -22,13 +22,13 @@ fun DailyForecastWidget(
     if (forecasts.isEmpty()) return
 
     val dimens = WeatherThemeTokens.dimens
-    val surfaceColor = WeatherThemeTokens.colors.surface
+    val backgroundColor = WeatherThemeTokens.colors.background
 
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(size = dimens.cornerRadiusLarge),
-        colors = CardDefaults.cardColors(containerColor = surfaceColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationSmall),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationNone),
     ) {
         Column(
             modifier = Modifier

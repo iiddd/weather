@@ -34,9 +34,9 @@ fun WeatherWidget(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = WeatherThemeTokens.colors.surface,
+            containerColor = WeatherThemeTokens.colors.background,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationSmall),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationNone),
     ) {
         Column(
             modifier = Modifier
