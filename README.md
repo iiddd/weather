@@ -164,7 +164,7 @@ https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_K
 
 ## 🧪 Roadmap
 
-- [ ] Add Room for caching favorite cities  
+- [X] Add DataStore for caching favorite cities  
 - [ ] Add notifications for weather alerts  
 - [ ] Add detailed 8-day forecast screen  
 - [ ] Add Gradle scripts for automatic module creation  
