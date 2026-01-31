@@ -6,34 +6,49 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.forecast.R as ForecastR
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.presentation.previewfixtures.PreviewWeatherProvider
 
 @Composable
-fun ForecastView(
-    weather: Weather?
-) {
+fun ForecastView(weather: Weather?) {
+    val dimens = WeatherThemeTokens.dimens
+
     Card(
         modifier = Modifier
             .wrapContentWidth()
-            .padding(12.dp)
+            .padding(all = dimens.spacingLarge),
+        colors = CardDefaults.cardColors(
+            containerColor = WeatherThemeTokens.colors.surface,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationSmall),
     ) {
         Column(
-            modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.Start
+            modifier = Modifier.padding(all = dimens.spacingLarge),
+            horizontalAlignment = Alignment.Start,
         ) {
             if (weather == null) {
-                Text(text = "Forecast coming soon...")
+                Text(
+                    text = stringResource(id = ForecastR.string.forecast_coming_soon),
+                    style = WeatherThemeTokens.typography.bodyMedium,
+                    color = WeatherThemeTokens.colors.onSurfaceVariant,
+                )
             } else {
-                Text(text = "Summary: ${weather.description}")
-                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(id = ForecastR.string.weather_summary, weather.description),
+                    style = WeatherThemeTokens.typography.bodyMedium,
+                    color = WeatherThemeTokens.colors.onSurface,
+                )
+                Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
             }
         }
     }
@@ -41,7 +56,7 @@ fun ForecastView(
 
 @WeatherPreview
 @Composable
-fun ForecastViewPreviewEmpty() {
+private fun ForecastViewPreviewEmpty() {
     WeatherTheme {
         ForecastView(weather = null)
     }
@@ -49,7 +64,7 @@ fun ForecastViewPreviewEmpty() {
 
 @WeatherPreview
 @Composable
-fun ForecastViewPreviewWithData() {
+private fun ForecastViewPreviewWithData() {
     WeatherTheme {
         ForecastView(weather = PreviewWeatherProvider.sampleWeather)
     }

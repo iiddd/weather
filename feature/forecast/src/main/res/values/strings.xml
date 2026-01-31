@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Permission -->
     <string name="permission_required">Location access required</string>
     <string name="permission_rationale">To show weather for your location the app needs access to location. Allow?</string>
     <string name="allow">Allow</string>
@@ -7,6 +8,12 @@
     <string name="open_settings">Open settings</string>
     <string name="permission_blocked">Permission blocked</string>
     <string name="permission_blocked_text">Location permission has been blocked. Open app settings to enable it.</string>
+
+    <!-- WeatherView -->
     <string name="refresh_button_label">Refresh</string>
     <string name="no_weather_data">No weather data</string>
+    <string name="unknown_location">Unknown location</string>
+    <string name="forecast_coming_soon">Forecast coming soon…</string>
+    <string name="weather_summary">Summary: %1$s</string>
+    <string name="weather_temperature">%1$d°</string>
 </resources>

@@ -38,8 +38,8 @@ fun MarkerInfoCard(
     onOpenDetails: (latitude: Double?, longitude: Double?) -> Unit,
     onClearMarker: () -> Unit,
     modifier: Modifier = Modifier,
-    tailHeight: Dp = WeatherThemeTokens.dimens.spacingLarge,
-    tailWidth: Dp = WeatherThemeTokens.dimens.spacingLarge,
+    tailHeight: Dp = WeatherThemeTokens.dimens.spacingExtraLarge,
+    tailWidth: Dp = WeatherThemeTokens.dimens.spacingExtraLarge,
 ) {
     val dimens = WeatherThemeTokens.dimens
     val cardColor = WeatherThemeTokens.colors.surface
@@ -59,10 +59,10 @@ fun MarkerInfoCard(
                     modifier = Modifier
                         .wrapContentWidth()
                         .padding(
-                            start = dimens.spacingMedium,
-                            end = dimens.spacingMedium,
+                            start = dimens.spacingLarge,
+                            end = dimens.spacingLarge,
                             top = dimens.buttonHeightLarge,
-                            bottom = dimens.spacingMedium,
+                            bottom = dimens.spacingLarge,
                         ),
                     horizontalAlignment = Alignment.Start,
                 ) {
@@ -73,7 +73,7 @@ fun MarkerInfoCard(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(height = dimens.spacingSmall))
+                    Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
                     IconButton(
                         onClick = {
@@ -94,7 +94,7 @@ fun MarkerInfoCard(
                 onClick = onClearMarker,
                 modifier = Modifier
                     .align(alignment = Alignment.TopEnd)
-                    .padding(all = dimens.spacingSmall)
+                    .padding(all = dimens.spacingMedium)
                     .size(size = dimens.iconSizeLarge),
             ) {
                 Icon(

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -20,9 +19,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.presentation.previewfixtures.PreviewWeatherProvider
 import com.iiddd.weather.forecast.presentation.view.component.HourlyForecastRow
@@ -35,10 +34,12 @@ fun DetailedWeatherScreenContent(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
 ) {
+    val dimens = WeatherThemeTokens.dimens
+
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.onBackground,
+        color = WeatherThemeTokens.colors.background,
+        contentColor = WeatherThemeTokens.colors.onBackground,
     ) {
         PullToRefreshBox(
             isRefreshing = isRefreshing,
@@ -51,7 +52,7 @@ fun DetailedWeatherScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(state = rememberScrollState())
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = dimens.spacingExtraLarge),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -60,7 +61,7 @@ fun DetailedWeatherScreenContent(
                     onRefresh = onRefresh,
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
 
                 HourlyForecastRow(
                     forecasts = weatherState.value?.hourly ?: emptyList(),
@@ -73,7 +74,7 @@ fun DetailedWeatherScreenContent(
 
 @WeatherPreview
 @Composable
-fun DetailedWeatherScreenContentPreview() {
+private fun DetailedWeatherScreenContentPreview() {
     val mockState = remember {
         mutableStateOf(PreviewWeatherProvider.sampleWeather)
     }

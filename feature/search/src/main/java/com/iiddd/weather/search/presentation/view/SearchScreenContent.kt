@@ -48,7 +48,7 @@ fun SearchScreenContent(
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var cardSize by remember { mutableStateOf(Size(0f, 0f)) }
 
-    val markerVerticalOffset = dimens.spacingLarge
+    val markerVerticalOffset = dimens.spacingExtraLarge
     val markerOffsetPx = with(density) { markerVerticalOffset.toPx() }
     val tailHeightPx = with(density) { markerVerticalOffset.toPx() }
 
@@ -76,7 +76,7 @@ fun SearchScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsPadding()
-                .padding(all = dimens.spacingSmall),
+                .padding(all = dimens.spacingMedium),
         )
 
         searchUiState.marker?.let { markerLatLng: LatLng ->

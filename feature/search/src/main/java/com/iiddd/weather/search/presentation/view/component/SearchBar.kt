@@ -45,7 +45,7 @@ fun SearchBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(all = dimens.spacingSmall),
+                    .padding(all = dimens.spacingMedium),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 TextField(
@@ -86,7 +86,7 @@ fun SearchBar(
             }
         }
 
-        Spacer(modifier = Modifier.height(height = dimens.spacingSmall))
+        Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
         when {
             searchUiState.isLoading -> {
@@ -94,14 +94,14 @@ fun SearchBar(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(all = dimens.spacingSmall),
+                            .padding(all = dimens.spacingMedium),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         CircularProgressIndicator(
-                            modifier = Modifier.padding(all = dimens.spacingExtraSmall),
+                            modifier = Modifier.padding(all = dimens.spacingSmall),
                             color = WeatherThemeTokens.colors.primary,
                         )
-                        Spacer(modifier = Modifier.width(width = dimens.spacingSmall))
+                        Spacer(modifier = Modifier.width(width = dimens.spacingMedium))
                         Text(
                             text = stringResource(id = SearchR.string.search_loading_text),
                             style = WeatherThemeTokens.typography.bodyMedium,
@@ -113,7 +113,7 @@ fun SearchBar(
             searchUiState.errorMessage != null -> {
                 Card(elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationMedium)) {
                     Text(
-                        modifier = Modifier.padding(all = dimens.spacingSmall),
+                        modifier = Modifier.padding(all = dimens.spacingMedium),
                         text = searchUiState.errorMessage,
                         style = WeatherThemeTokens.typography.bodyMedium,
                         color = WeatherThemeTokens.colors.error,
