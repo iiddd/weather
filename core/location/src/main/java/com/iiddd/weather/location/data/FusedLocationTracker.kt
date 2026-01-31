@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Looper
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -34,67 +33,29 @@ class FusedLocationTracker(
     private val maxLocationAgeMilliseconds: Long = 60_000L,
 ) : LocationTracker {
 
-    private val tag = "FusedLocationTracker"
-
     override suspend fun getLastKnownLocation(): Coordinates? {
-        if (!hasLocationPermission()) {
-            Log.d(tag, "getLastKnownLocation: No location permission")
-            return null
-        }
+        if (!hasLocationPermission()) return null
 
         return withTimeoutOrNull(timeMillis = timeoutMilliseconds) {
-            // Strategy 1: Try last known location first (instant if available and fresh)
             val lastLocation = lastLocationOrNull()
             if (lastLocation != null && isLocationFresh(location = lastLocation)) {
-                Log.d(
-                    tag,
-                    "lastLocation (fresh) -> lat=${lastLocation.latitude}, lon=${lastLocation.longitude}",
-                )
                 return@withTimeoutOrNull lastLocation.toCoordinates()
             }
 
-            // Strategy 2: Try to get current location and active fix in parallel
             val location = getFirstAvailableLocation()
             if (location != null) {
-                Log.d(
-                    tag,
-                    "parallelFix -> lat=${location.latitude}, lon=${location.longitude}",
-                )
                 return@withTimeoutOrNull location.toCoordinates()
             }
 
-            // Strategy 3: Fall back to stale last location if nothing else worked
-            if (lastLocation != null) {
-                Log.d(
-                    tag,
-                    "lastLocation (stale fallback) -> lat=${lastLocation.latitude}, lon=${lastLocation.longitude}",
-                )
-                return@withTimeoutOrNull lastLocation.toCoordinates()
-            }
-
-            Log.d(tag, "getLastKnownLocation: No location available")
-            null
+            lastLocation?.toCoordinates()
         }
     }
 
     override suspend fun getCurrentLocationOrNull(): Coordinates? {
-        if (!hasLocationPermission()) {
-            Log.d(tag, "getCurrentLocationOrNull: No location permission")
-            return null
-        }
+        if (!hasLocationPermission()) return null
 
         return withTimeoutOrNull(timeMillis = timeoutMilliseconds) {
-            val location = getFirstAvailableLocation()
-            if (location != null) {
-                Log.d(
-                    tag,
-                    "getCurrentLocationOrNull -> lat=${location.latitude}, lon=${location.longitude}",
-                )
-                return@withTimeoutOrNull location.toCoordinates()
-            }
-
-            Log.d(tag, "getCurrentLocationOrNull: No location available")
-            null
+            getFirstAvailableLocation()?.toCoordinates()
         }
     }
 
@@ -102,7 +63,6 @@ class FusedLocationTracker(
         val currentLocationDeferred = async { currentFixOrNull() }
         val activeLocationDeferred = async { requestSingleUpdateOrNull() }
 
-        // Return whichever completes first with a valid result
         val currentLocation = currentLocationDeferred.await()
         if (currentLocation != null) {
             activeLocationDeferred.cancel()
