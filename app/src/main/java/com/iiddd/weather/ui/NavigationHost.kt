@@ -135,6 +135,19 @@ private fun MainNavDisplay(
                             latitude = weatherDestination.latitude,
                             longitude = weatherDestination.longitude,
                             useDeviceLocation = weatherDestination.useDeviceLocation,
+                            onNavigateToDeviceLocation = {
+                                val deviceLocationDestination = Destination.Weather(
+                                    latitude = null,
+                                    longitude = null,
+                                    useDeviceLocation = true,
+                                )
+                                weatherNavigationState.updateWeatherDestination(
+                                    destination = deviceLocationDestination
+                                )
+                                navigationBackStack.replaceCurrent(
+                                    destination = deviceLocationDestination
+                                )
+                            },
                         )
                     }
                 }

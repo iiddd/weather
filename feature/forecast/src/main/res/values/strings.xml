@@ -11,6 +11,7 @@
 
     <!-- WeatherView -->
     <string name="refresh_button_label">Refresh</string>
+    <string name="current_location_button_label">Current location</string>
     <string name="no_weather_data">No weather data</string>
     <string name="unknown_location">Unknown location</string>
     <string name="forecast_coming_soon">Forecast coming soon…</string>

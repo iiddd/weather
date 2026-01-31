@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -47,6 +46,7 @@ fun HourlyForecastWidget(
             LazyRow(
                 state = listState,
                 contentPadding = PaddingValues(horizontal = dimens.spacingMedium),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingSmall),
                 modifier = Modifier.fillMaxSize(),
             ) {

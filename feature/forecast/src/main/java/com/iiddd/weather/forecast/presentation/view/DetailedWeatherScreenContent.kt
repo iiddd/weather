@@ -1,6 +1,7 @@
 package com.iiddd.weather.forecast.presentation.view
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.presentation.previewfixtures.PreviewWeatherProvider
+import com.iiddd.weather.forecast.presentation.view.component.CurrentLocationButton
 import com.iiddd.weather.forecast.presentation.view.component.DailyForecastWidget
 import com.iiddd.weather.forecast.presentation.view.component.HourlyForecastWidget
 import com.iiddd.weather.forecast.presentation.view.component.WeatherWidget
@@ -33,7 +35,9 @@ import com.iiddd.weather.forecast.presentation.view.component.WeatherWidget
 fun DetailedWeatherScreenContent(
     weatherState: State<Weather?>,
     isRefreshing: Boolean,
+    showCurrentLocationButton: Boolean,
     onRefresh: () -> Unit,
+    onCurrentLocationRequested: () -> Unit,
 ) {
     val dimens = WeatherThemeTokens.dimens
 
@@ -42,38 +46,51 @@ fun DetailedWeatherScreenContent(
         color = WeatherThemeTokens.colors.background,
         contentColor = WeatherThemeTokens.colors.onBackground,
     ) {
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = onRefresh,
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding(),
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(state = rememberScrollState())
-                    .padding(horizontal = dimens.spacingExtraLarge),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
+                modifier = Modifier.fillMaxSize(),
             ) {
-                WeatherWidget(
-                    weatherState = weatherState,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(state = rememberScrollState())
+                        .padding(horizontal = dimens.spacingExtraLarge),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    WeatherWidget(
+                        weatherState = weatherState,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
-                Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
+                    Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
 
-                HourlyForecastWidget(
-                    forecasts = weatherState.value?.hourly ?: emptyList(),
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                    HourlyForecastWidget(
+                        forecasts = weatherState.value?.hourly ?: emptyList(),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
-                Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
+                    Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
 
-                DailyForecastWidget(
-                    forecasts = weatherState.value?.daily ?: emptyList(),
-                    modifier = Modifier.fillMaxWidth(),
+                    DailyForecastWidget(
+                        forecasts = weatherState.value?.daily ?: emptyList(),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+
+            if (showCurrentLocationButton) {
+                CurrentLocationButton(
+                    onCurrentLocationRequested = onCurrentLocationRequested,
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomEnd)
+                        .padding(all = dimens.spacingExtraLarge),
                 )
             }
         }
@@ -91,7 +108,9 @@ private fun DetailedWeatherScreenContentPreview() {
         DetailedWeatherScreenContent(
             weatherState = mockState,
             isRefreshing = false,
+            showCurrentLocationButton = true,
             onRefresh = {},
+            onCurrentLocationRequested = {},
         )
     }
 }
