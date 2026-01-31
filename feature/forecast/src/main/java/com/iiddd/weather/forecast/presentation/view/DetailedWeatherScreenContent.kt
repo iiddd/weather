@@ -59,7 +59,6 @@ fun DetailedWeatherScreenContent(
             ) {
                 WeatherWidget(
                     weatherState = weatherState,
-                    onRefresh = onRefresh,
                     modifier = Modifier.fillMaxWidth(),
                 )
 

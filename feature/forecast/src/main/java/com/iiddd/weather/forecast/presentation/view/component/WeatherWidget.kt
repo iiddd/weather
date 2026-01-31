@@ -3,7 +3,6 @@ package com.iiddd.weather.forecast.presentation.view.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,16 +26,13 @@ import com.iiddd.weather.forecast.R as ForecastR
 @Composable
 fun WeatherWidget(
     weatherState: State<Weather?>,
-    onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val weather = weatherState.value
     val dimens = WeatherThemeTokens.dimens
 
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = dimens.cardHeightLarge),
+        modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = WeatherThemeTokens.colors.surface,
         ),
@@ -81,7 +77,6 @@ fun WeatherWidget(
                 )
             }
             Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
-            RefreshButton(onRefresh = onRefresh)
         }
     }
 }
@@ -94,9 +89,6 @@ private fun WeatherWidgetPreview() {
     }
 
     WeatherTheme {
-        WeatherWidget(
-            weatherState = mockWeather,
-            onRefresh = {},
-        )
+        WeatherWidget(weatherState = mockWeather)
     }
 }
