@@ -135,28 +135,30 @@ private fun MainNavDisplay(
                             useDeviceLocation = weatherDestination.useDeviceLocation,
                         )
                     }
-                }Destination.Search -> {
-                NavEntry(
-                    key = destination,
-                    contentKey = destination.toString(),
-                ) { _: Destination ->
-                    SearchRoute(
-                        onOpenDetails = { latitude: Double, longitude: Double ->
-                            val newWeatherDestination = Destination.Weather(
-                                latitude = latitude,
-                                longitude = longitude,
-                                useDeviceLocation = false,
-                            )
-                            weatherNavigationState.updateWeatherDestination(
-                                destination = newWeatherDestination
-                            )
-                            navigationBackStack.replaceCurrent(
-                                destination = newWeatherDestination
-                            )
-                        },
-                    )
                 }
-            }
+
+                Destination.Search -> {
+                    NavEntry(
+                        key = destination,
+                        contentKey = destination.toString(),
+                    ) { _: Destination ->
+                        SearchRoute(
+                            onOpenDetails = { latitude: Double, longitude: Double ->
+                                val newWeatherDestination = Destination.Weather(
+                                    latitude = latitude,
+                                    longitude = longitude,
+                                    useDeviceLocation = false,
+                                )
+                                weatherNavigationState.updateWeatherDestination(
+                                    destination = newWeatherDestination
+                                )
+                                navigationBackStack.replaceCurrent(
+                                    destination = newWeatherDestination
+                                )
+                            },
+                        )
+                    }
+                }
 
                 Destination.Settings -> {
                     NavEntry(
