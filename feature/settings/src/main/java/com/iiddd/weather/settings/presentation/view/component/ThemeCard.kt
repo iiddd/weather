@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.dp
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
@@ -37,16 +36,17 @@ internal fun ThemeCard(
     val colors = WeatherThemeTokens.colors
     val typography = WeatherThemeTokens.typography
     val shapes = WeatherThemeTokens.shapes
+    val dimens = WeatherThemeTokens.dimens
 
-    val borderStroke: BorderStroke? =
+    val borderStroke: BorderStroke =
         if (isSelected) {
             BorderStroke(
-                width = 2.dp,
+                width = dimens.borderWidthMedium,
                 color = colors.primary,
             )
         } else {
             BorderStroke(
-                width = 1.dp,
+                width = dimens.borderWidthThin,
                 color = colors.outlineVariant,
             )
         }
@@ -70,13 +70,13 @@ internal fun ThemeCard(
             contentColor = contentColor,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 1.dp,
+            defaultElevation = dimens.elevationSmall,
         ),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 8.dp),
+                .padding(all = dimens.spacingMedium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -84,14 +84,14 @@ internal fun ThemeCard(
                 painter = painterResource(id = themeDrawableRes),
                 contentDescription = stringResource(id = contentDescriptionRes),
                 modifier = Modifier
-                    .height(120.dp)
-                    .align(Alignment.CenterHorizontally),
+                    .height(height = dimens.imageHeightMedium)
+                    .align(alignment = Alignment.CenterHorizontally),
             )
 
             Text(
                 text = stringResource(id = titleRes),
                 style = typography.labelMedium,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
             )
         }
     }
@@ -106,7 +106,7 @@ private fun ThemeCardPreview() {
             themeDrawableRes = SettingsR.drawable.theme_system,
             titleRes = SettingsR.string.theme_system_label,
             contentDescriptionRes = SettingsR.string.theme_system_content_description,
-            onClick = {}
+            onClick = {},
         )
     }
 }

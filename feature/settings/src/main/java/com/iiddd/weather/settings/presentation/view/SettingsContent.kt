@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.ThemeMode
 import com.iiddd.weather.core.ui.theme.WeatherTheme
@@ -24,26 +23,31 @@ fun SettingsScreenContent(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val dimens = WeatherThemeTokens.dimens
     val typography = WeatherThemeTokens.typography
+    val colors = WeatherThemeTokens.colors
 
     Column(
-        modifier = modifier.padding(all = 16.dp)
+        modifier = modifier
+            .padding(all = dimens.spacingExtraLarge)
             .fillMaxSize()
             .statusBarsPadding(),
     ) {
         Text(
             text = title,
             style = typography.titleLarge,
+            color = colors.onBackground,
         )
 
-        Spacer(modifier = Modifier.height(height = 16.dp))
+        Spacer(modifier = Modifier.height(height = dimens.spacingExtraLarge))
 
         Text(
             text = "Theme",
             style = typography.titleMedium,
+            color = colors.onBackground,
         )
 
-        Spacer(modifier = Modifier.height(height = 12.dp))
+        Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
 
         ThemeSelectionRow(
             selectedThemeMode = selectedThemeMode,

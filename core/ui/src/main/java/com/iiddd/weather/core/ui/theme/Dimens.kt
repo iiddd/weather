@@ -45,6 +45,9 @@ object WeatherDimens {
     val cardHeightMedium: Dp = 128.dp
     val cardHeightLarge: Dp = 180.dp
 
+    // Image sizes
+    val imageHeightMedium: Dp = 120.dp
+
     // Misc
     val fadeWidth: Dp = 24.dp
 

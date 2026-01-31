@@ -7,9 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.ThemeMode
+import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.settings.R as SettingsR
 
 @Composable
@@ -18,12 +19,14 @@ fun ThemeSelectionRow(
     onThemeModeSelected: (ThemeMode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val dimens = WeatherThemeTokens.dimens
+
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(all = 12.dp)
+            .padding(all = dimens.spacingLarge)
             .selectableGroup(),
-        horizontalArrangement = Arrangement.spacedBy(space = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingLarge),
     ) {
         ThemeCard(
             isSelected = selectedThemeMode == ThemeMode.Light,
@@ -57,8 +60,10 @@ fun ThemeSelectionRow(
 @WeatherPreview
 @Composable
 private fun ThemeSelectionRowPreview() {
-    ThemeSelectionRow(
-        selectedThemeMode = ThemeMode.System,
-        onThemeModeSelected = {},
-    )
+    WeatherTheme {
+        ThemeSelectionRow(
+            selectedThemeMode = ThemeMode.System,
+            onThemeModeSelected = {},
+        )
+    }
 }
