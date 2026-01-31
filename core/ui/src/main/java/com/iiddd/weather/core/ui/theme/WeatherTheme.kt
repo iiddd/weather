@@ -47,4 +47,7 @@ object WeatherThemeTokens {
         @Composable
         @ReadOnlyComposable
         get() = MaterialTheme.shapes
+
+    val dimens: WeatherDimens
+        get() = WeatherDimens
 }

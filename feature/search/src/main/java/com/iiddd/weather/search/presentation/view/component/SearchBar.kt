@@ -23,9 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 
 @Composable
@@ -36,21 +36,28 @@ fun SearchBar(
     modifier: Modifier = Modifier,
 ) {
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
+    val dimens = WeatherThemeTokens.dimens
 
     Column(modifier = modifier) {
-        Card(elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)) {
+        Card(elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationLarge)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(all = 8.dp),
+                    .padding(all = dimens.spacingSmall),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 TextField(
                     value = searchUiState.query,
                     onValueChange = { query: String -> onQueryChange(query) },
-                    placeholder = { Text(text = "Search city") },
+                    placeholder = {
+                        Text(
+                            text = "Search city",
+                            style = WeatherThemeTokens.typography.bodyLarge,
+                        )
+                    },
                     modifier = Modifier.weight(weight = 1f),
                     singleLine = true,
+                    textStyle = WeatherThemeTokens.typography.bodyLarge,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(
                         onSearch = {
@@ -77,29 +84,37 @@ fun SearchBar(
             }
         }
 
-        Spacer(modifier = Modifier.height(height = 8.dp))
+        Spacer(modifier = Modifier.height(height = dimens.spacingSmall))
 
         when {
             searchUiState.isLoading -> {
-                Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
+                Card(elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationMedium)) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(all = 8.dp),
+                            .padding(all = dimens.spacingSmall),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        CircularProgressIndicator(modifier = Modifier.padding(all = 4.dp))
-                        Spacer(modifier = Modifier.width(width = 8.dp))
-                        Text(text = "Searching...")
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(all = dimens.spacingExtraSmall),
+                            color = WeatherThemeTokens.colors.primary,
+                        )
+                        Spacer(modifier = Modifier.width(width = dimens.spacingSmall))
+                        Text(
+                            text = "Searching...",
+                            style = WeatherThemeTokens.typography.bodyMedium,
+                        )
                     }
                 }
             }
 
             searchUiState.errorMessage != null -> {
-                Card(elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
+                Card(elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationMedium)) {
                     Text(
-                        modifier = Modifier.padding(all = 8.dp),
+                        modifier = Modifier.padding(all = dimens.spacingSmall),
                         text = searchUiState.errorMessage,
+                        style = WeatherThemeTokens.typography.bodyMedium,
+                        color = WeatherThemeTokens.colors.error,
                     )
                 }
             }
@@ -125,7 +140,7 @@ private fun SearchBarPreview() {
             onSearch = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 8.dp),
+                .padding(all = WeatherThemeTokens.dimens.spacingSmall),
         )
     }
 }
@@ -148,7 +163,7 @@ private fun SearchBarPreviewLoading() {
             onSearch = {},
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 8.dp),
+                .padding(all = WeatherThemeTokens.dimens.spacingSmall),
         )
     }
 }

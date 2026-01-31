@@ -5,22 +5,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
-
-private val MAP_PREVIEW_BACKGROUND_COLOR = Color(0xFFEDEDED)
+import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 
 @Composable
 internal fun Map(
-    cameraPositionState: com.google.maps.android.compose.CameraPositionState,
+    cameraPositionState: CameraPositionState,
     isPreview: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (isPreview) {
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(color = MAP_PREVIEW_BACKGROUND_COLOR),
+                .background(color = WeatherThemeTokens.colors.surfaceVariant),
         )
     } else {
         GoogleMap(

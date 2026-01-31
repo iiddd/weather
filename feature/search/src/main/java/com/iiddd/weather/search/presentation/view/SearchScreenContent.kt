@@ -17,20 +17,18 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.search.presentation.view.component.Map
 import com.iiddd.weather.search.presentation.view.component.MarkerInfoCard
 import com.iiddd.weather.search.presentation.view.component.SearchBar
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 import kotlin.math.roundToInt
-
-private val MARKER_VERTICAL_OFFSET_DP = 16.dp
 
 @Composable
 fun SearchScreenContent(
@@ -43,12 +41,14 @@ fun SearchScreenContent(
 ) {
     val isPreview = LocalInspectionMode.current
     val density = LocalDensity.current
+    val dimens = WeatherThemeTokens.dimens
 
     var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
     var cardSize by remember { mutableStateOf(Size(0f, 0f)) }
 
-    val markerOffsetPx = with(density) { MARKER_VERTICAL_OFFSET_DP.toPx() }
-    val tailHeightPx = with(density) { MARKER_VERTICAL_OFFSET_DP.toPx() }
+    val markerVerticalOffset = dimens.spacingLarge
+    val markerOffsetPx = with(density) { markerVerticalOffset.toPx() }
+    val tailHeightPx = with(density) { markerVerticalOffset.toPx() }
 
     Box(
         modifier = Modifier
@@ -62,7 +62,7 @@ fun SearchScreenContent(
     ) {
         Map(
             isPreview = isPreview,
-            cameraPositionState = cameraPositionState
+            cameraPositionState = cameraPositionState,
         )
 
         SearchBar(
@@ -72,7 +72,7 @@ fun SearchScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsPadding()
-                .padding(all = 8.dp),
+                .padding(all = dimens.spacingSmall),
         )
 
         searchUiState.marker?.let { markerLatLng: LatLng ->
@@ -99,7 +99,7 @@ fun SearchScreenContent(
                     )
                 },
                 onClearMarker = onClearMarker,
-                tailHeight = MARKER_VERTICAL_OFFSET_DP,
+                tailHeight = markerVerticalOffset,
                 modifier = Modifier
                     .onGloballyPositioned { layoutCoordinates ->
                         cardSize = Size(
