@@ -50,6 +50,7 @@ object WeatherDimens {
 
     // Misc
     val fadeWidth: Dp = 24.dp
+    val temperatureRowWidth: Dp = 72.dp
 
     // Border/Stroke
     val borderWidthThin: Dp = 1.dp

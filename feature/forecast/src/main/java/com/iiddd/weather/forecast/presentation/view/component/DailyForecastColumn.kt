@@ -34,7 +34,7 @@ fun DailyForecastColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = dimens.spacingMedium),
-            verticalArrangement = Arrangement.spacedBy(space = dimens.spacingExtraSmall),
+            verticalArrangement = Arrangement.spacedBy(space = dimens.spacingSmall),
         ) {
             forecasts.forEach { dailyForecast ->
                 DailyWeatherCard(forecast = dailyForecast)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,7 +47,6 @@ fun DailyWeatherCard(
                     horizontal = dimens.spacingMedium,
                     vertical = dimens.spacingSmall,
                 ),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -57,6 +57,7 @@ fun DailyWeatherCard(
             )
 
             val iconResource = resolveWeatherIcon(iconCode = forecast.icon)
+
             Image(
                 painter = painterResource(id = iconResource),
                 contentDescription = null,
@@ -64,7 +65,7 @@ fun DailyWeatherCard(
             )
 
             Row(
-                modifier = Modifier.weight(weight = 1f),
+                modifier = Modifier.width(width = dimens.temperatureRowWidth),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
