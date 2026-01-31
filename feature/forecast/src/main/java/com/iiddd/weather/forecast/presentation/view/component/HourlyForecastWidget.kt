@@ -25,7 +25,7 @@ import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.HourlyForecast
 
 @Composable
-fun HourlyForecastRow(
+fun HourlyForecastWidget(
     forecasts: List<HourlyForecast>,
     modifier: Modifier = Modifier,
 ) {
@@ -98,7 +98,7 @@ fun HourlyForecastRow(
 
 @WeatherPreview
 @Composable
-private fun HourlyForecastRowPreview() {
+private fun HourlyForecastWidgetPreview() {
     val mockForecasts = listOf(
         HourlyForecast(time = "09:00", temp = 13, icon = "01d"),
         HourlyForecast(time = "10:00", temp = 14, icon = "02d"),
@@ -110,6 +110,6 @@ private fun HourlyForecastRowPreview() {
     )
 
     WeatherTheme {
-        HourlyForecastRow(forecasts = mockForecasts)
+        HourlyForecastWidget(forecasts = mockForecasts)
     }
 }

@@ -15,7 +15,7 @@ import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.DailyForecast
 
 @Composable
-fun DailyForecastColumn(
+fun DailyForecastWidget(
     forecasts: List<DailyForecast>,
     modifier: Modifier = Modifier,
 ) {
@@ -45,7 +45,7 @@ fun DailyForecastColumn(
 
 @WeatherPreview
 @Composable
-private fun DailyForecastColumnPreview() {
+private fun DailyForecastWidgetPreview() {
     val mockForecasts = listOf(
         DailyForecast(day = "Monday", tempDay = 18, tempNight = 12, icon = "01d"),
         DailyForecast(day = "Tuesday", tempDay = 20, tempNight = 14, icon = "02d"),
@@ -57,6 +57,6 @@ private fun DailyForecastColumnPreview() {
     )
 
     WeatherTheme {
-        DailyForecastColumn(forecasts = mockForecasts)
+        DailyForecastWidget(forecasts = mockForecasts)
     }
 }

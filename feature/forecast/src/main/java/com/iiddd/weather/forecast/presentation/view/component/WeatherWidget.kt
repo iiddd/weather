@@ -25,7 +25,7 @@ import com.iiddd.weather.forecast.presentation.previewfixtures.PreviewWeatherPro
 import com.iiddd.weather.forecast.R as ForecastR
 
 @Composable
-fun WeatherView(
+fun WeatherWidget(
     weatherState: State<Weather?>,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
@@ -88,13 +88,13 @@ fun WeatherView(
 
 @WeatherPreview
 @Composable
-private fun WeatherViewPreview() {
+private fun WeatherWidgetPreview() {
     val mockWeather: State<Weather?> = remember {
         mutableStateOf(PreviewWeatherProvider.sampleWeather)
     }
 
     WeatherTheme {
-        WeatherView(
+        WeatherWidget(
             weatherState = mockWeather,
             onRefresh = {},
         )

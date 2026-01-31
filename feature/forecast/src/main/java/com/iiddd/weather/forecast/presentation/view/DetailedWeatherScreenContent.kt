@@ -24,9 +24,9 @@ import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.presentation.previewfixtures.PreviewWeatherProvider
-import com.iiddd.weather.forecast.presentation.view.component.DailyForecastColumn
-import com.iiddd.weather.forecast.presentation.view.component.HourlyForecastRow
-import com.iiddd.weather.forecast.presentation.view.component.WeatherView
+import com.iiddd.weather.forecast.presentation.view.component.DailyForecastWidget
+import com.iiddd.weather.forecast.presentation.view.component.HourlyForecastWidget
+import com.iiddd.weather.forecast.presentation.view.component.WeatherWidget
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +57,7 @@ fun DetailedWeatherScreenContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                WeatherView(
+                WeatherWidget(
                     weatherState = weatherState,
                     onRefresh = onRefresh,
                     modifier = Modifier.fillMaxWidth(),
@@ -65,14 +65,14 @@ fun DetailedWeatherScreenContent(
 
                 Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
 
-                HourlyForecastRow(
+                HourlyForecastWidget(
                     forecasts = weatherState.value?.hourly ?: emptyList(),
                     modifier = Modifier.fillMaxWidth(),
                 )
 
                 Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
 
-                DailyForecastColumn(
+                DailyForecastWidget(
                     forecasts = weatherState.value?.daily ?: emptyList(),
                     modifier = Modifier.fillMaxWidth(),
                 )
