@@ -16,8 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import com.iiddd.weather.R as AppR
 import com.iiddd.weather.core.ui.systembars.WeatherWindowInsets
 import com.iiddd.weather.forecast.presentation.view.DetailedWeatherRoute
 import com.iiddd.weather.search.presentation.view.SearchRoute
@@ -173,10 +175,11 @@ private fun MainNavDisplay(
     )
 }
 
+@Composable
 private fun tabLabel(destination: Destination): String = when (destination) {
-    is Destination.Weather -> "Weather"
-    Destination.Search -> "Search"
-    Destination.Settings -> "Settings"
+    is Destination.Weather -> stringResource(AppR.string.home_tab_label)
+    Destination.Search -> stringResource(AppR.string.search_tab_label)
+    Destination.Settings -> stringResource(AppR.string.settings_tab_label)
 }
 
 private fun tabIcon(destination: Destination): ImageVector = when (destination) {
