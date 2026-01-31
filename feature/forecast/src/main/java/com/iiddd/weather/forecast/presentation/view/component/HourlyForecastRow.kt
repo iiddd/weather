@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -36,56 +36,53 @@ fun HourlyForecastRow(
     val listState = rememberLazyListState()
 
     Card(
-        modifier = modifier
-            .wrapContentWidth()
-            .height(height = dimens.cardHeightMedium),
+        modifier = modifier.height(height = dimens.cardHeightMedium),
         shape = RoundedCornerShape(size = dimens.cornerRadiusLarge),
         colors = CardDefaults.cardColors(containerColor = surfaceColor),
         elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationSmall),
     ) {
-        Box {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+        ) {
             LazyRow(
                 state = listState,
                 contentPadding = PaddingValues(horizontal = dimens.spacingMedium),
                 horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingExtraSmall),
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .height(height = dimens.cardHeightMedium),
+                modifier = Modifier.fillMaxSize(),
             ) {
                 items(
                     items = forecasts,
                     key = { forecast -> "${forecast.time}-${forecast.icon}-${forecast.temp}" },
-                ) { item ->
+                ) { hourlyForecast ->
                     HourlyWeatherCard(
-                        forecast = item,
+                        forecast = hourlyForecast,
                         modifier = Modifier.padding(all = dimens.spacingSmall),
                     )
                 }
             }
 
-            // Left fade matching card height
+            // Left fade
             Box(
                 modifier = Modifier
                     .width(width = dimens.fadeWidth)
                     .fillMaxHeight()
                     .background(
-                        Brush.horizontalGradient(
+                        brush = Brush.horizontalGradient(
                             colors = listOf(
                                 surfaceColor,
                                 surfaceColor.copy(alpha = 0f),
                             ),
                         ),
-                    )
-                    .align(alignment = Alignment.CenterStart),
+                    )    .align(alignment = Alignment.CenterStart),
             )
 
-            // Right fade matching card height
+            // Right fade
             Box(
                 modifier = Modifier
                     .width(width = dimens.fadeWidth)
                     .fillMaxHeight()
                     .background(
-                        Brush.horizontalGradient(
+                        brush = Brush.horizontalGradient(
                             colors = listOf(
                                 surfaceColor.copy(alpha = 0f),
                                 surfaceColor,
@@ -97,6 +94,7 @@ fun HourlyForecastRow(
         }
     }
 }
+
 
 @WeatherPreview
 @Composable

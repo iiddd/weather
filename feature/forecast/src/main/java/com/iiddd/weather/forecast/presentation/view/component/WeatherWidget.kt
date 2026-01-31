@@ -20,21 +20,21 @@ import androidx.compose.ui.res.stringResource
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
-import com.iiddd.weather.forecast.R as ForecastR
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.presentation.previewfixtures.PreviewWeatherProvider
+import com.iiddd.weather.forecast.R as ForecastR
 
 @Composable
 fun WeatherView(
     weatherState: State<Weather?>,
     onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val weather = weatherState.value
     val dimens = WeatherThemeTokens.dimens
 
     Card(
-        modifier = Modifier
-            .padding(all = dimens.spacingLarge)
+        modifier = modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = dimens.cardHeightLarge),
         colors = CardDefaults.cardColors(
@@ -63,13 +63,19 @@ fun WeatherView(
                 )
             } else {
                 Text(
-                    text = stringResource(id = ForecastR.string.weather_summary, weather.description),
+                    text = stringResource(
+                        id = ForecastR.string.weather_summary,
+                        weather.description,
+                    ),
                     style = WeatherThemeTokens.typography.bodyMedium,
                     color = WeatherThemeTokens.colors.onSurface,
                 )
                 Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
                 Text(
-                    text = stringResource(id = ForecastR.string.weather_temperature, weather.currentTemp),
+                    text = stringResource(
+                        id = ForecastR.string.weather_temperature,
+                        weather.currentTemp,
+                    ),
                     style = WeatherThemeTokens.typography.headlineLarge,
                     color = WeatherThemeTokens.colors.onSurface,
                 )

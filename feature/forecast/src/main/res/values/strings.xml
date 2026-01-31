@@ -16,4 +16,8 @@
     <string name="forecast_coming_soon">Forecast coming soon…</string>
     <string name="weather_summary">Summary: %1$s</string>
     <string name="weather_temperature">%1$d°</string>
+
+    <!-- DailyForecastColumn -->
+    <string name="daily_temperature_day">%1$d°</string>
+    <string name="daily_temperature_night">%1$d°</string>
 </resources>
