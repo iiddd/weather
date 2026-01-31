@@ -3,7 +3,6 @@ package com.iiddd.weather.forecast.presentation.view.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -45,7 +44,6 @@ fun HourlyForecastWidget(
         ) {
             LazyRow(
                 state = listState,
-                contentPadding = PaddingValues(horizontal = dimens.spacingMedium),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingSmall),
                 modifier = Modifier.fillMaxSize(),

@@ -15,7 +15,6 @@
     <string name="no_weather_data">No weather data</string>
     <string name="unknown_location">Unknown location</string>
     <string name="forecast_coming_soon">Forecast coming soon…</string>
-    <string name="weather_summary">Summary: %1$s</string>
     <string name="weather_temperature">%1$d°</string>
 
     <!-- DailyForecastColumn -->

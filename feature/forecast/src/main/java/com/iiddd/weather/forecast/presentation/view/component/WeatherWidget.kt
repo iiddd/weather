@@ -59,10 +59,7 @@ fun WeatherWidget(
                 )
             } else {
                 Text(
-                    text = stringResource(
-                        id = ForecastR.string.weather_summary,
-                        weather.description,
-                    ),
+                    text = weather.description,
                     style = WeatherThemeTokens.typography.bodyMedium,
                     color = WeatherThemeTokens.colors.onSurface,
                 )

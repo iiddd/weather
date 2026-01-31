@@ -32,8 +32,7 @@ fun DailyWeatherCard(
 
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = dimens.spacingSmall),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = WeatherThemeTokens.colors.surfaceVariant,
         ),
