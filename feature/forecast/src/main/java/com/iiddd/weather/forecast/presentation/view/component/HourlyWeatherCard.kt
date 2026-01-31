@@ -32,8 +32,7 @@ fun HourlyWeatherCard(
     Card(
         modifier = modifier
             .width(width = dimens.cardWidthSmall)
-            .heightIn(min = dimens.cardHeightSmall)
-            .padding(all = dimens.spacingSmall),
+            .heightIn(min = dimens.cardHeightSmall),
         colors = CardDefaults.cardColors(
             containerColor = WeatherThemeTokens.colors.surfaceVariant,
         ),

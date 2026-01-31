@@ -47,17 +47,14 @@ fun HourlyForecastWidget(
             LazyRow(
                 state = listState,
                 contentPadding = PaddingValues(horizontal = dimens.spacingMedium),
-                horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingExtraSmall),
+                horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingSmall),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 items(
                     items = forecasts,
                     key = { forecast -> "${forecast.time}-${forecast.icon}-${forecast.temp}" },
                 ) { hourlyForecast ->
-                    HourlyWeatherCard(
-                        forecast = hourlyForecast,
-                        modifier = Modifier.padding(all = dimens.spacingSmall),
-                    )
+                    HourlyWeatherCard(forecast = hourlyForecast)
                 }
             }
 
