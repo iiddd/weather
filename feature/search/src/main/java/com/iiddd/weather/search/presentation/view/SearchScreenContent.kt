@@ -1,6 +1,5 @@
 package com.iiddd.weather.search.presentation.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -23,17 +21,16 @@ import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.search.presentation.view.component.Map
 import com.iiddd.weather.search.presentation.view.component.MarkerInfoCard
 import com.iiddd.weather.search.presentation.view.component.SearchBar
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 import kotlin.math.roundToInt
 
 private val MARKER_VERTICAL_OFFSET_DP = 16.dp
-private val MAP_PREVIEW_BACKGROUND_COLOR = Color(0xFFEDEDED)
 
 @Composable
 fun SearchScreenContent(
@@ -63,19 +60,10 @@ fun SearchScreenContent(
                 )
             },
     ) {
-        // TODO: Unite into a single composable when GoogleMap supports preview mode
-        if (isPreview) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = MAP_PREVIEW_BACKGROUND_COLOR),
-            )
-        } else {
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-            )
-        }
+        Map(
+            isPreview = isPreview,
+            cameraPositionState = cameraPositionState
+        )
 
         SearchBar(
             searchUiState = searchUiState,
