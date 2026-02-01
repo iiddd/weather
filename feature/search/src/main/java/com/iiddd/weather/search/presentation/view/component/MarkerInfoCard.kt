@@ -3,12 +3,12 @@ package com.iiddd.weather.search.presentation.view.component
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -42,13 +42,14 @@ fun MarkerInfoCard(
     tailWidth: Dp = WeatherThemeTokens.dimens.spacingExtraLarge,
 ) {
     val dimens = WeatherThemeTokens.dimens
-    val cardColor = WeatherThemeTokens.colors.surface
+    val colors = WeatherThemeTokens.colors
+    val cardColor = colors.surface
 
     Column(
         modifier = modifier.wrapContentWidth(align = Alignment.CenterHorizontally),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box {
+        Box(modifier = Modifier.wrapContentSize()) {
             Card(
                 modifier = Modifier.wrapContentWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationLarge),
@@ -59,19 +60,17 @@ fun MarkerInfoCard(
                     modifier = Modifier
                         .wrapContentWidth()
                         .padding(
-                            start = dimens.spacingLarge,
-                            end = dimens.spacingLarge,
-                            top = dimens.buttonHeightLarge,
+                            start = dimens.spacingXxl,
+                            end = dimens.spacingXxl,
+                            top = dimens.buttonHeightSmall,
                             bottom = dimens.spacingLarge,
                         ),
-                    horizontalAlignment = Alignment.Start,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = title,
-                            style = WeatherThemeTokens.typography.bodyLarge,
-                        )
-                    }
+                    Text(
+                        text = title,
+                        style = WeatherThemeTokens.typography.bodyLarge,
+                    )
 
                     Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
@@ -79,12 +78,11 @@ fun MarkerInfoCard(
                         onClick = {
                             onOpenDetails(markerLatLng.latitude, markerLatLng.longitude)
                         },
-                        modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
                             contentDescription = stringResource(id = SearchR.string.marker_add_favorite_content_description),
-                            tint = WeatherThemeTokens.colors.primary,
+                            tint = colors.primary,
                         )
                     }
                 }
@@ -95,12 +93,13 @@ fun MarkerInfoCard(
                 modifier = Modifier
                     .align(alignment = Alignment.TopEnd)
                     .padding(all = dimens.spacingMedium)
-                    .size(size = dimens.iconSizeLarge),
+                    .size(size = dimens.iconSizeMedium),
             ) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     contentDescription = stringResource(id = SearchR.string.marker_close_content_description),
-                    tint = WeatherThemeTokens.colors.onSurface,
+                    tint = colors.onSurfaceVariant,
+                    modifier = Modifier.size(size = dimens.iconSizeSmall),
                 )
             }
         }

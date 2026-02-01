@@ -3,6 +3,7 @@
     <!-- SearchBar -->
     <string name="search_city_placeholder">Search city</string>
     <string name="search_icon_content_description">Search</string>
+    <string name="search_clear_content_description">Clear search</string>
     <string name="search_loading_text">Searching…</string>
 
     <!-- MarkerInfoCard -->
