@@ -37,7 +37,7 @@ fun HourlyWeatherCard(
             containerColor = WeatherThemeTokens.colors.surfaceVariant,
         ),
         shape = RoundedCornerShape(size = dimens.cornerRadiusMedium),
-        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationSmall),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationNone),
     ) {
         Column(
             modifier = Modifier
