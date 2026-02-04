@@ -69,14 +69,14 @@ fun DetailedWeatherScreenContent(
                         modifier = Modifier.fillMaxWidth(),
                     )
 
-                    Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
+                    Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
                     HourlyForecastWidget(
                         forecasts = weatherState.value?.hourly ?: emptyList(),
                         modifier = Modifier.fillMaxWidth(),
                     )
 
-                    Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
+                    Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
                     DailyForecastWidget(
                         forecasts = weatherState.value?.daily ?: emptyList(),

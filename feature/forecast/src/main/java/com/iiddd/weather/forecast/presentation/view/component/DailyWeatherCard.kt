@@ -44,13 +44,13 @@ fun DailyWeatherCard(
                 .fillMaxWidth()
                 .padding(
                     horizontal = dimens.spacingMedium,
-                    vertical = dimens.spacingSmall,
+                    vertical = dimens.spacingMedium,
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = forecast.day,
-                style = WeatherThemeTokens.typography.bodyLarge,
+                style = WeatherThemeTokens.typography.titleMedium,
                 color = WeatherThemeTokens.colors.onSurfaceVariant,
                 modifier = Modifier.weight(weight = 1f),
             )
@@ -60,7 +60,7 @@ fun DailyWeatherCard(
             Image(
                 painter = painterResource(id = iconResource),
                 contentDescription = null,
-                modifier = Modifier.size(size = dimens.iconSizeMedium),
+                modifier = Modifier.size(size = dimens.iconSizeLarge),
             )
 
             Row(
@@ -73,7 +73,7 @@ fun DailyWeatherCard(
                         id = ForecastR.string.daily_temperature_day,
                         forecast.tempDay,
                     ),
-                    style = WeatherThemeTokens.typography.bodyLarge,
+                    style = WeatherThemeTokens.typography.titleMedium,
                     color = WeatherThemeTokens.colors.onSurfaceVariant,
                 )
                 Text(
@@ -81,7 +81,7 @@ fun DailyWeatherCard(
                         id = ForecastR.string.daily_temperature_night,
                         forecast.tempNight,
                     ),
-                    style = WeatherThemeTokens.typography.bodyMedium,
+                    style = WeatherThemeTokens.typography.bodyLarge,
                     color = WeatherThemeTokens.colors.onSurfaceVariant.copy(alpha = 0.7f),
                     modifier = Modifier.padding(start = dimens.spacingSmall),
                 )

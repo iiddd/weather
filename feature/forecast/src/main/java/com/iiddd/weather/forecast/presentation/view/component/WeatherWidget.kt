@@ -41,26 +41,26 @@ fun WeatherWidget(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = dimens.spacingLarge),
+                .padding(all = dimens.spacingMedium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = weather?.city ?: stringResource(id = ForecastR.string.unknown_location),
-                style = WeatherThemeTokens.typography.titleMedium,
+                style = WeatherThemeTokens.typography.titleLarge,
                 color = WeatherThemeTokens.colors.onSurface,
             )
             Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
             if (weather == null) {
                 Text(
                     text = stringResource(id = ForecastR.string.forecast_coming_soon),
-                    style = WeatherThemeTokens.typography.bodyMedium,
+                    style = WeatherThemeTokens.typography.bodyLarge,
                     color = WeatherThemeTokens.colors.onSurfaceVariant,
                 )
             } else {
                 Text(
-                    text = weather.description,
-                    style = WeatherThemeTokens.typography.bodyMedium,
+                    text = weather.description.replaceFirstChar { it.titlecase() },
+                    style = WeatherThemeTokens.typography.bodyLarge,
                     color = WeatherThemeTokens.colors.onSurface,
                 )
                 Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
@@ -69,11 +69,10 @@ fun WeatherWidget(
                         id = ForecastR.string.weather_temperature,
                         weather.currentTemp,
                     ),
-                    style = WeatherThemeTokens.typography.headlineLarge,
+                    style = WeatherThemeTokens.typography.displayMedium,
                     color = WeatherThemeTokens.colors.onSurface,
                 )
             }
-            Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
         }
     }
 }
