@@ -1,5 +1,6 @@
 package com.iiddd.weather.forecast.presentation.view.component
 
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -26,6 +27,8 @@ import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.HourlyForecast
+
+private const val ANIMATION_DURATION_MS = 25
 
 @Composable
 fun HourlyForecastWidget(
@@ -72,8 +75,8 @@ fun HourlyForecastWidget(
             // Left fade - only show when there are items to scroll back to
             androidx.compose.animation.AnimatedVisibility(
                 visible = canScrollBackward,
-                enter = fadeIn(),
-                exit = fadeOut(),
+                enter = fadeIn(animationSpec = tween(durationMillis = ANIMATION_DURATION_MS)),
+                exit = fadeOut(animationSpec = tween(durationMillis = ANIMATION_DURATION_MS)),
                 modifier = Modifier.align(alignment = Alignment.CenterStart),
             ) {
                 Box(
@@ -94,8 +97,8 @@ fun HourlyForecastWidget(
             // Right fade - only show when there are items to scroll to
             androidx.compose.animation.AnimatedVisibility(
                 visible = canScrollForward,
-                enter = fadeIn(),
-                exit = fadeOut(),
+                enter = fadeIn(animationSpec = tween(durationMillis = ANIMATION_DURATION_MS)),
+                exit = fadeOut(animationSpec = tween(durationMillis = ANIMATION_DURATION_MS)),
                 modifier = Modifier.align(alignment = Alignment.CenterEnd),
             ) {
                 Box(
