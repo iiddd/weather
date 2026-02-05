@@ -1,5 +1,7 @@
 package com.iiddd.weather.forecast.presentation.view.component
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -32,6 +37,14 @@ fun HourlyForecastWidget(
     val dimens = WeatherThemeTokens.dimens
     val backgroundColor = WeatherThemeTokens.colors.background
     val listState = rememberLazyListState()
+
+    val canScrollBackward by remember {
+        derivedStateOf { listState.canScrollBackward }
+    }
+
+    val canScrollForward by remember {
+        derivedStateOf { listState.canScrollForward }
+    }
 
     Card(
         modifier = modifier.height(height = dimens.cardHeightMedium),
@@ -56,37 +69,49 @@ fun HourlyForecastWidget(
                 }
             }
 
-            // Left fade
-            Box(
-                modifier = Modifier
-                    .width(width = dimens.fadeWidth)
-                    .fillMaxHeight()
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                backgroundColor,
-                                backgroundColor.copy(alpha = 0f),
+            // Left fade - only show when there are items to scroll back to
+            androidx.compose.animation.AnimatedVisibility(
+                visible = canScrollBackward,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(alignment = Alignment.CenterStart),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(width = dimens.fadeWidth)
+                        .fillMaxHeight()
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    backgroundColor,
+                                    backgroundColor.copy(alpha = 0f),
+                                ),
                             ),
                         ),
-                    )
-                    .align(alignment = Alignment.CenterStart),
-            )
+                )
+            }
 
-            // Right fade
-            Box(
-                modifier = Modifier
-                    .width(width = dimens.fadeWidth)
-                    .fillMaxHeight()
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                backgroundColor.copy(alpha = 0f),
-                                backgroundColor,
+            // Right fade - only show when there are items to scroll to
+            androidx.compose.animation.AnimatedVisibility(
+                visible = canScrollForward,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier.align(alignment = Alignment.CenterEnd),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(width = dimens.fadeWidth)
+                        .fillMaxHeight()
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    backgroundColor.copy(alpha = 0f),
+                                    backgroundColor,
+                                ),
                             ),
                         ),
-                    )
-                    .align(alignment = Alignment.CenterEnd),
-            )
+                )
+            }
         }
     }
 }
