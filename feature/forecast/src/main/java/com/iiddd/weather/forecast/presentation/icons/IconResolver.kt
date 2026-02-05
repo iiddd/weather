@@ -4,18 +4,24 @@ import com.iiddd.weather.forecast.R as ForecastR
 
 fun resolveWeatherIcon(iconCode: String): Int {
     return when (iconCode) {
-        "01d" -> ForecastR.drawable.clear_sky_day
-        "01n" -> ForecastR.drawable.clear_sky_night
-        "02d" -> ForecastR.drawable.few_clouds_day
-        "02n" -> ForecastR.drawable.few_clouds_night
-        "03d", "03n" -> ForecastR.drawable.scattered_clouds_day
-        "04d", "04n" -> ForecastR.drawable.broken_clouds_day
-        "09d", "09n" -> ForecastR.drawable.shower_rain_day
-        "10d" -> ForecastR.drawable.rain_day
-        "10n" -> ForecastR.drawable.rain_night
-        "11d", "11n" -> ForecastR.drawable.thunderstorm_day
-        "13d", "13n" -> ForecastR.drawable.snow_day
-        "50d", "50n" -> ForecastR.drawable.mist_day
+        "01d" -> ForecastR.drawable.day_clear_sky
+        "01n" -> ForecastR.drawable.night_clear_sky
+        "02d" -> ForecastR.drawable.day_few_clouds
+        "02n" -> ForecastR.drawable.night_few_clouds
+        "03d" -> ForecastR.drawable.day_scattered_clouds
+        "03n" -> ForecastR.drawable.night_scattered_clouds
+        "04d" -> ForecastR.drawable.day_broken_clouds
+        "04n" -> ForecastR.drawable.night_broken_clouds
+        "09d" -> ForecastR.drawable.day_shower_rain
+        "09n" -> ForecastR.drawable.night_shower_rain
+        "10d" -> ForecastR.drawable.day_rain
+        "10n" -> ForecastR.drawable.night_rain
+        "11d" -> ForecastR.drawable.day_thunderstorm
+        "11n" -> ForecastR.drawable.night_thunderstorm
+        "13d" -> ForecastR.drawable.day_snow
+        "13n" -> ForecastR.drawable.night_snow
+        "50d" -> ForecastR.drawable.day_mist
+        "50n" -> ForecastR.drawable.night_mist
         else -> ForecastR.drawable.air
     }
 }

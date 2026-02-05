@@ -1,6 +1,5 @@
 package com.iiddd.weather.forecast.presentation.view.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,12 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.HourlyForecast
-import com.iiddd.weather.forecast.presentation.icons.resolveWeatherIcon
 
 @Composable
 fun HourlyWeatherCard(
@@ -52,10 +49,8 @@ fun HourlyWeatherCard(
                 color = WeatherThemeTokens.colors.onSurfaceVariant,
             )
 
-            val iconRes = resolveWeatherIcon(iconCode = forecast.icon)
-            Image(
-                painter = painterResource(id = iconRes),
-                contentDescription = null,
+            WeatherIcon(
+                iconCode = forecast.icon,
                 modifier = Modifier.size(size = dimens.iconSizeLarge),
             )
 
