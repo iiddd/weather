@@ -28,9 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import com.iiddd.weather.core.ui.components.WeatherPreview
+import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
-import com.iiddd.weather.search.R as SearchR
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
+import com.iiddd.weather.search.R as SearchR
 
 @Composable
 fun SearchBar(
@@ -134,5 +136,23 @@ fun SearchBar(
                 )
             }
         }
+    }
+}
+
+@WeatherPreview
+@Composable
+private fun SearchBarPreviewContent() {
+    val mockSearchUiState = SearchUiState(
+        query = "New York",
+        isLoading = false,
+        errorMessage = null,
+    )
+
+    WeatherTheme {
+        SearchBar(
+            searchUiState = mockSearchUiState,
+            onQueryChange = {},
+            onSearch = {},
+        )
     }
 }

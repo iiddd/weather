@@ -82,7 +82,7 @@ fun SearchScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsPadding()
-                .padding(all = dimens.spacingMedium),
+                .padding(all = dimens.spacingExtraLarge),
         )
 
         if (isMyLocationEnabled) {
@@ -91,7 +91,7 @@ fun SearchScreenContent(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
                     .navigationBarsPadding()
-                    .padding(all = dimens.spacingMedium),
+                    .padding(all = dimens.spacingExtraLarge),
             )
         }
 
