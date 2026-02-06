@@ -1,10 +1,10 @@
-package com.iiddd.weather.forecast.data.location
+package com.iiddd.weather.location.data
 
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
-import com.iiddd.weather.forecast.domain.location.CityNameResolver
+import com.iiddd.weather.location.domain.CityNameResolver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -28,9 +28,21 @@ class AndroidCityNameResolver(
                 maxResults = 1
             )
             val address = addresses?.firstOrNull() ?: return null
-            address.locality ?: address.subAdminArea ?: address.adminArea
-        } catch (_: Exception) {
+            formatLocationName(address = address)
+        } catch (exception: Exception) {
             null
+        }
+    }
+
+    private fun formatLocationName(address: Address): String? {
+        val cityName = address.locality ?: address.subAdminArea ?: address.adminArea
+        val countryName = address.countryName
+
+        return when {
+            cityName != null && countryName != null -> "$cityName, $countryName"
+            cityName != null -> cityName
+            countryName != null -> countryName
+            else -> null
         }
     }
 }
@@ -53,9 +65,11 @@ private suspend fun Geocoder.getFromLocationCompat(
         withContext(context = Dispatchers.IO) {
             try {
                 getFromLocation(latitude, longitude, maxResults)
-            } catch (_: IOException) {
+            } catch (exception: IOException) {
                 null
             }
         }
     }
 }
+
+

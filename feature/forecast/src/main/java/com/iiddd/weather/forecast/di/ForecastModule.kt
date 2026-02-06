@@ -4,9 +4,7 @@ import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import com.iiddd.weather.forecast.BuildConfig
 import com.iiddd.weather.forecast.data.api.OpenWeatherApi
-import com.iiddd.weather.forecast.data.location.AndroidCityNameResolver
 import com.iiddd.weather.forecast.data.repository.WeatherRepositoryImpl
-import com.iiddd.weather.forecast.domain.location.CityNameResolver
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastViewModel
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -46,11 +44,6 @@ object ForecastModule {
             }
         }
 
-        single<CityNameResolver> {
-            AndroidCityNameResolver(
-                applicationContext = get(),
-            )
-        }
 
         viewModel {
             ForecastViewModel(

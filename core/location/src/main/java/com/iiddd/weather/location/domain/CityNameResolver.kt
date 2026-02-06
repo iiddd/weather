@@ -1,4 +1,4 @@
-package com.iiddd.weather.forecast.domain.location
+package com.iiddd.weather.location.domain
 
 interface CityNameResolver {
     suspend fun resolveCityName(
@@ -6,3 +6,4 @@ interface CityNameResolver {
         longitude: Double
     ): String?
 }
+

@@ -7,12 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 
 @Composable
 internal fun Map(
-    modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
+    isMyLocationEnabled: Boolean,
+    modifier: Modifier = Modifier,
     isPreview: Boolean = false,
 ) {
     if (isPreview) {
@@ -23,8 +26,15 @@ internal fun Map(
         )
     } else {
         GoogleMap(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
+            properties = MapProperties(
+                isMyLocationEnabled = isMyLocationEnabled,
+            ),
+            uiSettings = MapUiSettings(
+                myLocationButtonEnabled = false,
+                zoomControlsEnabled = false,
+            ),
         )
     }
 }

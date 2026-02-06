@@ -20,7 +20,6 @@ fun DetailedWeatherRoute(
     latitude: Double?,
     longitude: Double?,
     useDeviceLocation: Boolean,
-    onNavigateToDeviceLocation: () -> Unit,
 ) {
     val forecastUiState by forecastViewModel
         .forecastUiState
@@ -107,6 +106,5 @@ fun DetailedWeatherRoute(
         onRefreshRequested = {
             forecastViewModel.onEvent(ForecastUiEvent.RefreshRequested)
         },
-        onCurrentLocationRequested = onNavigateToDeviceLocation,
     )
 }

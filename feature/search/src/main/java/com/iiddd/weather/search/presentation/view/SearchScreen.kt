@@ -14,10 +14,12 @@ import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 fun SearchScreen(
     searchUiState: SearchUiState,
     cameraPositionState: CameraPositionState,
+    isMyLocationEnabled: Boolean,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     onClearMarker: () -> Unit,
     onRetrySearch: () -> Unit,
+    onMyLocationButtonClick: () -> Unit,
     onOpenDetails: (latitude: Double, longitude: Double) -> Unit,
 ) {
     if (searchUiState.errorMessage != null && searchUiState.marker == null) {
@@ -31,9 +33,11 @@ fun SearchScreen(
     SearchScreenContent(
         searchUiState = searchUiState,
         cameraPositionState = cameraPositionState,
+        isMyLocationEnabled = isMyLocationEnabled,
         onQueryChange = onQueryChange,
         onSearch = onSearch,
         onClearMarker = onClearMarker,
+        onMyLocationButtonClick = onMyLocationButtonClick,
         onOpenDetails = onOpenDetails,
     )
 }
@@ -57,10 +61,12 @@ private fun SearchScreenPreviewWithMarker() {
         SearchScreen(
             searchUiState = searchUiState,
             cameraPositionState = cameraPositionState,
+            isMyLocationEnabled = false,
             onQueryChange = {},
             onSearch = {},
             onClearMarker = {},
             onRetrySearch = {},
+            onMyLocationButtonClick = {},
             onOpenDetails = { _, _ -> },
         )
     }
@@ -85,10 +91,12 @@ private fun SearchScreenPreviewError() {
         SearchScreen(
             searchUiState = searchUiState,
             cameraPositionState = cameraPositionState,
+            isMyLocationEnabled = false,
             onQueryChange = {},
             onSearch = {},
             onClearMarker = {},
             onRetrySearch = {},
+            onMyLocationButtonClick = {},
             onOpenDetails = { _, _ -> },
         )
     }

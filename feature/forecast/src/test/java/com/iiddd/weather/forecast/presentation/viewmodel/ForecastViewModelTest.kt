@@ -3,9 +3,9 @@ package com.iiddd.weather.forecast.presentation.viewmodel
 import com.iiddd.weather.core.network.ApiError
 import com.iiddd.weather.core.network.ApiResult
 import com.iiddd.weather.core.testutils.UnitTestDispatcherProvider
-import com.iiddd.weather.forecast.domain.location.CityNameResolver
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
+import com.iiddd.weather.location.domain.CityNameResolver
 import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.LocationTracker
 import kotlinx.coroutines.ExperimentalCoroutinesApi

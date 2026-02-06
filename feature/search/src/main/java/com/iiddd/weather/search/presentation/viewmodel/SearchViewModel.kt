@@ -81,4 +81,17 @@ class SearchViewModel(
             markerTitle = null,
         )
     }
+
+    fun onSetMarkerAtCurrentLocation(
+        latitude: Double,
+        longitude: Double,
+        locationTitle: String,
+    ) {
+        mutableSearchUiState.value = mutableSearchUiState.value.copy(
+            marker = LatLng(latitude, longitude),
+            markerTitle = locationTitle,
+            isLoading = false,
+            errorMessage = null,
+        )
+    }
 }

@@ -3,6 +3,7 @@ package com.iiddd.weather.search.presentation.view
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -11,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -28,6 +30,7 @@ import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.search.R as SearchR
 import com.iiddd.weather.search.presentation.view.component.Map
 import com.iiddd.weather.search.presentation.view.component.MarkerInfoCard
+import com.iiddd.weather.search.presentation.view.component.MyLocationButton
 import com.iiddd.weather.search.presentation.view.component.SearchBar
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 import kotlin.math.roundToInt
@@ -36,9 +39,11 @@ import kotlin.math.roundToInt
 fun SearchScreenContent(
     searchUiState: SearchUiState,
     cameraPositionState: CameraPositionState,
+    isMyLocationEnabled: Boolean,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     onClearMarker: () -> Unit,
+    onMyLocationButtonClick: () -> Unit,
     onOpenDetails: (latitude: Double, longitude: Double) -> Unit,
 ) {
     val isPreview = LocalInspectionMode.current
@@ -67,6 +72,7 @@ fun SearchScreenContent(
         Map(
             isPreview = isPreview,
             cameraPositionState = cameraPositionState,
+            isMyLocationEnabled = isMyLocationEnabled,
         )
 
         SearchBar(
@@ -78,6 +84,16 @@ fun SearchScreenContent(
                 .statusBarsPadding()
                 .padding(all = dimens.spacingMedium),
         )
+
+        if (isMyLocationEnabled) {
+            MyLocationButton(
+                onClick = onMyLocationButtonClick,
+                modifier = Modifier
+                    .align(alignment = Alignment.BottomEnd)
+                    .navigationBarsPadding()
+                    .padding(all = dimens.spacingMedium),
+            )
+        }
 
         searchUiState.marker?.let { markerLatLng: LatLng ->
             val screenPosition = remember(
@@ -145,9 +161,11 @@ private fun SearchScreenContentPreview() {
         SearchScreenContent(
             searchUiState = searchUiState,
             cameraPositionState = cameraPositionState,
+            isMyLocationEnabled = false,
             onQueryChange = {},
             onSearch = {},
             onClearMarker = {},
+            onMyLocationButtonClick = {},
             onOpenDetails = { _, _ -> },
         )
     }
@@ -172,9 +190,11 @@ private fun SearchScreenContentPreviewLoading() {
         SearchScreenContent(
             searchUiState = searchUiState,
             cameraPositionState = cameraPositionState,
+            isMyLocationEnabled = false,
             onQueryChange = {},
             onSearch = {},
             onClearMarker = {},
+            onMyLocationButtonClick = {},
             onOpenDetails = { _, _ -> },
         )
     }

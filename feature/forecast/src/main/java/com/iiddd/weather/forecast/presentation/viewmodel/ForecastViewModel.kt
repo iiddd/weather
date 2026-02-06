@@ -6,8 +6,8 @@ import com.iiddd.weather.core.network.ApiError
 import com.iiddd.weather.core.network.ApiResult
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
-import com.iiddd.weather.forecast.domain.location.CityNameResolver
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
+import com.iiddd.weather.location.domain.CityNameResolver
 import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.LocationTracker
 import kotlinx.coroutines.delay

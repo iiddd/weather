@@ -19,7 +19,6 @@ fun DetailedWeatherScreen(
     isRefreshing: Boolean,
     onRequestLocationPermission: () -> Unit,
     onRefreshRequested: () -> Unit,
-    onCurrentLocationRequested: () -> Unit,
 ) {
     if (useDeviceLocation && !hasLocationPermission) {
         ErrorScreen(
@@ -52,15 +51,10 @@ fun DetailedWeatherScreen(
             val weather: Weather = forecastUiState.weather
             val weatherState = rememberUpdatedState(newValue = weather)
 
-            // Show current location button only when viewing weather for explicit coordinates (not device location)
-            val showCurrentLocationButton = !useDeviceLocation
-
             DetailedWeatherScreenContent(
                 weatherState = weatherState,
                 isRefreshing = isRefreshing,
-                showCurrentLocationButton = showCurrentLocationButton,
                 onRefresh = onRefreshRequested,
-                onCurrentLocationRequested = onCurrentLocationRequested,
             )
         }
     }
@@ -81,9 +75,7 @@ private fun DetailedWeatherScreenPreviewHappyFlow() {
         DetailedWeatherScreenContent(
             weatherState = mockState,
             isRefreshing = false,
-            showCurrentLocationButton = true,
             onRefresh = {},
-            onCurrentLocationRequested = {},
         )
     }
 }
@@ -102,7 +94,6 @@ private fun DetailedWeatherScreenPreviewError() {
             hasLocationPermission = false,
             onRequestLocationPermission = {},
             onRefreshRequested = {},
-            onCurrentLocationRequested = {},
             isRefreshing = false,
         )
     }

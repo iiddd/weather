@@ -10,4 +10,7 @@
     <string name="marker_add_favorite_content_description">Add favorite</string>
     <string name="marker_close_content_description">Close</string>
     <string name="marker_default_title">Result</string>
+
+    <!-- MyLocationButton -->
+    <string name="my_location_button_description">My location</string>
 </resources>
