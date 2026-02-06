@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.iiddd.weather.android.application")
     id("com.iiddd.weather.android.compose")
@@ -16,6 +18,19 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val props = Properties().apply {
+            val f = rootProject.file("apikeys.properties")
+            if (f.exists()) f.inputStream().use(::load)
+        }
+        val mapsKey = props.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+        buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"$mapsKey\"")
+        resValue("string", "google_maps_key", mapsKey)
+    }
+
+    buildFeatures {
+        buildConfig = true
+        resValues = true
     }
 
     buildTypes {
@@ -60,6 +75,12 @@ dependencies {
 
     // KotlinX Serialization
     implementation(libs.kotlinx.serialization.json)
+
+    // Networking
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
 
     // Koin
     implementation(libs.koin.android)

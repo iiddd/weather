@@ -13,7 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.iiddd.weather.location.domain.CityNameResolver
+import com.iiddd.weather.location.domain.GeocodingService
 import com.iiddd.weather.location.domain.LocationTracker
 import com.iiddd.weather.search.presentation.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
@@ -30,7 +30,7 @@ private const val MY_LOCATION_FALLBACK_TITLE = "My Location"
 fun SearchRoute(
     searchViewModel: SearchViewModel = koinViewModel(),
     locationTracker: LocationTracker = koinInject(),
-    cityNameResolver: CityNameResolver = koinInject(),
+    geocodingService: GeocodingService = koinInject(),
     onOpenDetails: (latitude: Double, longitude: Double) -> Unit,
 ) {
     val context = LocalContext.current
@@ -74,7 +74,7 @@ fun SearchRoute(
             coroutineScope.launch {
                 val currentLocation = locationTracker.getCurrentLocationOrNull()
                 currentLocation?.let { coordinates ->
-                    val locationTitle = cityNameResolver.resolveCityName(
+                    val locationTitle = geocodingService.reverseGeocode(
                         latitude = coordinates.latitude,
                         longitude = coordinates.longitude,
                     ) ?: MY_LOCATION_FALLBACK_TITLE

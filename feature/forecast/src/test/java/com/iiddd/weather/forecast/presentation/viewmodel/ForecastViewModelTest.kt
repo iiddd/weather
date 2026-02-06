@@ -5,8 +5,8 @@ import com.iiddd.weather.core.network.ApiResult
 import com.iiddd.weather.core.testutils.UnitTestDispatcherProvider
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
-import com.iiddd.weather.location.domain.CityNameResolver
 import com.iiddd.weather.location.domain.Coordinates
+import com.iiddd.weather.location.domain.GeocodingService
 import com.iiddd.weather.location.domain.LocationTracker
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -24,20 +24,20 @@ class ForecastViewModelTest {
     private val dispatcherProvider = UnitTestDispatcherProvider()
 
     private lateinit var weatherRepository: WeatherRepository
-    private lateinit var cityNameResolver: CityNameResolver
+    private lateinit var geocodingService: GeocodingService
     private lateinit var locationTracker: LocationTracker
     private lateinit var forecastViewModel: ForecastViewModel
 
     @BeforeEach
     fun setUp() {
         weatherRepository = mock()
-        cityNameResolver = mock()
+        geocodingService = mock()
         locationTracker = mock()
 
         forecastViewModel =
             ForecastViewModel(
                 weatherRepository = weatherRepository,
-                cityNameResolver = cityNameResolver,
+                geocodingService = geocodingService,
                 locationTracker = locationTracker,
                 dispatcherProvider = dispatcherProvider,
             )
@@ -55,7 +55,7 @@ class ForecastViewModelTest {
             ).thenReturn(ApiResult.Success(value = weather))
 
             whenever(
-                cityNameResolver.resolveCityName(
+                geocodingService.reverseGeocode(
                     latitude = 1.0,
                     longitude = 2.0,
                 ),
@@ -88,7 +88,7 @@ class ForecastViewModelTest {
             ).thenReturn(ApiResult.Failure(error = expectedError))
 
             whenever(
-                cityNameResolver.resolveCityName(
+                geocodingService.reverseGeocode(
                     latitude = 1.0,
                     longitude = 2.0,
                 ),
@@ -121,7 +121,7 @@ class ForecastViewModelTest {
             ).thenReturn(ApiResult.Success(value = repositoryWeather))
 
             whenever(
-                cityNameResolver.resolveCityName(
+                geocodingService.reverseGeocode(
                     latitude = 1.0,
                     longitude = 2.0,
                 ),
@@ -161,7 +161,7 @@ class ForecastViewModelTest {
             ).thenReturn(ApiResult.Success(value = repositoryWeather))
 
             whenever(
-                cityNameResolver.resolveCityName(
+                geocodingService.reverseGeocode(
                     latitude = 1.0,
                     longitude = 2.0,
                 ),
@@ -199,7 +199,7 @@ class ForecastViewModelTest {
             ).thenReturn(ApiResult.Success(value = weather))
 
             whenever(
-                cityNameResolver.resolveCityName(
+                geocodingService.reverseGeocode(
                     latitude = 11.0,
                     longitude = 22.0,
                 ),

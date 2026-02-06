@@ -48,7 +48,7 @@ object ForecastModule {
         viewModel {
             ForecastViewModel(
                 weatherRepository = get(),
-                cityNameResolver = get(),
+                geocodingService = get(),
                 locationTracker = get(),
                 dispatcherProvider = get(),
             )

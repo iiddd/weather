@@ -7,8 +7,8 @@ import com.iiddd.weather.core.network.ApiResult
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
-import com.iiddd.weather.location.domain.CityNameResolver
 import com.iiddd.weather.location.domain.Coordinates
+import com.iiddd.weather.location.domain.GeocodingService
 import com.iiddd.weather.location.domain.LocationTracker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 
 class ForecastViewModel(
     private val weatherRepository: WeatherRepository,
-    private val cityNameResolver: CityNameResolver,
+    private val geocodingService: GeocodingService,
     private val locationTracker: LocationTracker,
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider(),
 ) : ViewModel() {
@@ -191,7 +191,7 @@ class ForecastViewModel(
                     longitude = longitude,
                 )
 
-                val resolvedCityNameResult = cityNameResolver.resolveCityName(
+                val resolvedCityNameResult = geocodingService.reverseGeocode(
                     latitude = latitude,
                     longitude = longitude,
                 )
