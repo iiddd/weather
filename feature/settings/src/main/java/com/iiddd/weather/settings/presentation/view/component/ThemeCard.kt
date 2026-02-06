@@ -70,7 +70,7 @@ internal fun ThemeCard(
             contentColor = contentColor,
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = dimens.elevationSmall,
+            defaultElevation = dimens.elevationNone,
         ),
     ) {
         Column(

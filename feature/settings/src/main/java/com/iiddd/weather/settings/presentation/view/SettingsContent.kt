@@ -35,7 +35,7 @@ fun SettingsScreenContent(
     ) {
         Text(
             text = title,
-            style = typography.titleLarge,
+            style = typography.headlineMedium,
             color = colors.onBackground,
         )
 
@@ -43,7 +43,7 @@ fun SettingsScreenContent(
 
         Text(
             text = "Theme",
-            style = typography.titleMedium,
+            style = typography.titleLarge,
             color = colors.onBackground,
         )
 
