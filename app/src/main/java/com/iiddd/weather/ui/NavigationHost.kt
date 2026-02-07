@@ -30,13 +30,14 @@ import com.iiddd.weather.ui.navigation.Destination
 import com.iiddd.weather.ui.navigation.NavigationBackStack
 import com.iiddd.weather.ui.navigation.WeatherNavigationState
 import com.iiddd.weather.ui.navigation.popSafe
+import com.iiddd.weather.ui.navigation.rememberNavigationBackStack
 import com.iiddd.weather.ui.navigation.rememberWeatherNavigationState
 
 @Composable
 fun NavigationHost() {
-    val navigationBackStack: NavigationBackStack = remember {
-        NavigationBackStack(startDestination = Destination.Weather())
-    }
+    val navigationBackStack: NavigationBackStack = rememberNavigationBackStack(
+        startDestination = Destination.Weather()
+    )
 
     val weatherNavigationState: WeatherNavigationState = rememberWeatherNavigationState()
 
