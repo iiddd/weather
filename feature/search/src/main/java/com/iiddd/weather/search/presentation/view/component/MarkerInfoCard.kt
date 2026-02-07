@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -74,17 +73,9 @@ fun MarkerInfoCard(
 
                     Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
-                    IconButton(
-                        onClick = {
-                            onOpenDetails(markerLatLng.latitude, markerLatLng.longitude)
-                        },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = stringResource(id = SearchR.string.marker_add_favorite_content_description),
-                            tint = colors.primary,
-                        )
-                    }
+                    DetailsButton(
+                        onClick = { onOpenDetails(markerLatLng.latitude, markerLatLng.longitude) }
+                    )
                 }
             }
 

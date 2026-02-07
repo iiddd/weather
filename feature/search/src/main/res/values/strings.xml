@@ -13,4 +13,8 @@
 
     <!-- MyLocationButton -->
     <string name="my_location_button_description">My location</string>
+
+    <!-- DetailsButton -->
+    <string name="details_button_label">View Details</string>
+    <string name="details_button_content_description">Navigate to details screen with selected location</string>
 </resources>
