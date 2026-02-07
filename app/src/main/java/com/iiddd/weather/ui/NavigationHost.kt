@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -21,6 +22,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.iiddd.weather.R as AppR
 import com.iiddd.weather.core.ui.systembars.WeatherWindowInsets
+import com.iiddd.weather.favorites.presentation.view.FavoritesRoute
 import com.iiddd.weather.forecast.presentation.view.DetailedWeatherRoute
 import com.iiddd.weather.search.presentation.view.SearchRoute
 import com.iiddd.weather.settings.presentation.view.SettingsRoute
@@ -41,6 +43,7 @@ fun NavigationHost() {
     val bottomTabDestinations: List<Destination> = remember {
         listOf(
             Destination.Weather(),
+            Destination.Favorites,
             Destination.Search,
             Destination.Settings,
         )
@@ -54,6 +57,7 @@ fun NavigationHost() {
 
     val selectedBottomTabDestination: Destination = when (currentDestination) {
         is Destination.Weather -> Destination.Weather()
+        Destination.Favorites -> Destination.Favorites
         Destination.Search -> Destination.Search
         Destination.Settings -> Destination.Settings
     }
@@ -170,6 +174,29 @@ private fun MainNavDisplay(
                         SettingsRoute()
                     }
                 }
+
+                Destination.Favorites -> {
+                    NavEntry(
+                        key = destination,
+                        contentKey = destination.toString(),
+                    ) { _: Destination ->
+                        FavoritesRoute(
+                            onOpenDetails = { latitude: Double, longitude: Double ->
+                                val newWeatherDestination = Destination.Weather(
+                                    latitude = latitude,
+                                    longitude = longitude,
+                                    useDeviceLocation = false,
+                                )
+                                weatherNavigationState.updateWeatherDestination(
+                                    destination = newWeatherDestination
+                                )
+                                navigationBackStack.replaceCurrent(
+                                    destination = newWeatherDestination
+                                )
+                            },
+                        )
+                    }
+                }
             }
         },
     )
@@ -178,12 +205,14 @@ private fun MainNavDisplay(
 @Composable
 private fun tabLabel(destination: Destination): String = when (destination) {
     is Destination.Weather -> stringResource(AppR.string.home_tab_label)
+    Destination.Favorites -> stringResource(AppR.string.favorites_tab_label)
     Destination.Search -> stringResource(AppR.string.search_tab_label)
     Destination.Settings -> stringResource(AppR.string.settings_tab_label)
 }
 
 private fun tabIcon(destination: Destination): ImageVector = when (destination) {
     is Destination.Weather -> Icons.Default.Home
+    Destination.Favorites -> Icons.Default.Favorite
     Destination.Search -> Icons.Default.Search
     Destination.Settings -> Icons.Default.Settings
 }

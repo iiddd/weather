@@ -50,6 +50,7 @@ object ForecastModule {
                 weatherRepository = get(),
                 geocodingService = get(),
                 locationTracker = get(),
+                favoritesRepository = get(),
                 dispatcherProvider = get(),
             )
         }

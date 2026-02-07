@@ -1,16 +1,24 @@
 package com.iiddd.weather.forecast.presentation.view
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -33,7 +41,9 @@ import com.iiddd.weather.forecast.presentation.view.component.WeatherWidget
 fun DetailedWeatherScreenContent(
     weatherState: State<Weather?>,
     isRefreshing: Boolean,
+    isFavorite: Boolean,
     onRefresh: () -> Unit,
+    onToggleFavorite: () -> Unit,
 ) {
     val dimens = WeatherThemeTokens.dimens
 
@@ -42,38 +52,63 @@ fun DetailedWeatherScreenContent(
         color = WeatherThemeTokens.colors.background,
         contentColor = WeatherThemeTokens.colors.onBackground,
     ) {
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = onRefresh,
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
-        ) {
-            Column(
+        Box(modifier = Modifier.fillMaxSize()) {
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(state = rememberScrollState())
-                    .padding(horizontal = dimens.spacingExtraLarge),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .statusBarsPadding(),
             ) {
-                WeatherWidget(
-                    weatherState = weatherState,
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(state = rememberScrollState())
+                        .padding(horizontal = dimens.spacingExtraLarge),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    WeatherWidget(
+                        weatherState = weatherState,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
-                Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
+                    Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
-                HourlyForecastWidget(
-                    forecasts = weatherState.value?.hourly ?: emptyList(),
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                    HourlyForecastWidget(
+                        forecasts = weatherState.value?.hourly ?: emptyList(),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
-                Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
+                    Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
-                DailyForecastWidget(
-                    forecasts = weatherState.value?.daily ?: emptyList(),
-                    modifier = Modifier.fillMaxWidth(),
+                    DailyForecastWidget(
+                        forecasts = weatherState.value?.daily ?: emptyList(),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+
+            // Favorite toggle button in top-right corner
+            FilledIconButton(
+                onClick = onToggleFavorite,
+                modifier = Modifier
+                    .align(alignment = Alignment.TopEnd)
+                    .statusBarsPadding()
+                    .padding(all = dimens.spacingMedium)
+                    .size(size = dimens.iconButtonSize),
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = WeatherThemeTokens.colors.surfaceVariant,
+                    contentColor = if (isFavorite) {
+                        WeatherThemeTokens.colors.primary
+                    } else {
+                        WeatherThemeTokens.colors.onSurfaceVariant
+                    },
+                ),
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.StarOutline,
+                    contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
                 )
             }
         }
@@ -91,7 +126,9 @@ private fun DetailedWeatherScreenContentPreview() {
         DetailedWeatherScreenContent(
             weatherState = mockState,
             isRefreshing = false,
+            isFavorite = false,
             onRefresh = {},
+            onToggleFavorite = {},
         )
     }
 }

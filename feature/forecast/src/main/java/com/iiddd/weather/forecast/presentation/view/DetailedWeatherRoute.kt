@@ -37,6 +37,7 @@ fun DetailedWeatherRoute(
             permissionStateWhenRequested == hasLocationPermission
 
     val isRefreshing = (forecastUiState as? ForecastUiState.Content)?.isRefreshing ?: false
+    val isFavorite = (forecastUiState as? ForecastUiState.Content)?.isFavorite ?: false
 
     // Request permission at startup if using device location and don't have permission
     LaunchedEffect(
@@ -99,12 +100,16 @@ fun DetailedWeatherRoute(
         useDeviceLocation = useDeviceLocation,
         hasLocationPermission = hasLocationPermission,
         isRefreshing = isRefreshing,
+        isFavorite = isFavorite,
         onRequestLocationPermission = {
             permissionStateWhenRequested = hasLocationPermission
             locationPermissionController.requestLocationPermission()
         },
         onRefreshRequested = {
             forecastViewModel.onEvent(ForecastUiEvent.RefreshRequested)
+        },
+        onToggleFavorite = {
+            forecastViewModel.onEvent(ForecastUiEvent.ToggleFavoriteRequested)
         },
     )
 }

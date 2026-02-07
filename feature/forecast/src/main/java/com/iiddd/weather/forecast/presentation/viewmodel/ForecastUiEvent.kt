@@ -10,4 +10,6 @@ sealed interface ForecastUiEvent {
     data object RefreshRequested : ForecastUiEvent
 
     data object ErrorDismissed : ForecastUiEvent
+
+    data object ToggleFavoriteRequested : ForecastUiEvent
 }

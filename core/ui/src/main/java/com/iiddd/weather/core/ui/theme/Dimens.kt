@@ -38,6 +38,7 @@ object WeatherDimens {
     val buttonHeightSmall: Dp = 32.dp
     val buttonHeightMedium: Dp = 40.dp
     val buttonHeightLarge: Dp = 48.dp
+    val iconButtonSize: Dp = 48.dp
 
     // Card sizes
     val cardWidthSmall: Dp = 64.dp

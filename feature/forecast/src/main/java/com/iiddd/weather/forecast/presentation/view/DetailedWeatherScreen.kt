@@ -17,8 +17,10 @@ fun DetailedWeatherScreen(
     useDeviceLocation: Boolean,
     hasLocationPermission: Boolean,
     isRefreshing: Boolean,
+    isFavorite: Boolean,
     onRequestLocationPermission: () -> Unit,
     onRefreshRequested: () -> Unit,
+    onToggleFavorite: () -> Unit,
 ) {
     if (useDeviceLocation && !hasLocationPermission) {
         ErrorScreen(
@@ -54,7 +56,9 @@ fun DetailedWeatherScreen(
             DetailedWeatherScreenContent(
                 weatherState = weatherState,
                 isRefreshing = isRefreshing,
+                isFavorite = isFavorite,
                 onRefresh = onRefreshRequested,
+                onToggleFavorite = onToggleFavorite,
             )
         }
     }
@@ -75,7 +79,9 @@ private fun DetailedWeatherScreenPreviewHappyFlow() {
         DetailedWeatherScreenContent(
             weatherState = mockState,
             isRefreshing = false,
+            isFavorite = false,
             onRefresh = {},
+            onToggleFavorite = {},
         )
     }
 }
@@ -92,9 +98,11 @@ private fun DetailedWeatherScreenPreviewError() {
             ),
             useDeviceLocation = false,
             hasLocationPermission = false,
+            isRefreshing = false,
+            isFavorite = false,
             onRequestLocationPermission = {},
             onRefreshRequested = {},
-            isRefreshing = false,
+            onToggleFavorite = {},
         )
     }
 }

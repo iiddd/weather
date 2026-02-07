@@ -57,6 +57,7 @@ dependencies {
     implementation(projects.feature.forecast)
     implementation(projects.feature.search)
     implementation(projects.feature.settings)
+    implementation(projects.feature.favorites)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.preferences)

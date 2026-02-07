@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iiddd.weather.core.network.ApiError
 import com.iiddd.weather.core.network.ApiResult
+import com.iiddd.weather.core.preferences.favorites.FavoriteLocation
+import com.iiddd.weather.core.preferences.favorites.FavoritesRepository
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
+import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.domain.repository.WeatherRepository
 import com.iiddd.weather.location.domain.Coordinates
 import com.iiddd.weather.location.domain.GeocodingService
@@ -14,14 +17,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class ForecastViewModel(
     private val weatherRepository: WeatherRepository,
     private val geocodingService: GeocodingService,
     private val locationTracker: LocationTracker,
+    private val favoritesRepository: FavoritesRepository,
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider(),
 ) : ViewModel() {
 
@@ -72,6 +78,47 @@ class ForecastViewModel(
                 if (mutableForecastUiState.value is ForecastUiState.Error) {
                     mutableForecastUiState.value = ForecastUiState.Loading
                 }
+            }
+
+            ForecastUiEvent.ToggleFavoriteRequested -> {
+                toggleFavorite()
+            }
+        }
+    }
+
+    private fun toggleFavorite() {
+        val currentState = mutableForecastUiState.value as? ForecastUiState.Content ?: return
+        val weather = currentState.weather
+        val parameters = lastRequestParameters ?: return
+
+        val latitude = parameters.latitude ?: return
+        val longitude = parameters.longitude ?: return
+
+        viewModelScope.launch(context = dispatcherProvider.io) {
+            val isFavorite = favoritesRepository.isFavoriteFlow(
+                latitude = latitude,
+                longitude = longitude,
+            ).first()
+
+            if (isFavorite) {
+                favoritesRepository.removeFavorite(
+                    latitude = latitude,
+                    longitude = longitude,
+                )
+            } else {
+                val cityName = weather.city ?: "Unknown Location"
+                favoritesRepository.addFavorite(
+                    favoriteLocation = FavoriteLocation(
+                        id = UUID.randomUUID().toString(),
+                        cityName = cityName,
+                        latitude = latitude,
+                        longitude = longitude,
+                    )
+                )
+            }
+
+            mutableForecastUiState.update { state ->
+                (state as? ForecastUiState.Content)?.copy(isFavorite = !isFavorite) ?: state
             }
         }
     }
@@ -148,7 +195,6 @@ class ForecastViewModel(
                 return result
             }
 
-            // Don't delay after the last attempt
             if (attempt < maxRetries - 1) {
                 delay(timeMillis = retryDelayMilliseconds)
             }
@@ -184,7 +230,7 @@ class ForecastViewModel(
         latitude: Double,
         longitude: Double,
     ) {
-        val (weatherResult, resolvedCityName) =
+        val result: Triple<ApiResult<Weather>, String?, Boolean> =
             withContext(context = dispatcherProvider.io) {
                 val weatherApiResult = weatherRepository.getWeather(
                     latitude = latitude,
@@ -196,8 +242,17 @@ class ForecastViewModel(
                     longitude = longitude,
                 )
 
-                weatherApiResult to resolvedCityNameResult
+                val isFavoriteResult = favoritesRepository.isFavoriteFlow(
+                    latitude = latitude,
+                    longitude = longitude,
+                ).first()
+
+                Triple(weatherApiResult, resolvedCityNameResult, isFavoriteResult)
             }
+
+        val weatherResult = result.first
+        val resolvedCityName = result.second
+        val isFavorite = result.third
 
         when (weatherResult) {
             is ApiResult.Success -> {
@@ -210,6 +265,7 @@ class ForecastViewModel(
                 mutableForecastUiState.value = ForecastUiState.Content(
                     weather = updatedWeather,
                     isRefreshing = false,
+                    isFavorite = isFavorite,
                 )
             }
 

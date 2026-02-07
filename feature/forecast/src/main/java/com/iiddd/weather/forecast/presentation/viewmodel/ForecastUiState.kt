@@ -9,6 +9,7 @@ sealed interface ForecastUiState {
     data class Content(
         val weather: Weather,
         val isRefreshing: Boolean = false,
+        val isFavorite: Boolean = false,
     ) : ForecastUiState
 
     data class Error(

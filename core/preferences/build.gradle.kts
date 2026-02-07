@@ -1,5 +1,6 @@
 plugins {
     id("com.iiddd.weather.android.library")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -10,5 +11,6 @@ dependencies {
     implementation(projects.core.ui)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.koin.android)
 }

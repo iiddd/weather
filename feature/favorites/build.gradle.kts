@@ -1,6 +1,3 @@
-import java.util.Properties
-
-
 plugins {
     id("com.iiddd.weather.android.library")
     id("com.iiddd.weather.android.compose")
@@ -10,27 +7,18 @@ plugins {
 }
 
 android {
-    namespace = "com.iiddd.weather.forecast"
-
-    defaultConfig {
-        val props = Properties().apply {
-            val f = rootProject.file("apikeys.properties")
-            if (f.exists()) f.inputStream().use(::load)
-        }
-        val openWeather = props.getProperty("OPEN_WEATHER_API_KEY") ?: ""
-        buildConfigField("String", "OPEN_WEATHER_API_KEY", "\"$openWeather\"")
-    }
+    namespace = "com.iiddd.weather.favorites"
 }
 
 dependencies {
     // Modules
-    implementation(projects.core.location)
-    implementation(projects.core.network)
-    implementation(projects.core.preferences)
     implementation(projects.core.ui)
+    implementation(projects.core.network)
     implementation(projects.core.utils)
+    implementation(projects.core.preferences)
+    implementation(projects.feature.forecast)
 
-    //Lifecycle
+    // Lifecycle
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -46,7 +34,15 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
 
+    // KotlinX Serialization
+    implementation(libs.kotlinx.serialization.json)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.android)
+
     // Testing
     testImplementation(projects.core.testUtils)
     testImplementation(libs.mockito.kotlin)
 }
+

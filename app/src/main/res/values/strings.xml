@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Weather</string>
     <string name="home_tab_label">Weather</string>
+    <string name="favorites_tab_label">Favorites</string>
     <string name="search_tab_label">Search</string>
     <string name="settings_tab_label">Settings</string>
 </resources>

@@ -48,5 +48,6 @@ include(
     ":feature:search",
     ":feature:settings",
     ":feature:forecast",
+    ":feature:favorites",
 )
 include(":core:preferences")
