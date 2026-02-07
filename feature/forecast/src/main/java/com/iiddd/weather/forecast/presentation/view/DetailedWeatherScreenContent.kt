@@ -58,84 +58,85 @@ fun DetailedWeatherScreenContent(
         color = colors.background,
         contentColor = colors.onBackground,
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            PullToRefreshBox(
-                isRefreshing = isRefreshing,
-                onRefresh = onRefresh,
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding(),
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .statusBarsPadding(),
+                    .verticalScroll(state = rememberScrollState())
+                    .padding(
+                        horizontal = dimens.spacingExtraLarge,
+                        vertical = dimens.spacingLarge,
+                    ),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(state = rememberScrollState())
-                        .padding(horizontal = dimens.spacingExtraLarge,
-                            vertical = dimens.spacingLarge),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     WeatherWidget(
                         weatherState = weatherState,
                         modifier = Modifier.fillMaxWidth(),
                     )
 
-                    Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
-
-                    Text(
-                        text = stringResource(id = ForecastR.string.forecast_hourly_header),
-                        style = typography.headlineMedium,
-                        color = colors.onBackground,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
-                    Spacer(modifier = Modifier.height(height = dimens.spacingExtraLarge))
-
-                    HourlyForecastWidget(
-                        forecasts = weatherState.value?.hourly ?: emptyList(),
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
-                    Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
-
-                    Text(
-                        text = stringResource(id = ForecastR.string.forecast_daily_header),
-                        style = typography.headlineMedium,
-                        color = colors.onBackground,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
-                    Spacer(modifier = Modifier.height(height = dimens.spacingExtraLarge))
-
-                    DailyForecastWidget(
-                        forecasts = weatherState.value?.daily ?: emptyList(),
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+                    FilledIconButton(
+                        onClick = onToggleFavorite,
+                        modifier = Modifier
+                            .align(alignment = Alignment.TopEnd)
+                            .size(size = dimens.iconButtonSize),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = colors.surfaceVariant,
+                            contentColor = if (isFavorite) {
+                                colors.primary
+                            } else {
+                                colors.onSurfaceVariant
+                            },
+                        ),
+                    ) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.StarOutline,
+                            contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                        )
+                    }
                 }
-            }
 
-            // Favorite toggle button in top-right corner
-            FilledIconButton(
-                onClick = onToggleFavorite,
-                modifier = Modifier
-                    .align(alignment = Alignment.TopEnd)
-                    .statusBarsPadding()
-                    .padding(all = dimens.spacingExtraLarge)
-                    .size(size = dimens.iconButtonSize),
-                colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = WeatherThemeTokens.colors.surfaceVariant,
-                    contentColor = if (isFavorite) {
-                        WeatherThemeTokens.colors.primary
-                    } else {
-                        WeatherThemeTokens.colors.onSurfaceVariant
-                    },
-                ),
-            ) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.StarOutline,
-                    contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
+
+                Text(
+                    text = stringResource(id = ForecastR.string.forecast_hourly_header),
+                    style = typography.headlineMedium,
+                    color = colors.onBackground,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(modifier = Modifier.height(height = dimens.spacingExtraLarge))
+
+                HourlyForecastWidget(
+                    forecasts = weatherState.value?.hourly ?: emptyList(),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
+
+                Text(
+                    text = stringResource(id = ForecastR.string.forecast_daily_header),
+                    style = typography.headlineMedium,
+                    color = colors.onBackground,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(modifier = Modifier.height(height = dimens.spacingExtraLarge))
+
+                DailyForecastWidget(
+                    forecasts = weatherState.value?.daily ?: emptyList(),
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
