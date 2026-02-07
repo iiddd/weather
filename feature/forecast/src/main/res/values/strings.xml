@@ -16,6 +16,8 @@
     <string name="unknown_location">Unknown location</string>
     <string name="forecast_coming_soon">Forecast coming soon…</string>
     <string name="weather_temperature">%1$d°</string>
+    <string name="forecast_hourly_header">Hourly</string>
+    <string name="forecast_daily_header">Daily</string>
 
     <!-- DailyForecastColumn -->
     <string name="daily_temperature_day">%1$d°</string>

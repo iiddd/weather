@@ -20,6 +20,7 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -27,6 +28,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
@@ -35,6 +38,7 @@ import com.iiddd.weather.forecast.presentation.previewfixtures.PreviewWeatherPro
 import com.iiddd.weather.forecast.presentation.view.component.DailyForecastWidget
 import com.iiddd.weather.forecast.presentation.view.component.HourlyForecastWidget
 import com.iiddd.weather.forecast.presentation.view.component.WeatherWidget
+import com.iiddd.weather.forecast.R as ForecastR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,11 +50,13 @@ fun DetailedWeatherScreenContent(
     onToggleFavorite: () -> Unit,
 ) {
     val dimens = WeatherThemeTokens.dimens
+    val typography = WeatherThemeTokens.typography
+    val colors = WeatherThemeTokens.colors
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = WeatherThemeTokens.colors.background,
-        contentColor = WeatherThemeTokens.colors.onBackground,
+        color = colors.background,
+        contentColor = colors.onBackground,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             PullToRefreshBox(
@@ -64,7 +70,8 @@ fun DetailedWeatherScreenContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(state = rememberScrollState())
-                        .padding(horizontal = dimens.spacingExtraLarge),
+                        .padding(horizontal = dimens.spacingExtraLarge,
+                            vertical = dimens.spacingLarge),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -75,12 +82,32 @@ fun DetailedWeatherScreenContent(
 
                     Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
 
+                    Text(
+                        text = stringResource(id = ForecastR.string.forecast_hourly_header),
+                        style = typography.headlineMedium,
+                        color = colors.onBackground,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                    Spacer(modifier = Modifier.height(height = dimens.spacingExtraLarge))
+
                     HourlyForecastWidget(
                         forecasts = weatherState.value?.hourly ?: emptyList(),
                         modifier = Modifier.fillMaxWidth(),
                     )
 
                     Spacer(modifier = Modifier.height(height = dimens.spacingMedium))
+
+                    Text(
+                        text = stringResource(id = ForecastR.string.forecast_daily_header),
+                        style = typography.headlineMedium,
+                        color = colors.onBackground,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+
+                    Spacer(modifier = Modifier.height(height = dimens.spacingExtraLarge))
 
                     DailyForecastWidget(
                         forecasts = weatherState.value?.daily ?: emptyList(),
