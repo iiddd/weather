@@ -54,6 +54,9 @@ class DataStoreFavoritesRepository(
                     longitude1 = existingLocation.longitude,
                     latitude2 = favoriteLocation.latitude,
                     longitude2 = favoriteLocation.longitude,
+                ) || existingLocation.cityName.equals(
+                    other = favoriteLocation.cityName,
+                    ignoreCase = true,
                 )
             }
 

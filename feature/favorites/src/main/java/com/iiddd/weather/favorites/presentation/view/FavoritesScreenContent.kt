@@ -103,10 +103,15 @@ private fun SwipeToDeleteFavoriteItem(
         enableDismissFromStartToEnd = false,
         enableDismissFromEndToStart = true,
         backgroundContent = {
+            val isBeingDismissed = dismissState.targetValue == SwipeToDismissBoxValue.EndToStart ||
+                    dismissState.currentValue == SwipeToDismissBoxValue.EndToStart ||
+                    dismissState.progress > 0f
+
             val backgroundColor by animateColorAsState(
-                targetValue = when (dismissState.targetValue) {
-                    SwipeToDismissBoxValue.EndToStart -> WeatherThemeTokens.colors.error
-                    else -> Color.Transparent
+                targetValue = if (isBeingDismissed) {
+                    WeatherThemeTokens.colors.error
+                } else {
+                    Color.Transparent
                 },
                 label = "SwipeBackgroundColor",
             )
@@ -119,11 +124,13 @@ private fun SwipeToDeleteFavoriteItem(
                     .padding(horizontal = dimens.spacingExtraLarge),
                 contentAlignment = Alignment.CenterEnd,
             ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
-                    tint = WeatherThemeTokens.colors.onError,
-                )
+                if (isBeingDismissed) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = WeatherThemeTokens.colors.onError,
+                    )
+                }
             }
         },
         content = {

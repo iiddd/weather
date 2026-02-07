@@ -38,6 +38,31 @@ class ForecastViewModel(
         mutableForecastUiState.asStateFlow()
 
     private var lastRequestParameters: RequestParameters? = null
+    private var resolvedCoordinates: Coordinates? = null
+
+    init {
+        observeFavoritesChanges()
+    }
+
+    private fun observeFavoritesChanges() {
+        viewModelScope.launch(context = dispatcherProvider.io) {
+            favoritesRepository.favoritesFlow.collect { _ ->
+                val coordinates = resolvedCoordinates ?: return@collect
+                val currentState = mutableForecastUiState.value as? ForecastUiState.Content ?: return@collect
+
+                val isFavorite = favoritesRepository.isFavoriteFlow(
+                    latitude = coordinates.latitude,
+                    longitude = coordinates.longitude,
+                ).first()
+
+                if (currentState.isFavorite != isFavorite) {
+                    mutableForecastUiState.update { state ->
+                        (state as? ForecastUiState.Content)?.copy(isFavorite = isFavorite) ?: state
+                    }
+                }
+            }
+        }
+    }
 
     fun onEvent(forecastUiEvent: ForecastUiEvent) {
         when (forecastUiEvent) {
@@ -89,10 +114,10 @@ class ForecastViewModel(
     private fun toggleFavorite() {
         val currentState = mutableForecastUiState.value as? ForecastUiState.Content ?: return
         val weather = currentState.weather
-        val parameters = lastRequestParameters ?: return
+        val coordinates = resolvedCoordinates ?: return
 
-        val latitude = parameters.latitude ?: return
-        val longitude = parameters.longitude ?: return
+        val latitude = coordinates.latitude
+        val longitude = coordinates.longitude
 
         viewModelScope.launch(context = dispatcherProvider.io) {
             val isFavorite = favoritesRepository.isFavoriteFlow(
@@ -148,6 +173,7 @@ class ForecastViewModel(
 
             when (coordinatesResult) {
                 is ApiResult.Success -> {
+                    resolvedCoordinates = coordinatesResult.value
                     loadWeatherAndCityNameAndEmitState(
                         latitude = coordinatesResult.value.latitude,
                         longitude = coordinatesResult.value.longitude,

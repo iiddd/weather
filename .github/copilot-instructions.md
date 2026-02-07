@@ -89,6 +89,7 @@ onBack = { _ -> backStack.pop() }
 •	Avoid speculative or placeholder APIs
 •	Do not invent abstractions unless explicitly requested
 •	When unsure, ask instead of guessing
+•	Usage of deprecated APIs is not allowed unless explicitly requested for legacy support
 
 ---
 
@@ -97,6 +98,7 @@ onBack = { _ -> backStack.pop() }
 ## Screens and Tabs (global)
 - The application has 3 screens:
     - Home (DetailedWeatherScreen)
+    - Favorites (list of saved locations)
     - Search (Map + Search input)
     - Settings
 - Bottom tabs exist for each screen.

@@ -95,7 +95,7 @@ fun DetailedWeatherScreenContent(
                 modifier = Modifier
                     .align(alignment = Alignment.TopEnd)
                     .statusBarsPadding()
-                    .padding(all = dimens.spacingMedium)
+                    .padding(all = dimens.spacingExtraLarge)
                     .size(size = dimens.iconButtonSize),
                 colors = IconButtonDefaults.filledIconButtonColors(
                     containerColor = WeatherThemeTokens.colors.surfaceVariant,
