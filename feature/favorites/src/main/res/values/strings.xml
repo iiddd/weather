@@ -4,4 +4,5 @@
     <string name="favorites_empty_description">Add locations to your favorites from the weather details screen</string>
     <string name="favorites_temperature">%1$d°</string>
     <string name="favorites_tab_label">Favorites</string>
+    <string name="favorites_screen_title">Favorites</string>
 </resources>
