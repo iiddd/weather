@@ -9,10 +9,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.DailyForecast
+import com.iiddd.weather.forecast.R as ForecastR
 
 @Composable
 fun DailyForecastWidget(
@@ -30,14 +32,19 @@ fun DailyForecastWidget(
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         elevation = CardDefaults.cardElevation(defaultElevation = dimens.elevationNone),
     ) {
+        val todayLabel = stringResource(id = ForecastR.string.forecast_daily_today)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = dimens.spacingMedium),
             verticalArrangement = Arrangement.spacedBy(space = dimens.spacingSmall),
         ) {
-            forecasts.forEach { dailyForecast ->
-                DailyWeatherCard(forecast = dailyForecast)
+            forecasts.forEachIndexed { index, dailyForecast ->
+                val displayDay = if (index == 0) todayLabel else dailyForecast.day
+                DailyWeatherCard(
+                    forecast = dailyForecast,
+                    displayDay = displayDay,
+                )
             }
         }
     }

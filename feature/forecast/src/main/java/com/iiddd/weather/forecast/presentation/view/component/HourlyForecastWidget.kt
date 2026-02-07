@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -22,10 +22,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.HourlyForecast
+import com.iiddd.weather.forecast.R as ForecastR
 
 @Composable
 fun HourlyForecastWidget(
@@ -55,17 +57,22 @@ fun HourlyForecastWidget(
         Box(
             modifier = Modifier.fillMaxSize(),
         ) {
+            val nowLabel = stringResource(id = ForecastR.string.forecast_hourly_now)
             LazyRow(
                 state = listState,
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingSmall),
                 modifier = Modifier.fillMaxSize(),
             ) {
-                items(
+                itemsIndexed(
                     items = forecasts,
-                    key = { forecast -> "${forecast.time}-${forecast.icon}-${forecast.temp}" },
-                ) { hourlyForecast ->
-                    HourlyWeatherCard(forecast = hourlyForecast)
+                    key = { index, forecast -> "${index}-${forecast.time}-${forecast.icon}-${forecast.temp}" },
+                ) { index, hourlyForecast ->
+                    val displayTime = if (index == 0) nowLabel else hourlyForecast.time
+                    HourlyWeatherCard(
+                        forecast = hourlyForecast,
+                        displayTime = displayTime,
+                    )
                 }
             }
 

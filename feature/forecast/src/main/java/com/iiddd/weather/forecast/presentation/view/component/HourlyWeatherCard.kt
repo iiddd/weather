@@ -23,6 +23,7 @@ import com.iiddd.weather.forecast.domain.model.HourlyForecast
 fun HourlyWeatherCard(
     forecast: HourlyForecast,
     modifier: Modifier = Modifier,
+    displayTime: String = forecast.time,
 ) {
     val dimens = WeatherThemeTokens.dimens
 
@@ -44,7 +45,7 @@ fun HourlyWeatherCard(
             verticalArrangement = Arrangement.spacedBy(space = dimens.spacingMedium),
         ) {
             Text(
-                text = forecast.time,
+                text = displayTime,
                 style = WeatherThemeTokens.typography.labelSmall,
                 color = WeatherThemeTokens.colors.onSurfaceVariant,
             )

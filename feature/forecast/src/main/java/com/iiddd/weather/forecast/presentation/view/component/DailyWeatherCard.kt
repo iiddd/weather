@@ -24,6 +24,7 @@ import com.iiddd.weather.forecast.R as ForecastR
 fun DailyWeatherCard(
     forecast: DailyForecast,
     modifier: Modifier = Modifier,
+    displayDay: String = forecast.day,
 ) {
     val dimens = WeatherThemeTokens.dimens
 
@@ -46,7 +47,7 @@ fun DailyWeatherCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = forecast.day,
+                text = displayDay,
                 style = WeatherThemeTokens.typography.titleMedium,
                 color = WeatherThemeTokens.colors.onSurfaceVariant,
                 modifier = Modifier.weight(weight = 1f),
