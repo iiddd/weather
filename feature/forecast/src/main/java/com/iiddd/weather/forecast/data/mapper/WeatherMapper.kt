@@ -9,8 +9,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
-private const val HOURLY_FORECAST_LIMIT = 8
-private const val DAILY_FORECAST_LIMIT = 8
+private const val HOURLY_FORECAST_LIMIT = 24
+private const val DAILY_FORECAST_LIMIT = 10
 
 fun OpenWeatherOneCallResponse.toDomain(): Weather {
 

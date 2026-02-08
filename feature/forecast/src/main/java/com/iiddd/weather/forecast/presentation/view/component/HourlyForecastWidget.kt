@@ -56,12 +56,16 @@ fun HourlyForecastWidget(
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
         ) {
             val nowLabel = stringResource(id = ForecastR.string.forecast_hourly_now)
             LazyRow(
                 state = listState,
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingSmall),
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = dimens.spacingSmall,
+                    alignment = Alignment.CenterHorizontally,
+                ),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 itemsIndexed(
