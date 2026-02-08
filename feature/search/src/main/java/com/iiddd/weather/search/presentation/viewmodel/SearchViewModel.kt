@@ -94,4 +94,10 @@ class SearchViewModel(
             errorMessage = null,
         )
     }
+
+    fun onUpdateMarkerTitle(locationTitle: String) {
+        mutableSearchUiState.value = mutableSearchUiState.value.copy(
+            markerTitle = locationTitle,
+        )
+    }
 }

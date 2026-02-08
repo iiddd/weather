@@ -4,22 +4,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -28,12 +19,11 @@ import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.WeatherTheme
 import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
 import com.iiddd.weather.search.R as SearchR
+import com.iiddd.weather.search.presentation.view.component.LocationBottomPanel
 import com.iiddd.weather.search.presentation.view.component.Map
-import com.iiddd.weather.search.presentation.view.component.MarkerInfoCard
 import com.iiddd.weather.search.presentation.view.component.MyLocationButton
 import com.iiddd.weather.search.presentation.view.component.SearchBar
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
-import kotlin.math.roundToInt
 
 @Composable
 fun SearchScreenContent(
@@ -47,32 +37,16 @@ fun SearchScreenContent(
     onOpenDetails: (latitude: Double, longitude: Double) -> Unit,
 ) {
     val isPreview = LocalInspectionMode.current
-    val density = LocalDensity.current
     val dimens = WeatherThemeTokens.dimens
-
-    var mapSize by remember { mutableStateOf(Size(0f, 0f)) }
-    var cardSize by remember { mutableStateOf(Size(0f, 0f)) }
-
-    val markerVerticalOffset = dimens.spacingExtraLarge
-    val markerOffsetPx = with(density) { markerVerticalOffset.toPx() }
-    val tailHeightPx = with(density) { markerVerticalOffset.toPx() }
-
     val defaultMarkerTitle = stringResource(id = SearchR.string.marker_default_title)
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .onGloballyPositioned { layoutCoordinates ->
-                mapSize = Size(
-                    layoutCoordinates.size.width.toFloat(),
-                    layoutCoordinates.size.height.toFloat(),
-                )
-            },
+        modifier = Modifier.fillMaxSize(),
     ) {
         Map(
             isPreview = isPreview,
             cameraPositionState = cameraPositionState,
-            isMyLocationEnabled = isMyLocationEnabled,
+            markerPosition = searchUiState.marker,
         )
 
         SearchBar(
@@ -95,50 +69,18 @@ fun SearchScreenContent(
             )
         }
 
-        searchUiState.marker?.let { markerLatLng: LatLng ->
-            val screenPosition = remember(
-                mapSize,
-                cameraPositionState.position,
-                markerLatLng,
-            ) {
-                computeScreenPosition(
-                    marker = markerLatLng,
-                    cameraPosition = cameraPositionState.position,
-                    mapWidth = mapSize.width,
-                    mapHeight = mapSize.height,
-                )
-            }
-
-            MarkerInfoCard(
-                title = searchUiState.markerTitle ?: searchUiState.query.ifBlank { defaultMarkerTitle },
-                markerLatLng = markerLatLng,
-                onOpenDetails = { latitude: Double?, longitude: Double? ->
-                    onOpenDetails(
-                        latitude ?: markerLatLng.latitude,
-                        longitude ?: markerLatLng.longitude,
-                    )
-                },
-                onClearMarker = onClearMarker,
-                tailHeight = markerVerticalOffset,
-                modifier = Modifier
-                    .onGloballyPositioned { layoutCoordinates ->
-                        cardSize = Size(
-                            layoutCoordinates.size.width.toFloat(),
-                            layoutCoordinates.size.height.toFloat(),
-                        )
-                    }
-                    .let { baseModifier ->
-                        if (mapSize.width > 0f && mapSize.height > 0f && cardSize.width > 0f) {
-                            val xOffset = (screenPosition.x - cardSize.width / 2.0).roundToInt()
-                            val yOffset =
-                                (screenPosition.y - cardSize.height - tailHeightPx - markerOffsetPx).roundToInt()
-                            baseModifier.offset { IntOffset(x = xOffset, y = yOffset) }
-                        } else {
-                            baseModifier
-                        }
-                    },
-            )
-        }
+        // Bottom panel for location details
+        LocationBottomPanel(
+            locationTitle = searchUiState.markerTitle ?: searchUiState.query.ifBlank { defaultMarkerTitle },
+            isVisible = searchUiState.marker != null,
+            onViewDetails = {
+                searchUiState.marker?.let { markerLatLng ->
+                    onOpenDetails(markerLatLng.latitude, markerLatLng.longitude)
+                }
+            },
+            onDismiss = onClearMarker,
+            modifier = Modifier.align(alignment = Alignment.BottomCenter),
+        )
     }
 }
 
