@@ -6,10 +6,14 @@ The app uses **OpenWeatherMap One Call API 3.0** as its primary data source and 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/Screenshot_20260209-195125.png" width="200" />
-  <img src="docs/screenshots/Screenshot_20260209-195159.png" width="200" />
-  <img src="docs/screenshots/Screenshot_20260209-195210.png" width="200" />
-  <img src="docs/screenshots/Screenshot_20260209-195215.png" width="200" />
+  <img src="docs/screenshots/Light-0.png" width="200" />
+  <img src="docs/screenshots/Light-1.png" width="200" />
+  <img src="docs/screenshots/Light-2.png" width="200" />
+  <img src="docs/screenshots/Light-3.png" width="200" />
+  <img src="docs/screenshots/Dark-0.png" width="200" />
+  <img src="docs/screenshots/Dark-1.png" width="200" />
+  <img src="docs/screenshots/Dark-2.png" width="200" />
+  <img src="docs/screenshots/Dark-3.png" width="200" />
 </p>
 
 ---
@@ -39,12 +43,14 @@ Weather/
 ├── core/
 │   ├── network/             # API calls Handling (Success, Error, Loading)
 │   ├── preferences/         # DataStore preferences handling
-│   ├── ui/                  # Compose theme, Material 3, shared UI components
+│   ├── ui/                  # Material 3, shared UI components
 │   ├── utils/               # General utilities, extensions
 │   ├── location/            # FusedLocationProvider logic
+│   ├── theme/               # Theme definitions and color schemes
 │   └── test-utils/          # Testing utilities
 ├── feature/
 │   ├── forecast/            # Main screen: current weather + forecast
+│   ├── favorites/           # Favorite cities management
 │   ├── search/              # City and map search screen
 │   └── settings/            # Settings, theme control, favorites
 └── build.gradle(.kts)
@@ -155,19 +161,6 @@ https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&appid={API_K
 ## 🖼 Icon set
 
 ### Icon set credit: Pascal Vleugels [OpenWeatherMap iconset on Dribbble](https://dribbble.com/shots/4276406-OpenWeatherMap-iconset)
-
----
-
-## 🧩 Koin Modules
-
-| Module | Description |
-|---------|-------------|
-| `appModule` | Navigation, entry point |
-| `weatherModule` | Repository, UseCase, ViewModel |
-| `searchModule` | Google Maps integration, search logic |
-| `settingsModule` | Preferences, UI |
-| `networkModule` | Retrofit + OkHttp |
-| `locationModule` | FusedLocationRepository |
 
 ---
 
