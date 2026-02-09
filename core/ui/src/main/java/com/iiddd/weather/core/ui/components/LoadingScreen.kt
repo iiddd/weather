@@ -3,30 +3,38 @@ package com.iiddd.weather.core.ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.iiddd.weather.core.theme.WeatherTheme
+import com.iiddd.weather.core.theme.WeatherThemeTokens
 
 @Composable
 fun LoadingScreen(
     modifier: Modifier = Modifier,
-    indicatorScale: Float = 2f,
-    strokeWidth: Dp = 2.dp
 ) {
-    Box(
+    val colors = WeatherThemeTokens.colors
+    val progressIndicatorScale = 2f
+
+    Surface(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        color = colors.background,
+        contentColor = colors.onBackground,
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier.scale(scale = indicatorScale),
-            strokeWidth = strokeWidth,
-            strokeCap = StrokeCap.Round
-        )
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator(
+                color = colors.primary,
+                strokeCap = StrokeCap.Round,
+                strokeWidth = WeatherThemeTokens.dimens.borderWidthMedium,
+                modifier = Modifier.scale(progressIndicatorScale)
+            )
+        }
     }
 }
 
