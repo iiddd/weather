@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 @Immutable
 object WeatherDimens {
 
-    // Spacing
+    // Spacing (for padding, margin, gaps between elements)
     val spacingNone: Dp = 0.dp
     val spacingExtraSmall: Dp = 2.dp
     val spacingSmall: Dp = 4.dp
@@ -17,13 +17,13 @@ object WeatherDimens {
     val spacingXxl: Dp = 24.dp
     val spacingXxxl: Dp = 32.dp
 
-    // Elevation
+    // Elevation (for shadows and depth)
     val elevationNone: Dp = 0.dp
     val elevationSmall: Dp = 2.dp
     val elevationMedium: Dp = 4.dp
     val elevationLarge: Dp = 8.dp
 
-    // Corner radius
+    // Corner radius (for rounded shapes only)
     val cornerRadiusSmall: Dp = 8.dp
     val cornerRadiusMedium: Dp = 10.dp
     val cornerRadiusLarge: Dp = 12.dp
@@ -34,7 +34,7 @@ object WeatherDimens {
     val iconSizeLarge: Dp = 32.dp
     val iconSizeExtraLarge: Dp = 48.dp
 
-    // Component sizes
+    // Component sizes (fixed dimensions for components)
     val buttonHeightSmall: Dp = 32.dp
     val buttonHeightMedium: Dp = 40.dp
     val buttonHeightLarge: Dp = 48.dp
@@ -49,11 +49,11 @@ object WeatherDimens {
     // Image sizes
     val imageHeightMedium: Dp = 120.dp
 
-    // Misc
+    // Misc (component-specific dimensions)
     val fadeWidth: Dp = 24.dp
     val temperatureRowWidth: Dp = 88.dp
 
-    // Border/Stroke
+    // Border/Stroke (for outlines and borders)
     val borderWidthThin: Dp = 1.dp
     val borderWidthMedium: Dp = 2.dp
 }

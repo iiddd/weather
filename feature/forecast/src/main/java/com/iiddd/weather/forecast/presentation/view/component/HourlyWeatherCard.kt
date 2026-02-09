@@ -40,7 +40,7 @@ fun HourlyWeatherCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = dimens.cornerRadiusMedium),
+                .padding(vertical = dimens.spacingMedium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(space = dimens.spacingMedium),
         ) {
