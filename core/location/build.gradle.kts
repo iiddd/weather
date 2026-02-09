@@ -1,5 +1,6 @@
 plugins {
     id("com.iiddd.weather.android.library")
+    id("com.iiddd.weather.android.junit")
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -16,4 +17,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+
+    // Testing
+    testImplementation(projects.core.testUtils)
+    testImplementation(libs.mockito.kotlin)
 }
