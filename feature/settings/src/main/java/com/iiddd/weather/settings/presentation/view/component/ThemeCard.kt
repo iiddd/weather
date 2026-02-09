@@ -41,7 +41,7 @@ internal fun ThemeCard(
     val borderStroke: BorderStroke =
         if (isSelected) {
             BorderStroke(
-                width = dimens.borderWidthMedium,
+                width = dimens.borderWidthThin,
                 color = colors.primary,
             )
         } else {
@@ -51,11 +51,9 @@ internal fun ThemeCard(
             )
         }
 
-    val containerColor =
-        if (isSelected) colors.primaryContainer else colors.surface
+    val containerColor = colors.background
 
-    val contentColor =
-        if (isSelected) colors.onPrimaryContainer else colors.onSurface
+    val contentColor = colors.onBackground
 
     Card(
         modifier = modifier.selectable(

@@ -3,9 +3,9 @@ package com.iiddd.weather.settings.presentation.view.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.ui.theme.ThemeMode
@@ -24,9 +24,11 @@ fun ThemeSelectionRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(all = dimens.spacingLarge)
             .selectableGroup(),
-        horizontalArrangement = Arrangement.spacedBy(space = dimens.spacingLarge),
+        horizontalArrangement = Arrangement.spacedBy(
+            space = dimens.spacingMedium,
+            alignment = Alignment.CenterHorizontally,
+        ),
     ) {
         ThemeCard(
             isSelected = selectedThemeMode == ThemeMode.Light,
