@@ -1,11 +1,11 @@
-package com.iiddd.weather.core.ui.theme
+package com.iiddd.weather.core.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import com.iiddd.weather.core.ui.R as ThemeResourcesR
+import com.iiddd.weather.core.theme.R as ThemeResourcesR
 
 private val bodyFontFamily = FontFamily(
     Font(
@@ -45,3 +45,4 @@ val typography = Typography(
     labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
     labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
 )
+

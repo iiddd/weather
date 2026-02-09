@@ -2,8 +2,8 @@ package com.iiddd.weather.settings.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.iiddd.weather.core.ui.theme.ThemeMode
-import com.iiddd.weather.core.ui.theme.ThemeModeRepository
+import com.iiddd.weather.core.theme.ThemeMode
+import com.iiddd.weather.core.theme.ThemeModeRepository
 import com.iiddd.weather.core.utils.coroutines.DefaultDispatcherProvider
 import com.iiddd.weather.core.utils.coroutines.DispatcherProvider
 import kotlinx.coroutines.flow.SharingStarted

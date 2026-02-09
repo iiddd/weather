@@ -38,6 +38,7 @@ include(
     ":app",
 
     // Core
+    ":core:theme",
     ":core:ui",
     ":core:location",
     ":core:network",

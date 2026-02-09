@@ -34,8 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.iiddd.weather.core.preferences.favorites.FavoriteLocation
 import com.iiddd.weather.core.ui.components.WeatherPreview
-import com.iiddd.weather.core.ui.theme.WeatherTheme
-import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.core.theme.WeatherTheme
+import com.iiddd.weather.core.theme.WeatherThemeTokens
 import com.iiddd.weather.favorites.presentation.model.FavoriteLocationWithWeather
 import com.iiddd.weather.favorites.presentation.view.component.FavoriteLocationCard
 import com.iiddd.weather.favorites.R as FavoritesR

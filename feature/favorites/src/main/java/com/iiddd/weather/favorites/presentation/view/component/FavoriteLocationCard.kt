@@ -25,10 +25,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.iiddd.weather.core.ui.components.WeatherPreview
-import com.iiddd.weather.core.ui.theme.LocalThemeMode
-import com.iiddd.weather.core.ui.theme.ThemeMode
-import com.iiddd.weather.core.ui.theme.WeatherTheme
-import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.core.theme.LocalThemeMode
+import com.iiddd.weather.core.theme.ThemeMode
+import com.iiddd.weather.core.theme.WeatherTheme
+import com.iiddd.weather.core.theme.WeatherThemeTokens
 import com.iiddd.weather.core.preferences.favorites.FavoriteLocation
 import com.iiddd.weather.favorites.R
 import com.iiddd.weather.favorites.presentation.model.FavoriteLocationWithWeather

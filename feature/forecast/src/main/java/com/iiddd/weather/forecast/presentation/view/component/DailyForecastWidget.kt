@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.iiddd.weather.core.ui.components.WeatherPreview
-import com.iiddd.weather.core.ui.theme.WeatherTheme
-import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.core.theme.WeatherTheme
+import com.iiddd.weather.core.theme.WeatherThemeTokens
 import com.iiddd.weather.forecast.domain.model.DailyForecast
 import com.iiddd.weather.forecast.R as ForecastR
 

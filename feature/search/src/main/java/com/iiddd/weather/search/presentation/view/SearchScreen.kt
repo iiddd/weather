@@ -7,7 +7,7 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.iiddd.weather.core.ui.components.ErrorScreen
 import com.iiddd.weather.core.ui.components.WeatherPreview
-import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.theme.WeatherTheme
 import com.iiddd.weather.search.presentation.viewmodel.SearchUiState
 
 @Composable

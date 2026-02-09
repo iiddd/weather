@@ -1,4 +1,4 @@
-package com.iiddd.weather.core.ui.theme
+package com.iiddd.weather.core.theme
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -80,5 +80,5 @@ object WeatherColorSchemes {
         surfaceContainerHigh = surfaceContainerHighDark,
         surfaceContainerHighest = surfaceContainerHighestDark,
     )
-
 }
+

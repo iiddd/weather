@@ -1,4 +1,4 @@
-package com.iiddd.weather.core.ui.theme
+package com.iiddd.weather.core.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
@@ -19,3 +19,4 @@ fun ProvideThemeMode(
         content()
     }
 }
+

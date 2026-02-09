@@ -12,8 +12,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
-import com.iiddd.weather.core.ui.theme.LocalThemeMode
-import com.iiddd.weather.core.ui.theme.ThemeMode
+import com.iiddd.weather.core.theme.LocalThemeMode
+import com.iiddd.weather.core.theme.ThemeMode
 import com.iiddd.weather.forecast.presentation.icons.resolveWeatherIcon
 
 @Composable

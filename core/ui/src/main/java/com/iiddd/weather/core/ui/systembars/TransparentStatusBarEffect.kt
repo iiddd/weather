@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.iiddd.weather.core.ui.theme.LocalThemeMode
-import com.iiddd.weather.core.ui.theme.ThemeMode
+import com.iiddd.weather.core.theme.LocalThemeMode
+import com.iiddd.weather.core.theme.ThemeMode
 
 @Composable
 fun TransparentStatusBarEffect() {

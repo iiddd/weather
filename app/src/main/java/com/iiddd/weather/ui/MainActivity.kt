@@ -6,10 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.iiddd.weather.core.ui.systembars.TransparentStatusBarEffect
-import com.iiddd.weather.core.ui.theme.ProvideThemeMode
-import com.iiddd.weather.core.ui.theme.ThemeMode
-import com.iiddd.weather.core.ui.theme.ThemeModeRepository
-import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.theme.ProvideThemeMode
+import com.iiddd.weather.core.theme.ThemeMode
+import com.iiddd.weather.core.theme.ThemeModeRepository
+import com.iiddd.weather.core.theme.WeatherTheme
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {

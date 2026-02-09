@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.ui)
+    implementation(projects.core.theme)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)

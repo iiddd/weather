@@ -10,7 +10,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.theme.WeatherTheme
 
 @Composable
 fun LoadingScreen(

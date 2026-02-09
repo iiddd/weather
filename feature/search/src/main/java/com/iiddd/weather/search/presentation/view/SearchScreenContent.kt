@@ -16,8 +16,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.iiddd.weather.core.ui.components.WeatherPreview
-import com.iiddd.weather.core.ui.theme.WeatherTheme
-import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.core.theme.WeatherTheme
+import com.iiddd.weather.core.theme.WeatherThemeTokens
 import com.iiddd.weather.search.R as SearchR
 import com.iiddd.weather.search.presentation.view.component.LocationBottomPanel
 import com.iiddd.weather.search.presentation.view.component.Map

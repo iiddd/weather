@@ -1,7 +1,7 @@
 package com.iiddd.weather.settings.presentation.view
 
 import androidx.compose.runtime.Composable
-import com.iiddd.weather.core.ui.theme.ThemeMode
+import com.iiddd.weather.core.theme.ThemeMode
 
 @Composable
 fun SettingsScreen(

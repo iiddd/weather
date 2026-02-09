@@ -7,7 +7,7 @@ import com.iiddd.weather.core.network.toUiMessage
 import com.iiddd.weather.core.ui.components.ErrorScreen
 import com.iiddd.weather.core.ui.components.LoadingScreen
 import com.iiddd.weather.core.ui.components.WeatherPreview
-import com.iiddd.weather.core.ui.theme.WeatherTheme
+import com.iiddd.weather.core.theme.WeatherTheme
 import com.iiddd.weather.forecast.domain.model.Weather
 import com.iiddd.weather.forecast.presentation.viewmodel.ForecastUiState
 

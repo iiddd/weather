@@ -12,7 +12,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberUpdatedMarkerState
-import com.iiddd.weather.core.ui.theme.WeatherThemeTokens
+import com.iiddd.weather.core.theme.WeatherThemeTokens
 
 @Composable
 internal fun Map(

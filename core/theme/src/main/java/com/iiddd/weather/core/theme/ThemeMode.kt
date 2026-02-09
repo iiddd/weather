@@ -1,7 +1,8 @@
-package com.iiddd.weather.core.ui.theme
+package com.iiddd.weather.core.theme
 
 enum class ThemeMode {
     System,
     Light,
     Dark,
 }
+

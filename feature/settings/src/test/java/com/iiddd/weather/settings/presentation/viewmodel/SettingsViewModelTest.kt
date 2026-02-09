@@ -1,8 +1,8 @@
 package com.iiddd.weather.settings.presentation.viewmodel
 
 import com.iiddd.weather.core.testutils.UnitTestDispatcherProvider
-import com.iiddd.weather.core.ui.theme.ThemeMode
-import com.iiddd.weather.core.ui.theme.ThemeModeRepository
+import com.iiddd.weather.core.theme.ThemeMode
+import com.iiddd.weather.core.theme.ThemeModeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

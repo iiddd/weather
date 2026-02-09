@@ -1,4 +1,4 @@
-package com.iiddd.weather.core.ui.theme
+package com.iiddd.weather.core.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -51,3 +51,4 @@ object WeatherThemeTokens {
     val dimens: WeatherDimens
         get() = WeatherDimens
 }
+

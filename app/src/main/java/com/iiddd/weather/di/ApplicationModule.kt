@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.iiddd.weather.BuildConfig
 import com.iiddd.weather.core.preferences.theme.DataStoreThemeModeRepository
-import com.iiddd.weather.core.ui.theme.ThemeModeRepository
+import com.iiddd.weather.core.theme.ThemeModeRepository
 import com.iiddd.weather.location.data.FusedLocationTracker
 import com.iiddd.weather.location.data.GoogleGeocodingService
 import com.iiddd.weather.location.data.api.GeocodingApi
