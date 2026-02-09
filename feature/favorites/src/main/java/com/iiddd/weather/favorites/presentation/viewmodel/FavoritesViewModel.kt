@@ -137,6 +137,3 @@ class FavoritesViewModel(
         }
     }
 }
-
-
-

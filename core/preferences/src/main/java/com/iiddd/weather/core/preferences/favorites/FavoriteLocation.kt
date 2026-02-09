@@ -9,4 +9,3 @@ data class FavoriteLocation(
     val latitude: Double,
     val longitude: Double,
 )
-

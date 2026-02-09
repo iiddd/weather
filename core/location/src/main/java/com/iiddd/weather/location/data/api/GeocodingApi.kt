@@ -20,4 +20,3 @@ interface GeocodingApi {
         @Query("language") language: String = "en"
     ): GeocodingResponse
 }
-

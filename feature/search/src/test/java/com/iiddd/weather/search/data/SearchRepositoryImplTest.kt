@@ -168,4 +168,3 @@ class SearchRepositoryImplTest {
             assertEquals("Tokyo, Japan", successResult.value[0].name)
         }
 }
-

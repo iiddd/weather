@@ -264,4 +264,3 @@ class DataStoreFavoritesRepositoryTest {
         assertTrue(result.isEmpty())
     }
 }
-

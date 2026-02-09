@@ -105,4 +105,3 @@ class DataStoreFavoritesRepository(
                 kotlin.math.abs(longitude1 - longitude2) < COORDINATE_TOLERANCE
     }
 }
-

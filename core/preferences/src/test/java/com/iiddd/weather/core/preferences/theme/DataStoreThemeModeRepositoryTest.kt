@@ -119,5 +119,3 @@ class DataStoreThemeModeRepositoryTest {
         assertEquals(ThemeMode.System, result)
     }
 }
-
-

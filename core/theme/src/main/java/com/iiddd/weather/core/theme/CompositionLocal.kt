@@ -19,4 +19,3 @@ fun ProvideThemeMode(
         content()
     }
 }
-

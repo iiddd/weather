@@ -17,5 +17,3 @@ sealed interface FavoritesUiState {
 
     data object Empty : FavoritesUiState
 }
-
-

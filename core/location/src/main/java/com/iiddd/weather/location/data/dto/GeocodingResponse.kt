@@ -28,4 +28,3 @@ data class Geometry(val location: LocationDto? = null)
 
 @Serializable
 data class LocationDto(val lat: Double, val lng: Double)
-

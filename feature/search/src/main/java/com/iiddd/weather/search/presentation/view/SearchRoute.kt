@@ -93,4 +93,3 @@ fun SearchRoute(
         onOpenDetails = onOpenDetails,
     )
 }
-

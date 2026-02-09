@@ -51,4 +51,3 @@ object WeatherThemeTokens {
     val dimens: WeatherDimens
         get() = WeatherDimens
 }
-

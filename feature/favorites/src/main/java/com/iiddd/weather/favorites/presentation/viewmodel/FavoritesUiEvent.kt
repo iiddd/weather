@@ -9,5 +9,3 @@ sealed interface FavoritesUiEvent {
         val favoriteLocationWithWeather: FavoriteLocationWithWeather,
     ) : FavoritesUiEvent
 }
-
-

@@ -18,4 +18,3 @@ interface GeocodingService {
         longitude: Double,
     ): String?
 }
-

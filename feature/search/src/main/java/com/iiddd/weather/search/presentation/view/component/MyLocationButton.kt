@@ -42,4 +42,3 @@ private fun MyLocationButtonPreview() {
         MyLocationButton(onClick = {})
     }
 }
-

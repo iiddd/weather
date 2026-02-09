@@ -91,5 +91,3 @@ class GoogleGeocodingService(
         const val ADDRESS_TYPE_COUNTRY = "country"
     }
 }
-
-

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -22,9 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.core.theme.WeatherTheme
 import com.iiddd.weather.core.theme.WeatherThemeTokens
+import com.iiddd.weather.core.ui.components.PrimaryButton
+import com.iiddd.weather.core.ui.components.WeatherPreview
 import com.iiddd.weather.search.R as SearchR
 
 @Composable
@@ -70,13 +70,11 @@ fun LocationBottomPanel(
 
                     Spacer(modifier = Modifier.height(height = dimens.spacingLarge))
 
-                    Button(
+                    PrimaryButton(
                         onClick = onViewDetails,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(size = dimens.cornerRadiusMedium),
-                    ) {
-                        Text(text = stringResource(id = SearchR.string.details_button_label))
-                    }
+                        buttonText = stringResource(id = SearchR.string.details_button_label)
+                    )
                 }
 
                 IconButton(
@@ -109,8 +107,3 @@ private fun LocationBottomPanelPreview() {
         )
     }
 }
-
-
-
-
-

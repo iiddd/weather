@@ -81,4 +81,3 @@ object WeatherColorSchemes {
         surfaceContainerHighest = surfaceContainerHighestDark,
     )
 }
-

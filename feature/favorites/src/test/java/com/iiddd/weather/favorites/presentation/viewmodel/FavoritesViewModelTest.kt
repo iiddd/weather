@@ -330,4 +330,3 @@ class FavoritesViewModelTest {
             assertEquals(10, contentState.favorites[2].currentTemperature)
         }
 }
-

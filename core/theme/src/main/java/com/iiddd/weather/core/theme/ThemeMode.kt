@@ -5,4 +5,3 @@ enum class ThemeMode {
     Light,
     Dark,
 }
-
