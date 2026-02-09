@@ -6,10 +6,10 @@ The app uses **OpenWeatherMap One Call API 3.0** as its primary data source and 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/Screenshot_20260209-195125.png" width="220" />
-  <img src="docs/screenshots/Screenshot_20260209-195159.png" width="220" />
-  <img src="docs/screenshots/Screenshot_20260209-195210.png" width="220" />
-  <img src="docs/screenshots/Screenshot_20260209-195215.png" width="220" />
+  <img src="docs/screenshots/Screenshot_20260209-195125.png" width="200" />
+  <img src="docs/screenshots/Screenshot_20260209-195159.png" width="200" />
+  <img src="docs/screenshots/Screenshot_20260209-195210.png" width="200" />
+  <img src="docs/screenshots/Screenshot_20260209-195215.png" width="200" />
 </p>
 
 ---
