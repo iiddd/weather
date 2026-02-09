@@ -73,6 +73,7 @@ fun LocationBottomPanel(
                     Button(
                         onClick = onViewDetails,
                         modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(size = dimens.cornerRadiusMedium),
                     ) {
                         Text(text = stringResource(id = SearchR.string.details_button_label))
                     }
