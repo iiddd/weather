@@ -159,11 +159,9 @@ class FavoritesViewModelTest {
                 )
             ).thenReturn(ApiResult.Success(value = weather))
 
-            // First load to get into Content state
             favoritesViewModel.onEvent(favoritesUiEvent = FavoritesUiEvent.LoadFavoritesRequested)
             advanceUntilIdle()
 
-            // Trigger refresh
             favoritesViewModel.onEvent(favoritesUiEvent = FavoritesUiEvent.RefreshRequested)
             advanceUntilIdle()
 
@@ -209,14 +207,12 @@ class FavoritesViewModelTest {
                 weatherRepository.getWeather(latitude = 40.0, longitude = -74.0)
             ).thenReturn(ApiResult.Success(value = weather2))
 
-            // First load to get into Content state
             favoritesViewModel.onEvent(favoritesUiEvent = FavoritesUiEvent.LoadFavoritesRequested)
             advanceUntilIdle()
 
             val initialState = favoritesViewModel.favoritesUiState.value as FavoritesUiState.Content
             assertEquals(2, initialState.favorites.size)
 
-            // Delete first favorite
             val favoriteToDelete = FavoriteLocationWithWeather(
                 favoriteLocation = favoriteLocation1,
                 currentTemperature = 20,
@@ -261,14 +257,12 @@ class FavoritesViewModelTest {
                 weatherRepository.getWeather(latitude = 35.0, longitude = 139.0)
             ).thenReturn(ApiResult.Success(value = weather))
 
-            // First load to get into Content state
             favoritesViewModel.onEvent(favoritesUiEvent = FavoritesUiEvent.LoadFavoritesRequested)
             advanceUntilIdle()
 
             val initialState = favoritesViewModel.favoritesUiState.value as FavoritesUiState.Content
             assertEquals(1, initialState.favorites.size)
 
-            // Delete the only favorite
             val favoriteToDelete = FavoriteLocationWithWeather(
                 favoriteLocation = favoriteLocation,
                 currentTemperature = 20,

@@ -72,17 +72,14 @@ fun SearchRoute(
         onRetrySearch = searchViewModel::onRetrySearch,
         onMyLocationButtonClick = {
             coroutineScope.launch {
-                // Use getLastKnownLocation for faster response (uses cached location if available)
                 val currentLocation = locationTracker.getLastKnownLocation()
                 currentLocation?.let { coordinates ->
-                    // Set marker immediately with fallback title for fast response
                     searchViewModel.onSetMarkerAtCurrentLocation(
                         latitude = coordinates.latitude,
                         longitude = coordinates.longitude,
                         locationTitle = MY_LOCATION_FALLBACK_TITLE,
                     )
 
-                    // Then update with geocoded name asynchronously
                     val locationTitle = geocodingService.reverseGeocode(
                         latitude = coordinates.latitude,
                         longitude = coordinates.longitude,

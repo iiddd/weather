@@ -24,7 +24,6 @@ fun TransparentStatusBarEffect() {
         ThemeMode.Dark -> true
     }
 
-    // Dark icons when theme is light, white icons when theme is dark
     val useDarkIcons = !isDarkThemeEnabled
 
     LaunchedEffect(key1 = useDarkIcons) {

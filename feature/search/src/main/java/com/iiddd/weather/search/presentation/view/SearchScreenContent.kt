@@ -69,7 +69,6 @@ fun SearchScreenContent(
             )
         }
 
-        // Bottom panel for location details
         LocationBottomPanel(
             locationTitle = searchUiState.markerTitle ?: searchUiState.query.ifBlank { defaultMarkerTitle },
             isVisible = searchUiState.marker != null,
