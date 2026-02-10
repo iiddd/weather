@@ -3,7 +3,7 @@
 A modern multi-module **Android Weather App** built entirely with **Kotlin** and **Jetpack Compose**, following **Clean Architecture**, **MVVM**, and **SOLID** principles.  
 The app uses **OpenWeatherMap One Call API 3.0** as its primary data source and integrates **Google Maps API** for city search and location detection.
 
-## Screenshots
+## 📸 Screenshots
 
 <p align="center">
   <img src="docs/screenshots/Light-0.png" width="200" />
